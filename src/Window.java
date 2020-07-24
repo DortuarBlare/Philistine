@@ -1,12 +1,7 @@
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
@@ -14,9 +9,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.stb.STBImage.*;
-
-import javax.imageio.IIOImage;
 
 public class Window{
     private long window;

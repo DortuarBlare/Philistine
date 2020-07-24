@@ -23,7 +23,6 @@ public class Texture {
             IntBuffer h = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
-            URL url = Texture.class.getResource("res/" + resourceName + ".png");
             File file = new File("res/" + resourceName  + ".png");
             String filePath = file.getAbsolutePath();
             buffer = STBImage.stbi_load(filePath, w, h, channels, 4);
