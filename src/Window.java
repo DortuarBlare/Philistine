@@ -12,8 +12,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window{
     private long window;
-    private int x = 50, y = 50;
-    int idBox;
+    private int x = 50, y = 50, x1 = 100, y1 = 100;
+    int idBox, idPlayer;
 
     public void run(){
         System.out.println("Start");
@@ -64,14 +64,16 @@ public class Window{
         glOrtho(0, 640, 480, 0, 1, -1);
         glMatrixMode(GL_MODELVIEW);
         glEnable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+        glEnable(GL_BLEND);
         idBox = Texture.loadTexture("box");
-
+        idPlayer = Texture.loadTexture("player_05");
 
     }
 
     private void loop(){
 
-        glClearColor(0.4f, 0.4f, 0.2f, 0.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 
         while (!glfwWindowShouldClose(window)){
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -87,7 +89,7 @@ public class Window{
 
             glBindTexture(GL_TEXTURE_2D, idBox);
 
-            glColor3d(0.1, 0.8, 0.1);
+
             glBegin(GL_QUADS);
             glTexCoord2d(0, 0);
             glVertex2f(x, y);
@@ -97,6 +99,18 @@ public class Window{
             glVertex2f(x + 50, y + 50);
             glTexCoord2d(0, 1);
             glVertex2f(x, y + 50);
+            glEnd();
+
+            glBindTexture(GL_TEXTURE_2D, idPlayer);
+            glBegin(GL_QUADS);
+            glTexCoord2d(0, 0);
+            glVertex2f(x1, y1);
+            glTexCoord2d(1, 0);
+            glVertex2f(x1 + 50, y1);
+            glTexCoord2d(1, 1);
+            glVertex2f(x1 + 50, y1 + 50);
+            glTexCoord2d(0, 1);
+            glVertex2f(x1, y1 + 50);
             glEnd();
 
             glfwSwapBuffers(window);
