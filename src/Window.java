@@ -84,7 +84,7 @@ public class Window{
     }
 
     private void loop() {
-        int i = 0;
+        int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
         int g = 0;
         boolean mov = false;
         while (!glfwWindowShouldClose(window)) {
@@ -133,7 +133,7 @@ public class Window{
 
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-                switch (i){
+                switch (i1){
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, idPlayerRight);
                         break;
@@ -144,12 +144,12 @@ public class Window{
                         glBindTexture(GL_TEXTURE_2D, idPlayerRight2);
                         break;
                     case 3:
-                        i = 0;
+                        i1 = 0;
                         glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
                         break;
                 }
                 if (g == 8){
-                    i++;
+                    i1++;
                     g = 0;
                 }
                 g++;
@@ -157,7 +157,7 @@ public class Window{
                 xPlayer += 1;
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-                switch (i){
+                switch (i2){
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
                         break;
@@ -168,12 +168,12 @@ public class Window{
                         glBindTexture(GL_TEXTURE_2D, idPlayerLeft2);
                         break;
                     case 3:
-                        i = 0;
+                        i2 = 0;
                         glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
                         break;
                 }
                 if (g == 8){
-                    i++;
+                    i2++;
                     g = 0;
                 }
                 g++;
@@ -181,7 +181,7 @@ public class Window{
                 xPlayer -= 1;
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-                switch (i){
+                switch (i3){
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, idPlayerUp);
                         break;
@@ -192,12 +192,12 @@ public class Window{
                         glBindTexture(GL_TEXTURE_2D, idPlayerUp2);
                         break;
                     case 3:
-                        i = 0;
+                        i3 = 0;
                         glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
                         break;
                 }
                 if (g == 8){
-                    i++;
+                    i3++;
                     g = 0;
                 }
                 g++;
@@ -205,7 +205,7 @@ public class Window{
                 yPlayer -= 1;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
-                switch (i){
+                switch (i4){
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown);
                         break;
@@ -216,12 +216,12 @@ public class Window{
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
                         break;
                     case 3:
-                        i = 0;
+                        i4 = 0;
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
                         break;
                 }
                 if (g == 8){
-                    i++;
+                    i4++;
                     g = 0;
                 }
                 g++;
@@ -232,11 +232,11 @@ public class Window{
             glTexCoord2d(0, 0);
             glVertex2f(xPlayer, yPlayer);
             glTexCoord2d(1, 0);
-            glVertex2f(xPlayer + 50, yPlayer);
+            glVertex2f(xPlayer + 42, yPlayer);
             glTexCoord2d(1, 1);
-            glVertex2f(xPlayer + 50, yPlayer + 50);
+            glVertex2f(xPlayer + 42, yPlayer + 64);
             glTexCoord2d(0, 1);
-            glVertex2f(xPlayer, yPlayer + 50);
+            glVertex2f(xPlayer, yPlayer + 64);
             glEnd();
 
             glfwSwapBuffers(window);
