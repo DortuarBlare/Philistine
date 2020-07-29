@@ -13,7 +13,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window{
     private long window;
     private int x = 50, y = 50, xPlayer = 100, yPlayer = 100;
-    int idBox, idPlayerStand, idPlayerRight, idPlayerLeft, idPlayerUp, idPlayerDown, idBackground, idBackground2;
+    int idBox, idPlayerStand, idPlayerRight, idPlayerLeft, idPlayerUp, idPlayerDown, idPlayerDown2, idPlayerDown3, idBackground, idBackground2;
     String level = "Village";
 
     public void run(){
@@ -75,6 +75,8 @@ public class Window{
         idPlayerLeft = Texture.loadTexture("player_left");
         idPlayerUp = Texture.loadTexture("player_up");
         idPlayerDown = Texture.loadTexture("player_down");
+        idPlayerDown2 = Texture.loadTexture("player_down2");
+        idPlayerDown3 = Texture.loadTexture("player_down3");
     }
 
     private void loop() {
@@ -94,7 +96,6 @@ public class Window{
                     glTexCoord2d(0, 1);
                     glVertex2f(0, 480);
                     glEnd();
-
                     break;
                 }
                 case "Castle": {
@@ -138,6 +139,7 @@ public class Window{
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
                 glBindTexture(GL_TEXTURE_2D, idPlayerDown);
+
                 yPlayer += 1;
             }
             glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
