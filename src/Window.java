@@ -12,8 +12,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window{
     private long window;
-    private int x = 50, y = 50, x1 = 100, y1 = 100;
-    int idBox, idPlayerStand, idPlayerRight, idPlayerLeft, idPlayerUp, idPlayerDown, idBackground;
+    private int x = 50, y = 50, xPlayer = 100, yPlayer = 100;
+    int idBox, idPlayerStand, idPlayerRight, idPlayerLeft, idPlayerUp, idPlayerDown, idBackground, idBackground2;
+    String level = "Village";
 
     public void run(){
         System.out.println("Start");
@@ -64,10 +65,11 @@ public class Window{
         glOrtho(0, 640, 480, 0, 1, -1);    // Камера на место окна
         glMatrixMode(GL_MODELVIEW);
         glEnable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE);   // Добавляет прозрачность
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   // Добавляет прозрачность
         glEnable(GL_BLEND);
         idBox = Texture.loadTexture("box");
         idBackground = Texture.loadTexture("background");
+        idBackground2 = Texture.loadTexture("background2");
         idPlayerStand = Texture.loadTexture("player_stand");
         idPlayerRight = Texture.loadTexture("player_right");
         idPlayerLeft = Texture.loadTexture("player_left");
@@ -75,62 +77,89 @@ public class Window{
         idPlayerDown = Texture.loadTexture("player_down");
     }
 
-    private void loop(){
-
-        while (!glfwWindowShouldClose(window)){
+    private void loop() {
+        while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glBindTexture(GL_TEXTURE_2D, idBackground);
-            glBegin(GL_QUADS);
-            glTexCoord2d(0, 0);
-            glVertex2f(0, 0);
-            glTexCoord2d(1, 0);
-            glVertex2f(640, 0);
-            glTexCoord2d(1, 1);
-            glVertex2f(640, 480);
-            glTexCoord2d(0, 1);
-            glVertex2f(0, 480);
-            glEnd();
+            switch (level) {
+                case "Village": {
+                    glBindTexture(GL_TEXTURE_2D, idBackground);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(0, 0);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(640, 0);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(640, 480);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(0, 480);
+                    glEnd();
+
+                    glBindTexture(GL_TEXTURE_2D, idBox);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(x, y);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(x + 50, y);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(x + 50, y + 50);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(x, y + 50);
+                    glEnd();
+                    break;
+                }
+                case "Castle": {
+                    glBindTexture(GL_TEXTURE_2D, idBackground2);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(0, 0);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(640, 0);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(640, 480);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(0, 480);
+                    glEnd();
+                    break;
+                }
+
+            }
+            if (xPlayer > 640) {
+                xPlayer = 5;
+                level = "Castle";
+            }
+            else if (xPlayer < 0) {
+                xPlayer = 635;
+                level = "Village";
+            }
+
 
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
                 glBindTexture(GL_TEXTURE_2D, idPlayerRight);
-                x1+=1;
+                xPlayer += 1;
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
                 glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
-                x1-=1;
+                xPlayer -= 1;
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
                 glBindTexture(GL_TEXTURE_2D, idPlayerUp);
-                y1-=1;
+                yPlayer -= 1;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
                 glBindTexture(GL_TEXTURE_2D, idPlayerDown);
-                y1+=1;
+                yPlayer += 1;
             }
-
             glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
             glTexCoord2d(0, 0);
-            glVertex2f(x1, y1);
+            glVertex2f(xPlayer, yPlayer);
             glTexCoord2d(1, 0);
-            glVertex2f(x1 + 50, y1);
+            glVertex2f(xPlayer + 50, yPlayer);
             glTexCoord2d(1, 1);
-            glVertex2f(x1 + 50, y1 + 50);
+            glVertex2f(xPlayer + 50, yPlayer + 50);
             glTexCoord2d(0, 1);
-            glVertex2f(x1, y1 + 50);
-            glEnd();
-
-            glBindTexture(GL_TEXTURE_2D, idBox);
-            glBegin(GL_QUADS);
-            glTexCoord2d(0, 0);
-            glVertex2f(x, y);
-            glTexCoord2d(1, 0);
-            glVertex2f(x + 50, y);
-            glTexCoord2d(1, 1);
-            glVertex2f(x + 50, y + 50);
-            glTexCoord2d(0, 1);
-            glVertex2f(x, y + 50);
+            glVertex2f(xPlayer, yPlayer + 50);
             glEnd();
 
             glfwSwapBuffers(window);
