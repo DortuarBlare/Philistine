@@ -95,17 +95,6 @@ public class Window{
                     glVertex2f(0, 480);
                     glEnd();
 
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(x, y);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(x + 50, y);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(x + 50, y + 50);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(x, y + 50);
-                    glEnd();
                     break;
                 }
                 case "Castle": {
