@@ -10,27 +10,38 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class Window{
+public class Window implements Runnable{
+    private Thread thread;
+    boolean running = false;
     private long window;
-    private int xPlayer = 100, yPlayer = 100;
+    private int xPlayer = 100, yPlayer = 100, xSlime = 50, ySlime = 50;
     int idBox, idPlayerStand, idBackground, idBackground2;
     int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
     int idPlayerRight, idPlayerRight2, idPlayerRight3;
     int idPlayerUp, idPlayerUp2, idPlayerUp3;
     int idPlayerDown, idPlayerDown2, idPlayerDown3;
+    int idSlime, idSlime2;
     String level = "Village";
 
-    public void run(){
-        System.out.println("Start");
+    public void start() {
+        thread = new Thread(this, "Game");
+        running = true;
+        thread.start();
+    }
 
-        init();
-        loop();
+    public void run() {
+        while(running) {
+            System.out.println("Start");
 
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
+            init();
+            loop();
 
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+            glfwFreeCallbacks(window);
+            glfwDestroyWindow(window);
+
+            glfwTerminate();
+            glfwSetErrorCallback(null).free();
+        }
     }
 
     private void init(){
@@ -48,8 +59,10 @@ public class Window{
             throw new RuntimeException("Failed to create the GLFW window");
 
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) ->{
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
+                running = false;
+            }
         });
 
         try (MemoryStack stack = stackPush()){
@@ -87,11 +100,13 @@ public class Window{
         idPlayerDown = Texture.loadTexture("player_down");
         idPlayerDown2 = Texture.loadTexture("player_down2");
         idPlayerDown3 = Texture.loadTexture("player_down3");
+        idSlime = Texture.loadTexture("slime");
+        idSlime2 = Texture.loadTexture("slime2");
     }
 
     private void loop() {
-        int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
-        int g = 0;
+        int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
+        int g = 0, g2 = 0;
         boolean mov = false;
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -108,6 +123,35 @@ public class Window{
                     glVertex2f(640, 480);
                     glTexCoord2d(0, 1);
                     glVertex2f(0, 480);
+                    glEnd();
+
+                    glBindTexture(GL_TEXTURE_2D, idSlime);
+                    switch (i5){
+                        case 0:
+                            glBindTexture(GL_TEXTURE_2D, idSlime);
+                            break;
+                        case 1:
+                            i5 = 0;
+                            glBindTexture(GL_TEXTURE_2D, idSlime2);
+                            break;
+                    }
+                    if (g2 == 12) {
+                        i5++;
+                        g2 = 0;
+                    }
+                    g2++;
+                    xSlime += Math.random() * 2;
+                    ySlime += Math.random() * 2;
+
+                    glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
+                    glTexCoord2d(0, 0);
+                    glVertex2f(xSlime, ySlime);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(xSlime + 30, ySlime);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(xSlime + 30, ySlime + 30);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(xSlime, ySlime + 30);
                     glEnd();
                     break;
                 }
@@ -160,7 +204,7 @@ public class Window{
                 }
                 g++;
 
-                xPlayer += 1;
+                xPlayer += 2;
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 switch (i2){
@@ -184,7 +228,7 @@ public class Window{
                 }
                 g++;
 
-                xPlayer -= 1;
+                xPlayer -= 2;
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                 switch (i3){
@@ -208,7 +252,7 @@ public class Window{
                 }
                 g++;
 
-                yPlayer -= 1;
+                yPlayer -= 2;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
                 switch (i4){
@@ -232,7 +276,7 @@ public class Window{
                 }
                 g++;
 
-                yPlayer += 1;
+                yPlayer += 2;
             }
             glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
             glTexCoord2d(0, 0);

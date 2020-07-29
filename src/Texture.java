@@ -39,9 +39,8 @@ public class Texture {
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
             STBImage.stbi_image_free(buffer);
             return id;
-        }catch (Exception e){
-            e.printStackTrace();
         }
+        catch (Exception e) { e.printStackTrace(); }
         return 0;
     }
 }
