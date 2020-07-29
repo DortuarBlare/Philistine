@@ -13,7 +13,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window{
     private long window;
     private int x = 50, y = 50, x1 = 100, y1 = 100;
-    int idBox, idPlayerStand, idPlayerRight, idPlayerLeft, idPlayerUp, idPlayerDown;
+    int idBox, idPlayerStand, idPlayerRight, idPlayerLeft, idPlayerUp, idPlayerDown, idBackground;
 
     public void run(){
         System.out.println("Start");
@@ -67,6 +67,7 @@ public class Window{
         glBlendFunc(GL_SRC_ALPHA,GL_ONE);   // Добавляет прозрачность
         glEnable(GL_BLEND);
         idBox = Texture.loadTexture("box");
+        idBackground = Texture.loadTexture("background");
         idPlayerStand = Texture.loadTexture("player_stand");
         idPlayerRight = Texture.loadTexture("player_right");
         idPlayerLeft = Texture.loadTexture("player_left");
@@ -75,10 +76,22 @@ public class Window{
     }
 
     private void loop(){
-        glClearColor(0.3f, 0.1f, 0.1f, 0.0f);
 
         while (!glfwWindowShouldClose(window)){
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glBindTexture(GL_TEXTURE_2D, idBackground);
+            glBegin(GL_QUADS);
+            glTexCoord2d(0, 0);
+            glVertex2f(0, 0);
+            glTexCoord2d(1, 0);
+            glVertex2f(640, 0);
+            glTexCoord2d(1, 1);
+            glVertex2f(640, 480);
+            glTexCoord2d(0, 1);
+            glVertex2f(0, 480);
+            glEnd();
+
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
                 glBindTexture(GL_TEXTURE_2D, idPlayerRight);
