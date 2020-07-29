@@ -113,12 +113,12 @@ public class Window{
                 }
 
             }
-            if (xPlayer > 640) {
-                xPlayer = 5;
+            if (xPlayer > 630 && (yPlayer > 280 && yPlayer < 420)) {
+                xPlayer = 10;
                 level = "Castle";
             }
-            else if (xPlayer < 0) {
-                xPlayer = 635;
+            else if (xPlayer < 5 && (yPlayer > 280 && yPlayer < 420)) {
+                xPlayer = 625;
                 level = "Village";
             }
 
