@@ -80,6 +80,9 @@ public class Window{
     }
 
     private void loop() {
+        int i = 0;
+        int g = 0;
+        boolean mov = false;
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -138,7 +141,28 @@ public class Window{
                 yPlayer -= 1;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
-                glBindTexture(GL_TEXTURE_2D, idPlayerDown);
+                switch (i){
+                    case 0:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown);
+                        break;
+                    case 1:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
+                        break;
+                    case 2:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown);
+                        break;
+                    case 3:
+                        i = 0;
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
+                        break;
+                }
+                if (g == 8){
+                    i++;
+                    g = 0;
+                }
+                g++;
+
+
 
                 yPlayer += 1;
             }
