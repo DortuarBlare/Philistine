@@ -44,5 +44,4 @@ public class Texture {
         }
         return 0;
     }
-
 }

@@ -59,12 +59,12 @@ public class Window{
         glfwShowWindow(window);
 
         GL.createCapabilities();
-        glMatrixMode(GL_PROJECTION);
+        glMatrixMode(GL_PROJECTION);    // Выставление камеры
         glLoadIdentity();
-        glOrtho(0, 640, 480, 0, 1, -1);
+        glOrtho(0, 640, 480, 0, 1, -1);    // Камера на место окна
         glMatrixMode(GL_MODELVIEW);
         glEnable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE);   // Добавляет прозрачность
         glEnable(GL_BLEND);
         idBox = Texture.loadTexture("box");
         idPlayerStand = Texture.loadTexture("player_stand");
@@ -76,7 +76,7 @@ public class Window{
 
     private void loop(){
 
-        glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+        glClearColor(0.3f, 0.1f, 0.1f, 0.0f);
         String isMovement;
 
         while (!glfwWindowShouldClose(window)){
@@ -117,7 +117,7 @@ public class Window{
                     break;
             }
 
-            glBegin(GL_QUADS);
+            glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
             glTexCoord2d(0, 0);
             glVertex2f(x1, y1);
             glTexCoord2d(1, 0);
