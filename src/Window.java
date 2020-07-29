@@ -12,8 +12,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window{
     private long window;
-    private int x = 50, y = 50, xPlayer = 100, yPlayer = 100;
-    int idBox, idPlayerStand, idPlayerRight, idPlayerLeft, idPlayerUp, idPlayerDown, idPlayerDown2, idPlayerDown3, idBackground, idBackground2;
+    private int xPlayer = 100, yPlayer = 100;
+    int idBox, idPlayerStand, idBackground, idBackground2;
+    int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
+    int idPlayerRight, idPlayerRight2, idPlayerRight3;
+    int idPlayerUp, idPlayerUp2, idPlayerUp3;
+    int idPlayerDown, idPlayerDown2, idPlayerDown3;
     String level = "Village";
 
     public void run(){
@@ -128,16 +132,76 @@ public class Window{
 
 
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
-            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
-                glBindTexture(GL_TEXTURE_2D, idPlayerRight);
+            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+                switch (i){
+                    case 0:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight);
+                        break;
+                    case 1:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
+                        break;
+                    case 2:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight2);
+                        break;
+                    case 3:
+                        i = 0;
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
+                        break;
+                }
+                if (g == 8){
+                    i++;
+                    g = 0;
+                }
+                g++;
+
                 xPlayer += 1;
             }
-            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
-                glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
+            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+                switch (i){
+                    case 0:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
+                        break;
+                    case 1:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
+                        break;
+                    case 2:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft2);
+                        break;
+                    case 3:
+                        i = 0;
+                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
+                        break;
+                }
+                if (g == 8){
+                    i++;
+                    g = 0;
+                }
+                g++;
+
                 xPlayer -= 1;
             }
-            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
-                glBindTexture(GL_TEXTURE_2D, idPlayerUp);
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+                switch (i){
+                    case 0:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerUp);
+                        break;
+                    case 1:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
+                        break;
+                    case 2:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerUp2);
+                        break;
+                    case 3:
+                        i = 0;
+                        glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
+                        break;
+                }
+                if (g == 8){
+                    i++;
+                    g = 0;
+                }
+                g++;
+
                 yPlayer -= 1;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
@@ -146,10 +210,10 @@ public class Window{
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown);
                         break;
                     case 1:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
                         break;
                     case 2:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerDown);
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
                         break;
                     case 3:
                         i = 0;
@@ -161,8 +225,6 @@ public class Window{
                     g = 0;
                 }
                 g++;
-
-
 
                 yPlayer += 1;
             }
