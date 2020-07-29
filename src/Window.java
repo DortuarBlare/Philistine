@@ -75,46 +75,26 @@ public class Window{
     }
 
     private void loop(){
-
         glClearColor(0.3f, 0.1f, 0.1f, 0.0f);
-        String isMovement;
 
         while (!glfwWindowShouldClose(window)){
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            isMovement = "stand";
+            glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
-                isMovement = "right";
+                glBindTexture(GL_TEXTURE_2D, idPlayerRight);
                 x1+=1;
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
-                isMovement = "left";
+                glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
                 x1-=1;
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
-                isMovement = "up";
+                glBindTexture(GL_TEXTURE_2D, idPlayerUp);
                 y1-=1;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
-                isMovement = "down";
+                glBindTexture(GL_TEXTURE_2D, idPlayerDown);
                 y1+=1;
-            }
-
-            switch (isMovement){
-                case "stand":
-                    glBindTexture(GL_TEXTURE_2D, idPlayerStand);
-                    break;
-                case "right":
-                    glBindTexture(GL_TEXTURE_2D, idPlayerRight);
-                    break;
-                case "left":
-                    glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
-                    break;
-                case "up":
-                    glBindTexture(GL_TEXTURE_2D, idPlayerUp);
-                    break;
-                case "down":
-                    glBindTexture(GL_TEXTURE_2D, idPlayerDown);
-                    break;
             }
 
             glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
