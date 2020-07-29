@@ -76,8 +76,14 @@ public class Window{
         idBackground2 = Texture.loadTexture("background2");
         idPlayerStand = Texture.loadTexture("player_stand");
         idPlayerRight = Texture.loadTexture("player_right");
+        idPlayerRight2 = Texture.loadTexture("player_right2");
+        idPlayerRight3 = Texture.loadTexture("player_right3");
         idPlayerLeft = Texture.loadTexture("player_left");
+        idPlayerLeft2 = Texture.loadTexture("player_left2");
+        idPlayerLeft3 = Texture.loadTexture("player_left3");
         idPlayerUp = Texture.loadTexture("player_up");
+        idPlayerUp2 = Texture.loadTexture("player_up2");
+        idPlayerUp3 = Texture.loadTexture("player_up3");
         idPlayerDown = Texture.loadTexture("player_down");
         idPlayerDown2 = Texture.loadTexture("player_down2");
         idPlayerDown3 = Texture.loadTexture("player_down3");
