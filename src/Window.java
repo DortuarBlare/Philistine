@@ -14,7 +14,7 @@ public class Window implements Runnable{
     private Thread thread;
     boolean running = false;
     private long window;
-    private int xPlayer = 100, yPlayer = 100, xSlime = 50, ySlime = 50;
+    private int xPlayer = 200, yPlayer = 200, xSlime = 150, ySlime = 150;
     int idBox, idPlayerStand, idBackground, idBackground2;
     int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
     int idPlayerRight, idPlayerRight2, idPlayerRight3;
@@ -58,7 +58,7 @@ public class Window implements Runnable{
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) ->{
+        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
                 running = false;
@@ -107,13 +107,13 @@ public class Window implements Runnable{
     private void loop() {
         int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
         int g = 0, g2 = 0;
-        boolean mov = false;
+
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             switch (level) {
                 case "Village": {
-                    glBindTexture(GL_TEXTURE_2D, idBackground);
+                    glBindTexture(GL_TEXTURE_2D, idBackground); // Фон первого уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
                     glVertex2f(0, 0);
@@ -125,7 +125,7 @@ public class Window implements Runnable{
                     glVertex2f(0, 480);
                     glEnd();
 
-                    glBindTexture(GL_TEXTURE_2D, idSlime);
+                    glBindTexture(GL_TEXTURE_2D, idSlime);  // Текстура слайма
                     switch (i5){
                         case 0:
                             glBindTexture(GL_TEXTURE_2D, idSlime);
@@ -133,14 +133,10 @@ public class Window implements Runnable{
                         case 1:
                             glBindTexture(GL_TEXTURE_2D, idSlime2);
                             break;
-                    }
+                    }   // Анимация слайма
                     if (g2 == 8) {
-                        if (i5 == 0){
-                            i5++;
-                        }
-                        else {
-                            i5--;
-                        }
+                        if (i5 == 0) { i5++; }
+                        else { i5--; }
                         g2 = 0;
                     }
                     g2++;
@@ -160,7 +156,7 @@ public class Window implements Runnable{
                     break;
                 }
                 case "Castle": {
-                    glBindTexture(GL_TEXTURE_2D, idBackground2);
+                    glBindTexture(GL_TEXTURE_2D, idBackground2); // Фон второго уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
                     glVertex2f(0, 0);
@@ -175,15 +171,19 @@ public class Window implements Runnable{
                 }
 
             }
-            if (xPlayer > 630 && (yPlayer > 280 && yPlayer < 420)) {
+            if (xPlayer > 630 && (yPlayer > 280 && yPlayer < 420) && level == "Village") { // Переход с первого уровня
                 xPlayer = 10;
                 level = "Castle";
             }
-            else if (xPlayer < 5 && (yPlayer > 280 && yPlayer < 420)) {
+            else if (xPlayer < 5 && (yPlayer > 280 && yPlayer < 420) && level == "Castle") { // Переход со второго уровня
                 xPlayer = 625;
                 level = "Village";
             }
 
+            if (xPlayer < 60 && level == "Village") xPlayer += 5;
+            if (xPlayer > 410 && yPlayer < 270 && level == "Village") xPlayer -= 5;
+            if (yPlayer < 135 && level == "Village") yPlayer += 5;
+            if (yPlayer > 385 && level == "Village") yPlayer -= 5;
 
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -282,7 +282,7 @@ public class Window implements Runnable{
 
                 yPlayer += 2;
             }
-            glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
+            glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура персонажа
             glTexCoord2d(0, 0);
             glVertex2f(xPlayer, yPlayer);
             glTexCoord2d(1, 0);
@@ -297,5 +297,4 @@ public class Window implements Runnable{
             glfwPollEvents();
         }
     }
-
 }
