@@ -193,10 +193,10 @@ public class Window implements Runnable {
                 level = "FirstLevel";
             }
 
-            if (xPlayer < 60 && level == "FirstLevel") xPlayer += 5; // Столкновение со стеной
-            if (xPlayer > 410 && yPlayer < 270 && level == "FirstLevel") xPlayer -= 5;
-            if (yPlayer < 135 && level == "FirstLevel") yPlayer += 5;
-            if (yPlayer > 385 && level == "FirstLevel") yPlayer -= 5;
+            if (xPlayer < 60 && level == "FirstLevel") xPlayer += 2; // Столкновение со стеной
+            if (xPlayer > 410 && yPlayer < 270 && level == "FirstLevel") xPlayer -= 2;
+            if (yPlayer < 135 && level == "FirstLevel") yPlayer += 2;
+            if (yPlayer > 385 && level == "FirstLevel") yPlayer -= 2;
 
             switch (playerHealth) { // Отрисовка хелсбара в зависимости от единиц хп
                 case 0: {
@@ -242,7 +242,7 @@ public class Window implements Runnable {
 
             playerBox.min[0] = xPlayer;
             playerBox.min[1] = yPlayer;
-            playerBox.max[0] = xPlayer + 20;
+            playerBox.max[0] = xPlayer + 25;
             playerBox.max[1] = yPlayer + 50;
             slimeBox.min[0] = xSlime;
             slimeBox.min[1] = ySlime;
