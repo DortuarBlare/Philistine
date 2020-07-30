@@ -13,15 +13,18 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window implements Runnable {
     private Thread thread;
     boolean running = false;
+    boolean dead = false;
     private long window;
-    private int xPlayer = 200, yPlayer = 200, xSlime = 150, ySlime = 150;
+    private int xPlayer = 200, yPlayer = 200, xSlime = 250, ySlime = 250;
     int idBox, idPlayerStand, idBackground, idBackground2;
     int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
     int idPlayerRight, idPlayerRight2, idPlayerRight3;
     int idPlayerUp, idPlayerUp2, idPlayerUp3;
     int idPlayerDown, idPlayerDown2, idPlayerDown3;
     int idSlime, idSlime2;
-    String level = "Village";
+    int[] idHealthbar;
+    int playerHealth = 6;
+    String level = "FirstLevel";
 
     public void start() {
         thread = new Thread(this, "Game");
@@ -30,7 +33,7 @@ public class Window implements Runnable {
     }
 
     public void run() {
-        while(running) {
+        while (running) {
             System.out.println("Start");
 
             init();
@@ -83,6 +86,8 @@ public class Window implements Runnable {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
         glEnable(GL_BLEND);
 
+        idHealthbar = new int[7];
+
         // Единичная загрузка всех текстур
         idBox = Texture.loadTexture("box");
         idBackground = Texture.loadTexture("background");
@@ -102,6 +107,13 @@ public class Window implements Runnable {
         idPlayerDown3 = Texture.loadTexture("player_down3");
         idSlime = Texture.loadTexture("slime");
         idSlime2 = Texture.loadTexture("slime2");
+        idHealthbar[0] = Texture.loadTexture("You dead");
+        idHealthbar[1] = Texture.loadTexture("1hp");
+        idHealthbar[2] = Texture.loadTexture("2hp");
+        idHealthbar[3] = Texture.loadTexture("3hp");
+        idHealthbar[4] = Texture.loadTexture("4hp");
+        idHealthbar[5] = Texture.loadTexture("5hp");
+        idHealthbar[6] = Texture.loadTexture("6hp");
     }
 
     private void loop() {
@@ -112,7 +124,7 @@ public class Window implements Runnable {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             switch (level) {
-                case "Village": {
+                case "FirstLevel": {
                     glBindTexture(GL_TEXTURE_2D, idBackground); // Фон первого уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
@@ -140,8 +152,8 @@ public class Window implements Runnable {
                         g2 = 0;
                     }
                     g2++;
-                    xSlime += Math.random() * 2;
-                    ySlime += Math.random() * 2;
+//                    xSlime += Math.random() * 2;
+//                    ySlime += Math.random() * 2;
 
                     glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
                     glTexCoord2d(0, 0);
@@ -155,7 +167,7 @@ public class Window implements Runnable {
                     glEnd();
                     break;
                 }
-                case "Castle": {
+                case "SecondLevel": {
                     glBindTexture(GL_TEXTURE_2D, idBackground2); // Фон второго уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
@@ -169,21 +181,67 @@ public class Window implements Runnable {
                     glEnd();
                     break;
                 }
-
             }
-            if (xPlayer > 630 && (yPlayer > 280 && yPlayer < 420) && level == "Village") { // Переход с первого уровня
+            if (xPlayer > 630 && (yPlayer > 280 && yPlayer < 420) && level == "FirstLevel") { // Переход с первого уровня
                 xPlayer = 10;
-                level = "Castle";
+                level = "SecondLevel";
             }
-            else if (xPlayer < 5 && (yPlayer > 280 && yPlayer < 420) && level == "Castle") { // Переход со второго уровня
+            else if (xPlayer < 5 && (yPlayer > 280 && yPlayer < 420) && level == "SecondLevel") { // Переход со второго уровня
                 xPlayer = 625;
-                level = "Village";
+                level = "FirstLevel";
             }
 
-            if (xPlayer < 60 && level == "Village") xPlayer += 5;
-            if (xPlayer > 410 && yPlayer < 270 && level == "Village") xPlayer -= 5;
-            if (yPlayer < 135 && level == "Village") yPlayer += 5;
-            if (yPlayer > 385 && level == "Village") yPlayer -= 5;
+            if (xPlayer < 60 && level == "FirstLevel") xPlayer += 5;
+            if (xPlayer > 410 && yPlayer < 270 && level == "FirstLevel") xPlayer -= 5;
+            if (yPlayer < 135 && level == "FirstLevel") yPlayer += 5;
+            if (yPlayer > 385 && level == "FirstLevel") yPlayer -= 5;
+
+            switch (playerHealth) { // Отрисовка хелсбара в зависимости от единиц хп
+                case 0: {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[0]);
+                    dead = true;
+                    break;
+                }
+                case 1: {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[1]); // Текстура хелсбара
+                    break;
+                }
+                case 2: {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[2]);
+                    break;
+                }
+                case 3: {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[3]);
+                    break;
+                }
+                case 4: {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[4]);
+                    break;
+                }
+                case 5: {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[5]);
+                    break;
+                }
+                case 6: {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[6]);
+                    break;
+                }
+            }
+            glBegin(GL_QUADS);
+            glTexCoord2d(0, 0);
+            glVertex2f(0, 0);
+            glTexCoord2d(1, 0);
+            glVertex2f(100, 0);
+            glTexCoord2d(1, 1);
+            glVertex2f(100, 20);
+            glTexCoord2d(0, 1);
+            glVertex2f(0, 20);
+            glEnd();
+
+            if (xPlayer == xSlime && !dead) {
+                playerHealth--;
+                xPlayer -= 100;
+            }
 
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -282,7 +340,7 @@ public class Window implements Runnable {
 
                 yPlayer += 2;
             }
-            glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура персонажа
+            glBegin(GL_QUADS);
             glTexCoord2d(0, 0);
             glVertex2f(xPlayer, yPlayer);
             glTexCoord2d(1, 0);
