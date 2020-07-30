@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class Window implements Runnable{
+public class Window implements Runnable {
     private Thread thread;
     boolean running = false;
     private long window;
@@ -47,25 +47,23 @@ public class Window implements Runnable{
     private void init(){
         GLFWErrorCallback.createPrint(System.err).set();
 
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
+        if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        window = glfwCreateWindow(640, 480, "Window", NULL, NULL);
-        if (window == NULL)
-            throw new RuntimeException("Failed to create the GLFW window");
+        window = glfwCreateWindow(640, 480, "Philistine", NULL, NULL);
+        if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> { // Клашива ESC на выход(закрытие приложения)
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
                 running = false;
             }
         });
 
-        try (MemoryStack stack = stackPush()){
+        try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
             IntBuffer pHeight = stack.mallocInt(1);
             glfwGetWindowSize(window, pWidth, pHeight);
@@ -76,14 +74,16 @@ public class Window implements Runnable{
         glfwSwapInterval(1);
         glfwShowWindow(window);
 
-        GL.createCapabilities();
-        glMatrixMode(GL_PROJECTION);    // Выставление камеры
-        glLoadIdentity();
-        glOrtho(0, 640, 480, 0, 1, -1);    // Камера на место окна
-        glMatrixMode(GL_MODELVIEW);
+        GL.createCapabilities(); // создает instance для OpenGL в текущем потоке
+        glMatrixMode(GL_PROJECTION); // Выставление камеры
+        glLoadIdentity(); // По видимости ненужная строка(что-то с единичной матрицей)
+        glOrtho(0, 640, 480, 0, 1, -1); // Камера на место окна
+        glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
         glEnable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   // Добавляет прозрачность
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
         glEnable(GL_BLEND);
+
+        // Единичная загрузка всех текстур
         idBox = Texture.loadTexture("box");
         idBackground = Texture.loadTexture("background");
         idBackground2 = Texture.loadTexture("background2");
@@ -258,7 +258,7 @@ public class Window implements Runnable{
 
                 yPlayer -= 2;
             }
-            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                 switch (i4){
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown);

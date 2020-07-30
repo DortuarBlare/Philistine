@@ -12,8 +12,7 @@ public class Texture {
     private static HashMap<String, Integer> idMap = new HashMap<String, Integer>();
 
     public static int loadTexture(String resourceName){
-        if (idMap.containsKey(resourceName))
-            return idMap.get(resourceName);
+        if (idMap.containsKey(resourceName)) return idMap.get(resourceName);
 
         int width, height;
         ByteBuffer buffer;
@@ -26,8 +25,7 @@ public class Texture {
             File file = new File("res/" + resourceName  + ".png");
             String filePath = file.getAbsolutePath();
             buffer = STBImage.stbi_load(filePath, w, h, channels, 4);
-            if (buffer == null)
-                throw new Exception("Can't load file " + resourceName + " " + STBImage.stbi_failure_reason());
+            if (buffer == null) throw new Exception("Can't load file " + resourceName + " " + STBImage.stbi_failure_reason());
             width = w.get();
             height = h.get();
 
