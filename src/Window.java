@@ -16,6 +16,8 @@ public class Window implements Runnable {
     boolean dead = false;
     private long window;
     private int xPlayer = 200, yPlayer = 200, xSlime = 250, ySlime = 250;
+    AABB playerBox = new AABB();
+    AABB slimeBox = new AABB();
     int idBox, idPlayerStand, idBackground, idBackground2;
     int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
     int idPlayerRight, idPlayerRight2, idPlayerRight3;
@@ -191,7 +193,7 @@ public class Window implements Runnable {
                 level = "FirstLevel";
             }
 
-            if (xPlayer < 60 && level == "FirstLevel") xPlayer += 5;
+            if (xPlayer < 60 && level == "FirstLevel") xPlayer += 5; // Столкновение со стеной
             if (xPlayer > 410 && yPlayer < 270 && level == "FirstLevel") xPlayer -= 5;
             if (yPlayer < 135 && level == "FirstLevel") yPlayer += 5;
             if (yPlayer > 385 && level == "FirstLevel") yPlayer -= 5;
@@ -238,7 +240,16 @@ public class Window implements Runnable {
             glVertex2f(0, 20);
             glEnd();
 
-            if (xPlayer == xSlime && !dead) {
+            playerBox.min[0] = xPlayer;
+            playerBox.min[1] = yPlayer;
+            playerBox.max[0] = xPlayer + 20;
+            playerBox.max[1] = yPlayer + 50;
+            slimeBox.min[0] = xSlime;
+            slimeBox.min[1] = ySlime;
+            slimeBox.max[0] = xSlime + 14;
+            slimeBox.max[1] = ySlime + 14;
+
+            if (AABB.AABBvsAABB(playerBox, slimeBox) && !dead) {
                 playerHealth--;
                 xPlayer -= 100;
             }
