@@ -131,12 +131,16 @@ public class Window implements Runnable{
                             glBindTexture(GL_TEXTURE_2D, idSlime);
                             break;
                         case 1:
-                            i5 = 0;
                             glBindTexture(GL_TEXTURE_2D, idSlime2);
                             break;
                     }
-                    if (g2 == 12) {
-                        i5++;
+                    if (g2 == 8) {
+                        if (i5 == 0){
+                            i5++;
+                        }
+                        else {
+                            i5--;
+                        }
                         g2 = 0;
                     }
                     g2++;
