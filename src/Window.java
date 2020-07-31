@@ -18,7 +18,7 @@ public class Window implements Runnable {
     private int xPlayer = 200, yPlayer = 200, xSlime = 250, ySlime = 250;
     AABB playerBox = new AABB();
     AABB slimeBox = new AABB();
-    int idBox, idPlayerStand, idBackground, idBackground2;
+    int idBox, idPlayerStand, idLevel0, idLevel1;
     int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
     int idPlayerRight, idPlayerRight2, idPlayerRight3;
     int idPlayerUp, idPlayerUp2, idPlayerUp3;
@@ -92,8 +92,8 @@ public class Window implements Runnable {
 
         // Единичная загрузка всех текстур
         idBox = Texture.loadTexture("box");
-        idBackground = Texture.loadTexture("background");
-        idBackground2 = Texture.loadTexture("background2");
+        idLevel0 = Texture.loadTexture("level0");
+        idLevel1 = Texture.loadTexture("level1");
         idPlayerStand = Texture.loadTexture("player_stand");
         idPlayerRight = Texture.loadTexture("player_right");
         idPlayerRight2 = Texture.loadTexture("player_right2");
@@ -127,7 +127,7 @@ public class Window implements Runnable {
 
             switch (level) {
                 case "FirstLevel": {
-                    glBindTexture(GL_TEXTURE_2D, idBackground); // Фон первого уровня
+                    glBindTexture(GL_TEXTURE_2D, idLevel0); // Фон первого уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
                     glVertex2f(0, 0);
@@ -170,7 +170,7 @@ public class Window implements Runnable {
                     break;
                 }
                 case "SecondLevel": {
-                    glBindTexture(GL_TEXTURE_2D, idBackground2); // Фон второго уровня
+                    glBindTexture(GL_TEXTURE_2D, idLevel1); // Фон второго уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
                     glVertex2f(0, 0);
@@ -348,7 +348,6 @@ public class Window implements Runnable {
                     g = 0;
                 }
                 g++;
-
                 yPlayer += 2;
             }
             glBegin(GL_QUADS);
