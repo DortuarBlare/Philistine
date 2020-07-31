@@ -25,7 +25,7 @@ public class Window implements Runnable {
     int idSlime, idSlime2;
     Player player = new Player(250, 250, 2, 100, 0, 1);
     Slime slime = new Slime(300, 300, 2, 5, 0, 10);
-    AABB wall0, wall1, wall2, wall3, wall4, entranceToFirstLevel, entranceToSecondLevel;
+    AABB wall0, wall1, wall2, wall3, wall4, wall5, wall6,entranceToFirstLevel, entranceToSecondLevel;
     int[] idHealthbar;
     String level = "FirstLevel";
 
@@ -87,6 +87,9 @@ public class Window implements Runnable {
         wall2 = new AABB();
         wall3 = new AABB();
         wall4 = new AABB();
+        wall5 = new AABB();
+        wall6 = new AABB();
+
         entranceToSecondLevel = new AABB();
         entranceToFirstLevel = new AABB();
 
@@ -127,61 +130,10 @@ public class Window implements Runnable {
             switch (level) {
                 case "FirstLevel": {
                     //Пытаюсь стену сделать
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(60, 60);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(455, 60);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(455,185);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(60, 185);
-                    glEnd();
                     wall0.update(60, 60, 455, 130);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(0, 189);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(65, 189);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(65,456);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(0, 456);
-                    glEnd();
                     wall1.update(0, 189, 65, 456);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(60, 453);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(640, 453);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(640,480);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(60, 480);
-                    glEnd();
                     wall2.update(60, 451, 640, 480);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(449, 312);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(640, 312);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(640,316);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(449, 316);
-                    glEnd();
                     wall3.update(451, 312, 640, 261);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(449, 188);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(451, 188);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(451,315);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(449, 315);
-                    glEnd();
                     wall4.update(449, 188, 451, 259);
                     //Заканчиваю пытаться
                     glBindTexture(GL_TEXTURE_2D, idLevel0); // Фон первого уровня
@@ -237,9 +189,196 @@ public class Window implements Runnable {
                     glVertex2f(610, 445);
                     glEnd();
                     entranceToSecondLevel.update(610, 315, 640, 445);
+
+                    //движение
+                    glBindTexture(GL_TEXTURE_2D, idPlayerStand);
+                    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+                        switch (i1){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight2);
+                                break;
+                            case 3:
+                                i1 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
+                                break;
+                        }
+                        if (g == 8){
+                            i1++;
+                            g = 0;
+                        }
+                        g++;
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall4))  player.setX(player.getX() + 2);
+                    }
+                    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+                        switch (i2){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft2);
+                                break;
+                            case 3:
+                                i2 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
+                                break;
+                        }
+                        if (g == 8){
+                            i2++;
+                            g = 0;
+                        }
+                        g++;
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall1))  player.setX(player.getX() - 2);
+                    }
+                    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+                        switch (i3){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp2);
+                                break;
+                            case 3:
+                                i3 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
+                                break;
+                        }
+                        if (g == 8) {
+                            i3++;
+                            g = 0;
+                        }
+                        g++;
+
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall3)) player.setY(player.getY() - 2);
+                    }
+                    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+                        switch (i4){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
+                                break;
+                            case 3:
+                                i4 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
+                                break;
+                        }
+                        if (g == 8){
+                            i4++;
+                            g = 0;
+                        }
+                        g++;
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall2))  player.setY(player.getY() + 2);
+                    }
+
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(player.getX(), player.getY());
+                    glTexCoord2d(1, 0);
+                    glVertex2f(player.getX() + 42, player.getY());
+                    glTexCoord2d(1, 1);
+                    glVertex2f(player.getX() + 42, player.getY() + 64);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(player.getX(), player.getY() + 64);
+                    glEnd();
                     break;
                 }
                 case "SecondLevel": {
+                    //Пытаюсь стену сделать
+                    glBindTexture(GL_TEXTURE_2D, idBox);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(0, 250);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(128, 250);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(128,252);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(0, 252);
+                    glEnd();
+                    wall0.update(0, 190, 126, 192);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(126, 185);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(128, 185);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(128,252);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(126, 252);
+                    glEnd();
+                    wall1.update(126, 185, 128, 190);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(128, 186);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(580, 186);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(580,188);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(128, 188);
+                    glEnd();
+                    wall2.update(128, 186, 580, 128);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(577, 188);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(580, 188);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(580,452);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(577, 452);
+                    glEnd();
+                    wall3.update(577, 188, 580, 452);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(128, 452);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(580, 452);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(580,458);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(128, 458);
+                    glEnd();
+                    wall4.update(128, 452, 580, 458);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(126, 385);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(128, 385);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(128,453);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(126, 453);
+                    glEnd();
+                    wall5.update(126, 385, 128, 453);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(0, 384);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(128, 384);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(128,388);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(0, 388);
+                    glEnd();
+                    wall6.update(0, 384, 126, 388);
+                    //Заканчиваю пытаться
                     glBindTexture(GL_TEXTURE_2D, idLevel1); // Фон второго уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
@@ -264,6 +403,113 @@ public class Window implements Runnable {
                     glVertex2f(0, 380);
                     glEnd();
                     entranceToFirstLevel.update(0, 250, 30, 380);
+
+                    //движение
+                    glBindTexture(GL_TEXTURE_2D, idPlayerStand);
+                    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+                        switch (i1){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight2);
+                                break;
+                            case 3:
+                                i1 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
+                                break;
+                        }
+                        if (g == 8){
+                            i1++;
+                            g = 0;
+                        }
+                        g++;
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall3))  player.setX(player.getX() + 2);
+                    }
+                    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+                        switch (i2){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft2);
+                                break;
+                            case 3:
+                                i2 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
+                                break;
+                        }
+                        if (g == 8){
+                            i2++;
+                            g = 0;
+                        }
+                        g++;
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall1) && !AABB.AABBvsAABB(player.getHitbox(), wall5))  player.setX(player.getX() - 2);
+                    }
+                    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+                        switch (i3){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp2);
+                                break;
+                            case 3:
+                                i3 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
+                                break;
+                        }
+                        if (g == 8) {
+                            i3++;
+                            g = 0;
+                        }
+                        g++;
+
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall2)) player.setY(player.getY() - 2);
+                    }
+                    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+                        switch (i4){
+                            case 0:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown);
+                                break;
+                            case 1:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
+                                break;
+                            case 3:
+                                i4 = 0;
+                                glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
+                                break;
+                        }
+                        if (g == 8){
+                            i4++;
+                            g = 0;
+                        }
+                        g++;
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall4) && !AABB.AABBvsAABB(player.getHitbox(), wall6))  player.setY(player.getY() + 2);
+                    }
+
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(player.getX(), player.getY());
+                    glTexCoord2d(1, 0);
+                    glVertex2f(player.getX() + 42, player.getY());
+                    glTexCoord2d(1, 1);
+                    glVertex2f(player.getX() + 42, player.getY() + 64);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(player.getX(), player.getY() + 64);
+                    glEnd();
                     break;
                 }
             }
@@ -309,111 +555,6 @@ public class Window implements Runnable {
                 player.setX(565);
                 player.setY(340);
             }
-
-            glBindTexture(GL_TEXTURE_2D, idPlayerStand);
-            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-                switch (i1){
-                    case 0:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerRight);
-                        break;
-                    case 1:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
-                        break;
-                    case 2:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerRight2);
-                        break;
-                    case 3:
-                        i1 = 0;
-                        glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
-                        break;
-                }
-                if (g == 8){
-                    i1++;
-                    g = 0;
-                }
-                g++;
-                if (!AABB.AABBvsAABB(player.getHitbox(), wall4))  player.setX(player.getX() + 2);
-            }
-            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-                switch (i2){
-                    case 0:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft);
-                        break;
-                    case 1:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
-                        break;
-                    case 2:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft2);
-                        break;
-                    case 3:
-                        i2 = 0;
-                        glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
-                        break;
-                }
-                if (g == 8){
-                    i2++;
-                    g = 0;
-                }
-                g++;
-                if (!AABB.AABBvsAABB(player.getHitbox(), wall1))  player.setX(player.getX() - 2);
-            }
-            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-                switch (i3){
-                    case 0:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerUp);
-                        break;
-                    case 1:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
-                        break;
-                    case 2:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerUp2);
-                        break;
-                    case 3:
-                        i3 = 0;
-                        glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
-                        break;
-                }
-                if (g == 8) {
-                    i3++;
-                    g = 0;
-                }
-                g++;
-
-                if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall3)) player.setY(player.getY() - 2);
-            }
-            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-                switch (i4){
-                    case 0:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerDown);
-                        break;
-                    case 1:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
-                        break;
-                    case 2:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
-                        break;
-                    case 3:
-                        i4 = 0;
-                        glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
-                        break;
-                }
-                if (g == 8){
-                    i4++;
-                    g = 0;
-                }
-                g++;
-                if (!AABB.AABBvsAABB(player.getHitbox(), wall2))  player.setY(player.getY() + 2);
-            }
-            glBegin(GL_QUADS);
-            glTexCoord2d(0, 0);
-            glVertex2f(player.getX(), player.getY());
-            glTexCoord2d(1, 0);
-            glVertex2f(player.getX() + 42, player.getY());
-            glTexCoord2d(1, 1);
-            glVertex2f(player.getX() + 42, player.getY() + 64);
-            glTexCoord2d(0, 1);
-            glVertex2f(player.getX(), player.getY() + 64);
-            glEnd();
 
             glfwSwapBuffers(window);
             glfwPollEvents();
