@@ -25,7 +25,7 @@ public class Window implements Runnable {
     int idSlime, idSlime2;
     Player player = new Player(250, 250, 2, 100, 0, 1);
     Slime slime = new Slime(300, 300, 2, 5, 0, 10);
-    AABB boxBox, entranceToFirstLevel, entranceToSecondLevel;
+    AABB wall0, wall1, wall2, wall3, wall4, entranceToFirstLevel, entranceToSecondLevel;
     int[] idHealthbar;
     String level = "FirstLevel";
 
@@ -82,7 +82,11 @@ public class Window implements Runnable {
         glEnable(GL_BLEND);
 
         idHealthbar = new int[6];
-        boxBox = new AABB();
+        wall0 = new AABB();
+        wall1 = new AABB();
+        wall2 = new AABB();
+        wall3 = new AABB();
+        wall4 = new AABB();
         entranceToSecondLevel = new AABB();
         entranceToFirstLevel = new AABB();
 
@@ -175,7 +179,40 @@ public class Window implements Runnable {
                     glTexCoord2d(0, 1);
                     glVertex2f(60, 185);
                     glEnd();
-                    boxBox.update(60, 60, 455, 130);
+                    wall0.update(60, 60, 455, 130);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(0, 189);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(65, 189);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(65,456);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(0, 456);
+                    glEnd();
+                    wall1.update(0, 189, 65, 456);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(60, 453);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(640, 453);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(640,480);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(60, 480);
+                    glEnd();
+                    wall2.update(60, 453, 640, 480);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(448, 188);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(640, 188);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(640,316);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(448, 316);
+                    glEnd();
+                    wall3.update(448, 188, 640, 261);
                     //Заканчиваю пытаться
 
                     glBindTexture(GL_TEXTURE_2D, idBox); // Переход на второй уровень
@@ -285,8 +322,7 @@ public class Window implements Runnable {
                     g = 0;
                 }
                 g++;
-
-                player.setX(player.getX() + 2);
+                if (!AABB.AABBvsAABB(player.getHitbox(), wall3))  player.setX(player.getX() + 2);
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 switch (i2){
@@ -309,8 +345,7 @@ public class Window implements Runnable {
                     g = 0;
                 }
                 g++;
-
-                player.setX(player.getX() - 2);
+                if (!AABB.AABBvsAABB(player.getHitbox(), wall1))  player.setX(player.getX() - 2);
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                 switch (i3){
@@ -334,7 +369,7 @@ public class Window implements Runnable {
                 }
                 g++;
 
-                if (!AABB.AABBvsAABB(player.getHitbox(), boxBox)) player.setY(player.getY() - 2);
+                if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall3)) player.setY(player.getY() - 2);
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                 switch (i4){
@@ -357,7 +392,7 @@ public class Window implements Runnable {
                     g = 0;
                 }
                 g++;
-                player.setY(player.getY() + 2);
+                if (!AABB.AABBvsAABB(player.getHitbox(), wall2))  player.setY(player.getY() + 2);
             }
             glBegin(GL_QUADS);
             glTexCoord2d(0, 0);
