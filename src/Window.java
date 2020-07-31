@@ -25,7 +25,7 @@ public class Window implements Runnable {
     int idSlime, idSlime2;
     Player player = new Player(250, 250, 2, 100, 0, 1);
     Slime slime = new Slime(300, 300, 2, 5, 0, 10);
-    AABB boxBox;
+    AABB boxBox, entranceToFirstLevel, entranceToSecondLevel;
     int[] idHealthbar;
     String level = "FirstLevel";
 
@@ -83,6 +83,8 @@ public class Window implements Runnable {
 
         idHealthbar = new int[6];
         boxBox = new AABB();
+        entranceToSecondLevel = new AABB();
+        entranceToFirstLevel = new AABB();
 
         // Единичная загрузка всех текстур
         idBox = Texture.loadTexture("box");
@@ -120,7 +122,6 @@ public class Window implements Runnable {
 
             switch (level) {
                 case "FirstLevel": {
-
                     glBindTexture(GL_TEXTURE_2D, idLevel0); // Фон первого уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
@@ -176,6 +177,19 @@ public class Window implements Runnable {
                     glEnd();
                     boxBox.update(60, 60, 455, 130);
                     //Заканчиваю пытаться
+
+                    glBindTexture(GL_TEXTURE_2D, idBox); // Переход на второй уровень
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(610, 315);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(640, 315);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(640,445);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(610, 445);
+                    glEnd();
+                    entranceToSecondLevel.update(610, 315, 640, 445);
                     break;
                 }
                 case "SecondLevel": {
@@ -190,6 +204,19 @@ public class Window implements Runnable {
                     glTexCoord2d(0, 1);
                     glVertex2f(0, 480);
                     glEnd();
+
+                    glBindTexture(GL_TEXTURE_2D, idBox);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(0, 250);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(30, 250);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(30,380);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(0, 380);
+                    glEnd();
+                    entranceToFirstLevel.update(0, 250, 30, 380);
                     break;
                 }
             }
@@ -220,12 +247,22 @@ public class Window implements Runnable {
             glVertex2f(0, 32);
             glEnd();
 
-            if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead()) {
+            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
+            if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && level == "FirstLevel" && !player.getDead()) {
                 player.setHealth(player.getHealth() - slime.getDamage());
                 player.setX(player.getX() - 100);
             }
+            if(AABB.AABBvsAABB(player.getHitbox(), entranceToSecondLevel) && level == "FirstLevel") {
+                level = "SecondLevel";
+                player.setX(35);
+                player.setY(280);
+            }
+            if(AABB.AABBvsAABB(player.getHitbox(), entranceToFirstLevel) && level == "SecondLevel") {
+                level = "FirstLevel";
+                player.setX(565);
+                player.setY(340);
+            }
 
-            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
                 switch (i1){
