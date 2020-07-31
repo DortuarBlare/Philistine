@@ -126,6 +126,64 @@ public class Window implements Runnable {
 
             switch (level) {
                 case "FirstLevel": {
+                    //Пытаюсь стену сделать
+                    glBindTexture(GL_TEXTURE_2D, idBox);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(60, 60);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(455, 60);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(455,185);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(60, 185);
+                    glEnd();
+                    wall0.update(60, 60, 455, 130);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(0, 189);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(65, 189);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(65,456);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(0, 456);
+                    glEnd();
+                    wall1.update(0, 189, 65, 456);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(60, 453);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(640, 453);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(640,480);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(60, 480);
+                    glEnd();
+                    wall2.update(60, 451, 640, 480);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(449, 312);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(640, 312);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(640,316);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(449, 316);
+                    glEnd();
+                    wall3.update(451, 312, 640, 261);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(449, 188);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(451, 188);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(451,315);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(449, 315);
+                    glEnd();
+                    wall4.update(449, 188, 451, 259);
+                    //Заканчиваю пытаться
                     glBindTexture(GL_TEXTURE_2D, idLevel0); // Фон первого уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
@@ -166,54 +224,6 @@ public class Window implements Runnable {
                     glTexCoord2d(0, 1);
                     glVertex2f(slime.getX(), slime.getY() + 30);
                     glEnd();
-
-                    //Пытаюсь стену сделать
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(60, 60);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(455, 60);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(455,185);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(60, 185);
-                    glEnd();
-                    wall0.update(60, 60, 455, 130);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(0, 189);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(65, 189);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(65,456);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(0, 456);
-                    glEnd();
-                    wall1.update(0, 189, 65, 456);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(60, 453);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(640, 453);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(640,480);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(60, 480);
-                    glEnd();
-                    wall2.update(60, 453, 640, 480);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(448, 188);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(640, 188);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(640,316);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(448, 316);
-                    glEnd();
-                    wall3.update(448, 188, 640, 261);
-                    //Заканчиваю пытаться
 
                     glBindTexture(GL_TEXTURE_2D, idBox); // Переход на второй уровень
                     glBegin(GL_QUADS);
@@ -322,7 +332,7 @@ public class Window implements Runnable {
                     g = 0;
                 }
                 g++;
-                if (!AABB.AABBvsAABB(player.getHitbox(), wall3))  player.setX(player.getX() + 2);
+                if (!AABB.AABBvsAABB(player.getHitbox(), wall4))  player.setX(player.getX() + 2);
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 switch (i2){
