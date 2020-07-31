@@ -18,6 +18,7 @@ public class Window implements Runnable {
     private int xPlayer = 200, yPlayer = 200, xSlime = 250, ySlime = 250;
     AABB playerBox = new AABB();
     AABB slimeBox = new AABB();
+    AABB boxBox = new AABB();
     int idBox, idPlayerStand, idLevel0, idLevel1;
     int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
     int idPlayerRight, idPlayerRight2, idPlayerRight3;
@@ -185,10 +186,12 @@ public class Window implements Runnable {
                 level = "FirstLevel";
             }
 
-            if (xPlayer < 60 && level == "FirstLevel") xPlayer += 2; // Столкновение со стеной
+            /*if (xPlayer < 60 && level == "FirstLevel") xPlayer += 2; // Столкновение со стеной
             if (xPlayer > 410 && yPlayer < 270 && level == "FirstLevel") xPlayer -= 2;
             if (yPlayer < 135 && level == "FirstLevel") yPlayer += 2;
-            if (yPlayer > 385 && level == "FirstLevel") yPlayer -= 2;
+            if (yPlayer > 385 && level == "FirstLevel") yPlayer -= 2;*/
+
+
 
             switch (playerHealth) { // Отрисовка хелсбара в зависимости от единиц хп
                 case 0: {
@@ -234,8 +237,8 @@ public class Window implements Runnable {
 
             playerBox.min[0] = xPlayer;
             playerBox.min[1] = yPlayer;
-            playerBox.max[0] = xPlayer + 25;
-            playerBox.max[1] = yPlayer + 50;
+            playerBox.max[0] = xPlayer + 42;
+            playerBox.max[1] = yPlayer + 64;
             slimeBox.min[0] = xSlime;
             slimeBox.min[1] = ySlime;
             slimeBox.max[0] = xSlime + 14;
@@ -245,6 +248,24 @@ public class Window implements Runnable {
                 playerHealth--;
                 xPlayer -= 100;
             }
+
+            //Пытаюсь стену сделать
+            glBindTexture(GL_TEXTURE_2D, idBox);
+            glBegin(GL_QUADS);
+            glTexCoord2d(0, 0);
+            glVertex2f(60, 60);
+            glTexCoord2d(1, 0);
+            glVertex2f(455, 60);
+            glTexCoord2d(1, 1);
+            glVertex2f(455,185);
+            glTexCoord2d(0, 1);
+            glVertex2f(60, 185);
+            glEnd();
+            boxBox.min[0] = 60;
+            boxBox.min[1] = 60;
+            boxBox.max[0] = 455;
+            boxBox.max[1] = 130;
+            //Заканчиваю пытаться
 
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -317,6 +338,11 @@ public class Window implements Runnable {
                 }
                 g++;
 
+                playerBox.min[0] = xPlayer;
+                playerBox.min[1] = yPlayer;
+                playerBox.max[0] = xPlayer + 42;
+                playerBox.max[1] = yPlayer + 64;
+                if (!AABB.AABBvsAABB(playerBox, boxBox))
                 yPlayer -= 2;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
@@ -352,6 +378,9 @@ public class Window implements Runnable {
             glTexCoord2d(0, 1);
             glVertex2f(xPlayer, yPlayer + 64);
             glEnd();
+
+
+
 
             glfwSwapBuffers(window);
             glfwPollEvents();
