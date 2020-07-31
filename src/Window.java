@@ -24,7 +24,7 @@ public class Window implements Runnable {
     int idPlayerDown, idPlayerDown2, idPlayerDown3;
     int idSlime, idSlime2;
     Player player = new Player(250, 250, 2, 100, 0, 1);
-    Slime slime = new Slime(300, 300, 2, 5, 0, 1);
+    Slime slime = new Slime(300, 300, 2, 5, 0, 10);
     AABB boxBox;
     int[] idHealthbar;
     String level = "FirstLevel";
@@ -81,7 +81,7 @@ public class Window implements Runnable {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
         glEnable(GL_BLEND);
 
-        idHealthbar = new int[7];
+        idHealthbar = new int[6];
         boxBox = new AABB();
 
         // Единичная загрузка всех текстур
@@ -103,13 +103,12 @@ public class Window implements Runnable {
         idPlayerDown3 = Texture.loadTexture("player_down3");
         idSlime = Texture.loadTexture("slime");
         idSlime2 = Texture.loadTexture("slime2");
-        idHealthbar[0] = Texture.loadTexture("You dead");
-        idHealthbar[1] = Texture.loadTexture("1hp");
-        idHealthbar[2] = Texture.loadTexture("2hp");
-        idHealthbar[3] = Texture.loadTexture("3hp");
-        idHealthbar[4] = Texture.loadTexture("4hp");
-        idHealthbar[5] = Texture.loadTexture("5hp");
-        idHealthbar[6] = Texture.loadTexture("6hp");
+        idHealthbar[0] = Texture.loadTexture("0hp");
+        idHealthbar[1] = Texture.loadTexture("20hp");
+        idHealthbar[2] = Texture.loadTexture("40hp");
+        idHealthbar[3] = Texture.loadTexture("60hp");
+        idHealthbar[4] = Texture.loadTexture("80hp");
+        idHealthbar[5] = Texture.loadTexture("100hp");
     }
 
     private void loop() {
@@ -121,6 +120,7 @@ public class Window implements Runnable {
 
             switch (level) {
                 case "FirstLevel": {
+
                     glBindTexture(GL_TEXTURE_2D, idLevel0); // Фон первого уровня
                     glBegin(GL_QUADS);
                     glTexCoord2d(0, 0);
@@ -194,53 +194,35 @@ public class Window implements Runnable {
                 }
             }
 
-            switch (player.getHealth()) { // Отрисовка хелсбара в зависимости от единиц хп
-                case 0: {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[0]);
-                    player.setDead(true);
-                    break;
-                }
-                case 20: {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[1]); // Текстура хелсбара
-                    break;
-                }
-                case 36: {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[2]);
-                    break;
-                }
-                case 52: {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[3]);
-                    break;
-                }
-                case 68: {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[4]);
-                    break;
-                }
-                case 84: {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[5]);
-                    break;
-                }
-                case 100: {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[6]);
-                    break;
-                }
+            if(player.getHealth() == 100) {
+                glBindTexture(GL_TEXTURE_2D, idHealthbar[5]);
+            }
+            else if(player.getHealth() < 100) {
+                if(player.getHealth() < 100 && player.getHealth() > 80) glBindTexture(GL_TEXTURE_2D, idHealthbar[5]);
+                if(player.getHealth() <= 80 && player.getHealth() > 60) glBindTexture(GL_TEXTURE_2D, idHealthbar[4]);
+                if(player.getHealth() <= 60 && player.getHealth() > 40) glBindTexture(GL_TEXTURE_2D, idHealthbar[3]);
+                if(player.getHealth() <= 40 && player.getHealth() > 20) glBindTexture(GL_TEXTURE_2D, idHealthbar[2]);
+                if(player.getHealth() <= 20 && player.getHealth() > 0) glBindTexture(GL_TEXTURE_2D, idHealthbar[1]);
+                if(player.getHealth() == 0) glBindTexture(GL_TEXTURE_2D, idHealthbar[0]);
+
             }
             glBegin(GL_QUADS);
             glTexCoord2d(0, 0);
             glVertex2f(0, 0);
             glTexCoord2d(1, 0);
-            glVertex2f(100, 0);
+            glVertex2f(485, 0);
             glTexCoord2d(1, 1);
-            glVertex2f(100, 20);
+            glVertex2f(485, 45);
             glTexCoord2d(0, 1);
-            glVertex2f(0, 20);
+            glVertex2f(0, 45);
             glEnd();
 
             if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead()) {
                 player.setHealth(player.getHealth() - slime.getDamage());
-//                player.setX(player.getX() - 100);
+                player.setX(player.getX() - 100);
             }
 
+            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
                 switch (i1){
@@ -312,8 +294,6 @@ public class Window implements Runnable {
                 }
                 g++;
 
-                player.setY(player.getY() - 2);
-                player.getHitbox().update(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
                 if (!AABB.AABBvsAABB(player.getHitbox(), boxBox)) player.setY(player.getY() - 2);
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
