@@ -160,6 +160,23 @@ public class Window implements Runnable {
                     glTexCoord2d(0, 1);
                     glVertex2f(xSlime, ySlime + 30);
                     glEnd();
+                    //Пытаюсь стену сделать
+                    glBindTexture(GL_TEXTURE_2D, idBox);
+                    glBegin(GL_QUADS);
+                    glTexCoord2d(0, 0);
+                    glVertex2f(60, 60);
+                    glTexCoord2d(1, 0);
+                    glVertex2f(455, 60);
+                    glTexCoord2d(1, 1);
+                    glVertex2f(455,185);
+                    glTexCoord2d(0, 1);
+                    glVertex2f(60, 185);
+                    glEnd();
+                    boxBox.min[0] = 60;
+                    boxBox.min[1] = 60;
+                    boxBox.max[0] = 455;
+                    boxBox.max[1] = 130;
+                    //Заканчиваю пытаться
                     break;
                 }
                 case "SecondLevel": {
@@ -249,23 +266,7 @@ public class Window implements Runnable {
                 xPlayer -= 100;
             }
 
-            //Пытаюсь стену сделать
-            glBindTexture(GL_TEXTURE_2D, idBox);
-            glBegin(GL_QUADS);
-            glTexCoord2d(0, 0);
-            glVertex2f(60, 60);
-            glTexCoord2d(1, 0);
-            glVertex2f(455, 60);
-            glTexCoord2d(1, 1);
-            glVertex2f(455,185);
-            glTexCoord2d(0, 1);
-            glVertex2f(60, 185);
-            glEnd();
-            boxBox.min[0] = 60;
-            boxBox.min[1] = 60;
-            boxBox.max[0] = 455;
-            boxBox.max[1] = 130;
-            //Заканчиваю пытаться
+
 
             glBindTexture(GL_TEXTURE_2D, idPlayerStand);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
