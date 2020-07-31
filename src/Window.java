@@ -24,8 +24,8 @@ public class Window implements Runnable {
     int idPlayerDown, idPlayerDown2, idPlayerDown3;
     int idSlime, idSlime2;
     Player player = new Player(250, 250, 2, 100, 0, 1);
-    Slime slime = new Slime(300, 300, 2, 5, 0, 10);
-    AABB wall0, wall1, wall2, wall3, wall4, wall5, wall6,entranceToFirstLevel, entranceToSecondLevel;
+    Slime slime = new Slime(300, 300, 1, 5, 0, 10);
+    AABB wall0, wall1, wall2, wall3, wall4, wall5, wall6, entranceToFirstLevel, entranceToSecondLevel;
     int[] idHealthbar;
     String level = "FirstLevel";
 
@@ -129,68 +129,49 @@ public class Window implements Runnable {
 
             switch (level) {
                 case "FirstLevel": {
-                    //Пытаюсь стену сделать
                     wall0.update(60, 60, 455, 130);
                     wall1.update(0, 189, 65, 456);
                     wall2.update(60, 451, 640, 480);
                     wall3.update(451, 312, 640, 261);
                     wall4.update(449, 188, 451, 259);
-                    //Заканчиваю пытаться
+
                     glBindTexture(GL_TEXTURE_2D, idLevel0); // Фон первого уровня
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(0, 0);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(640, 0);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(640, 480);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(0, 480);
-                    glEnd();
+                    createQuadTexture(0, 0, 640, 480);
 
                     glBindTexture(GL_TEXTURE_2D, idSlime);  // Текстура слайма
-                    switch (i5){
+                    switch (i5) { // Анимация слайма
                         case 0:
                             glBindTexture(GL_TEXTURE_2D, idSlime);
                             break;
                         case 1:
                             glBindTexture(GL_TEXTURE_2D, idSlime2);
                             break;
-                    }   // Анимация слайма
+                    }
                     if (g2 == 8) {
                         if (i5 == 0) { i5++; }
                         else { i5--; }
                         g2 = 0;
                     }
                     g2++;
-//                    xSlime += Math.random() * 2;
-//                    ySlime += Math.random() * 2;
+//                    if( (int)(Math.random() * 5) == 1) slime.setX(slime.getX() - slime.getSpeed());
+//                    else if( (int)(Math.random() * 5) == 2) slime.setY(slime.getY() - slime.getSpeed());
+//                    else if( (int)(Math.random() * 5) == 3) slime.setX(slime.getX() + slime.getSpeed());
+//                    else if( (int)(Math.random() * 5) == 4) slime.setY(slime.getY() + slime.getSpeed());
+                    if(!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox())) {
+                        if(slime.getX() > player.getX()) slime.setX(slime.getX() - slime.getSpeed());
+                        if(slime.getX() < player.getX()) slime.setX(slime.getX() + slime.getSpeed());
+                        if(slime.getY() > player.getY()) slime.setY(slime.getY() - slime.getSpeed());
+                        if(slime.getY() < player.getY()) slime.setY(slime.getY() + slime.getSpeed());
+                    }
 
-                    glBegin(GL_QUADS);  // Отрисовка квадрата, на который натягивается текстура
-                    glTexCoord2d(0, 0);
-                    glVertex2f(slime.getX(), slime.getY());
-                    glTexCoord2d(1, 0);
-                    glVertex2f(slime.getX() + 30, slime.getY());
-                    glTexCoord2d(1, 1);
-                    glVertex2f(slime.getX() + 30, slime.getY() + 30);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(slime.getX(), slime.getY() + 30);
-                    glEnd();
+                    slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 30, slime.getY() + 30);
+                    createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 30, slime.getY() + 30);
 
                     glBindTexture(GL_TEXTURE_2D, idBox); // Переход на второй уровень
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(610, 315);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(640, 315);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(640,445);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(610, 445);
-                    glEnd();
+                    createQuadTexture(610, 315, 640, 445);
                     entranceToSecondLevel.update(610, 315, 640, 445);
 
-                    //движение
+                    //Движение игрока
                     glBindTexture(GL_TEXTURE_2D, idPlayerStand);
                     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
                         switch (i1){
@@ -285,21 +266,10 @@ public class Window implements Runnable {
                         g++;
                         if (!AABB.AABBvsAABB(player.getHitbox(), wall2))  player.setY(player.getY() + 2);
                     }
-
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(player.getX(), player.getY());
-                    glTexCoord2d(1, 0);
-                    glVertex2f(player.getX() + 42, player.getY());
-                    glTexCoord2d(1, 1);
-                    glVertex2f(player.getX() + 42, player.getY() + 64);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(player.getX(), player.getY() + 64);
-                    glEnd();
+                    createQuadTexture(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
                     break;
                 }
                 case "SecondLevel": {
-                    //Пытаюсь стену сделать
                     wall0.update(0, 190, 126, 192);
                     wall1.update(126, 185, 128, 190);
                     wall2.update(128, 186, 580, 128);
@@ -307,33 +277,15 @@ public class Window implements Runnable {
                     wall4.update(128, 452, 580, 458);
                     wall5.update(126, 385, 128, 453);
                     wall6.update(0, 384, 126, 388);
-                    //Заканчиваю пытаться
-                    glBindTexture(GL_TEXTURE_2D, idLevel1); // Фон второго уровня
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(0, 0);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(640, 0);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(640, 480);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(0, 480);
-                    glEnd();
 
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(0, 250);
-                    glTexCoord2d(1, 0);
-                    glVertex2f(30, 250);
-                    glTexCoord2d(1, 1);
-                    glVertex2f(30,380);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(0, 380);
-                    glEnd();
+                    glBindTexture(GL_TEXTURE_2D, idLevel1); // Фон второго уровня
+                    createQuadTexture(0, 0, 640, 480);
+
+                    glBindTexture(GL_TEXTURE_2D, idBox); // Переход на первый уровень
+                    createQuadTexture(0, 250, 30, 380);
                     entranceToFirstLevel.update(0, 250, 30, 380);
 
-                    //движение
+                    //Движение игрока
                     glBindTexture(GL_TEXTURE_2D, idPlayerStand);
                     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
                         switch (i1){
@@ -356,7 +308,8 @@ public class Window implements Runnable {
                             g = 0;
                         }
                         g++;
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall3))  player.setX(player.getX() + 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall3))
+                            player.setX(player.getX() + player.getSpeed());
                     }
                     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                         switch (i2){
@@ -379,7 +332,8 @@ public class Window implements Runnable {
                             g = 0;
                         }
                         g++;
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall1) && !AABB.AABBvsAABB(player.getHitbox(), wall5))  player.setX(player.getX() - 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall1) && !AABB.AABBvsAABB(player.getHitbox(), wall5))
+                            player.setX(player.getX() - player.getSpeed());
                     }
                     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                         switch (i3){
@@ -403,7 +357,8 @@ public class Window implements Runnable {
                         }
                         g++;
 
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall2)) player.setY(player.getY() - 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall2))
+                            player.setY(player.getY() - player.getSpeed());
                     }
                     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                         switch (i4){
@@ -426,23 +381,15 @@ public class Window implements Runnable {
                             g = 0;
                         }
                         g++;
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall4) && !AABB.AABBvsAABB(player.getHitbox(), wall6))  player.setY(player.getY() + 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall4) && !AABB.AABBvsAABB(player.getHitbox(), wall6))
+                            player.setY(player.getY() + player.getSpeed());
                     }
-
-                    glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0);
-                    glVertex2f(player.getX(), player.getY());
-                    glTexCoord2d(1, 0);
-                    glVertex2f(player.getX() + 42, player.getY());
-                    glTexCoord2d(1, 1);
-                    glVertex2f(player.getX() + 42, player.getY() + 64);
-                    glTexCoord2d(0, 1);
-                    glVertex2f(player.getX(), player.getY() + 64);
-                    glEnd();
+                    createQuadTexture(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
                     break;
                 }
             }
 
+            //Полоска здоровья
             if(player.getHealth() == 100) {
                 glBindTexture(GL_TEXTURE_2D, idHealthbar[5]);
             }
@@ -458,17 +405,9 @@ public class Window implements Runnable {
                 }
 
             }
-            glBegin(GL_QUADS);
-            glTexCoord2d(0, 0);
-            glVertex2f(0, 0);
-            glTexCoord2d(1, 0);
-            glVertex2f(200, 0);
-            glTexCoord2d(1, 1);
-            glVertex2f(200, 32);
-            glTexCoord2d(0, 1);
-            glVertex2f(0, 32);
-            glEnd();
+            createQuadTexture(5, 5, 205, 37);
 
+            //Обновление хитбокса игрока и переходы м/у уровнями
             player.getHitbox().update(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
             if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && level == "FirstLevel" && !player.getDead()) {
                 player.setHealth(player.getHealth() - slime.getDamage());
@@ -488,5 +427,18 @@ public class Window implements Runnable {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+    }
+
+    private void createQuadTexture(int xmin, int ymin, int xmax, int ymax) {
+        glBegin(GL_QUADS);
+        glTexCoord2d(0, 0);
+        glVertex2f(xmin, ymin);
+        glTexCoord2d(1, 0);
+        glVertex2f(xmax, ymin);
+        glTexCoord2d(1, 1);
+        glVertex2f(xmax, ymax);
+        glTexCoord2d(0, 1);
+        glVertex2f(xmin, ymax);
+        glEnd();
     }
 }
