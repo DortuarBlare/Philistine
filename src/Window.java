@@ -23,7 +23,7 @@ public class Window implements Runnable {
     int idPlayerUp, idPlayerUp2, idPlayerUp3;
     int idPlayerDown, idPlayerDown2, idPlayerDown3;
     int idSlime, idSlime2;
-    Player player = new Player(250, 250, 2, 100, 0, 1);
+    Player player = new Player(150, 250, 2, 100, 0, 1);
     Slime slime = new Slime(300, 300, 1, 5, 0, 10);
     AABB wall0, wall1, wall2, wall3, wall4, wall5, wall6, entranceToFirstLevel, entranceToSecondLevel;
     int[] idHealthbar;
@@ -153,10 +153,7 @@ public class Window implements Runnable {
                         g2 = 0;
                     }
                     g2++;
-//                    if( (int)(Math.random() * 5) == 1) slime.setX(slime.getX() - slime.getSpeed());
-//                    else if( (int)(Math.random() * 5) == 2) slime.setY(slime.getY() - slime.getSpeed());
-//                    else if( (int)(Math.random() * 5) == 3) slime.setX(slime.getX() + slime.getSpeed());
-//                    else if( (int)(Math.random() * 5) == 4) slime.setY(slime.getY() + slime.getSpeed());
+                    // Преследование игрока слаймом
                     if(!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox())) {
                         if(slime.getX() > player.getX()) slime.setX(slime.getX() - slime.getSpeed());
                         if(slime.getX() < player.getX()) slime.setX(slime.getX() + slime.getSpeed());
@@ -194,7 +191,7 @@ public class Window implements Runnable {
                             g = 0;
                         }
                         g++;
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall4))  player.setX(player.getX() + 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall4))  player.setX(player.getX() + player.getSpeed());
                     }
                     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                         switch (i2){
@@ -217,7 +214,7 @@ public class Window implements Runnable {
                             g = 0;
                         }
                         g++;
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall1))  player.setX(player.getX() - 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall1))  player.setX(player.getX() - player.getSpeed());
                     }
                     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                         switch (i3){
@@ -241,7 +238,8 @@ public class Window implements Runnable {
                         }
                         g++;
 
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall3)) player.setY(player.getY() - 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall0) && !AABB.AABBvsAABB(player.getHitbox(), wall3))
+                            player.setY(player.getY() - player.getSpeed());
                     }
                     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                         switch (i4){
@@ -264,7 +262,7 @@ public class Window implements Runnable {
                             g = 0;
                         }
                         g++;
-                        if (!AABB.AABBvsAABB(player.getHitbox(), wall2))  player.setY(player.getY() + 2);
+                        if (!AABB.AABBvsAABB(player.getHitbox(), wall2)) player.setY(player.getY() + player.getSpeed());
                     }
                     createQuadTexture(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
                     break;
