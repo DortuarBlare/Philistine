@@ -28,25 +28,17 @@ public class Window implements Runnable {
     int playerHealth = 6;
     String level = "FirstLevel";
 
-    public void start() {
-        thread = new Thread(this, "Game");
-        running = true;
-        thread.start();
-    }
-
     public void run() {
-        while (running) {
-            System.out.println("Start");
+        System.out.println("Start");
 
-            init();
-            loop();
+        init();
+        loop();
 
-            glfwFreeCallbacks(window);
-            glfwDestroyWindow(window);
+        glfwFreeCallbacks(window);
+        glfwDestroyWindow(window);
 
-            glfwTerminate();
-            glfwSetErrorCallback(null).free();
-        }
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     private void init(){
