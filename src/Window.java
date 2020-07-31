@@ -103,12 +103,12 @@ public class Window implements Runnable {
         idPlayerDown3 = Texture.loadTexture("player_down3");
         idSlime = Texture.loadTexture("slime");
         idSlime2 = Texture.loadTexture("slime2");
-        idHealthbar[0] = Texture.loadTexture("0hp");
-        idHealthbar[1] = Texture.loadTexture("20hp");
-        idHealthbar[2] = Texture.loadTexture("40hp");
-        idHealthbar[3] = Texture.loadTexture("60hp");
-        idHealthbar[4] = Texture.loadTexture("80hp");
-        idHealthbar[5] = Texture.loadTexture("100hp");
+        idHealthbar[0] = Texture.loadTexture("healthbar/0hp");
+        idHealthbar[1] = Texture.loadTexture("healthbar/20hp");
+        idHealthbar[2] = Texture.loadTexture("healthbar/40hp");
+        idHealthbar[3] = Texture.loadTexture("healthbar/60hp");
+        idHealthbar[4] = Texture.loadTexture("healthbar/80hp");
+        idHealthbar[5] = Texture.loadTexture("healthbar/100hp");
     }
 
     private void loop() {
@@ -203,18 +203,21 @@ public class Window implements Runnable {
                 if(player.getHealth() <= 60 && player.getHealth() > 40) glBindTexture(GL_TEXTURE_2D, idHealthbar[3]);
                 if(player.getHealth() <= 40 && player.getHealth() > 20) glBindTexture(GL_TEXTURE_2D, idHealthbar[2]);
                 if(player.getHealth() <= 20 && player.getHealth() > 0) glBindTexture(GL_TEXTURE_2D, idHealthbar[1]);
-                if(player.getHealth() == 0) glBindTexture(GL_TEXTURE_2D, idHealthbar[0]);
+                if(player.getHealth() == 0) {
+                    glBindTexture(GL_TEXTURE_2D, idHealthbar[0]);
+                    player.setDead(true);
+                }
 
             }
             glBegin(GL_QUADS);
             glTexCoord2d(0, 0);
             glVertex2f(0, 0);
             glTexCoord2d(1, 0);
-            glVertex2f(485, 0);
+            glVertex2f(200, 0);
             glTexCoord2d(1, 1);
-            glVertex2f(485, 45);
+            glVertex2f(200, 32);
             glTexCoord2d(0, 1);
-            glVertex2f(0, 45);
+            glVertex2f(0, 32);
             glEnd();
 
             if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead()) {
