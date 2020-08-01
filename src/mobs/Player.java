@@ -7,12 +7,12 @@ import java.util.TimerTask;
 
 public class Player extends Mob {
     private boolean immortal = false;
-    public int time = 0;
+    private int time = 0;
     private Timer timerPlayer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
         @Override
         public void run() {
-            setX(getX() - getSpeed());
+//            setX(getX() - getSpeed());
             time++;
         }
     };
@@ -38,6 +38,8 @@ public class Player extends Mob {
     public Timer getTimerPlayer() { return timerPlayer; }
 
     public TimerTask getTimerTaskPlayer() { return timerTaskPlayer; }
+
+    public int getTime() { return time; }
 
     public boolean getImmortal() { return immortal; }
 
