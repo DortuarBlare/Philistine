@@ -29,6 +29,7 @@ public class Window implements Runnable {
     AABB wall0, wall1, wall2, wall3, wall4, wall5, wall6, entranceToFirstLevel, entranceToSecondLevel;
     int[] idHealthbar;
     String level = "FirstLevel";
+    boolean a = true;
 
     public void run() {
         System.out.println("Start");
@@ -458,9 +459,13 @@ public class Window implements Runnable {
     void reshape(int w, int h)
     {
         glViewport(0, 0, w, h);
-        glMatrixMode(GL_PROJECTION); // Выставление камеры
-        glLoadIdentity(); // По видимости ненужная строка(что-то с единичной матрицей)
-        glOrtho(0, w, h, 0, 1, -1); // Камера на место окна
-        glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, w, h, 0, 1, -1);
+        glMatrixMode(GL_MODELVIEW);
+        if (a){
+            glScaled(2, 2, 1);
+            a = false;
+        }
     }
 }
