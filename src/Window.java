@@ -220,6 +220,7 @@ public class Window {
                     break;
                 }
                 case "SecondLevel": {
+                    // Установление хитбоксов стен
                     wall0.update(0, 190, 126, 192);
                     wall1.update(126, 185, 128, 190);
                     wall2.update(128, 186, 580, 128);
@@ -230,21 +231,6 @@ public class Window {
 
                     glBindTexture(GL_TEXTURE_2D, idLevel1); // Фон второго уровня
                     createQuadTexture(0, 0, 640, 480);
-
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    createQuadTexture(0, 190, 126, 192);
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    createQuadTexture(126, 185, 128, 190);
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    createQuadTexture(128, 186, 580, 128);
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    createQuadTexture(577, 188, 580, 452);
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    createQuadTexture(128, 452, 580, 458);
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    createQuadTexture(126, 385, 128, 453);
-                    glBindTexture(GL_TEXTURE_2D, idBox);
-                    createQuadTexture(0, 384, 126, 388);
 
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {

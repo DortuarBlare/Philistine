@@ -12,7 +12,7 @@ public class Player extends Mob {
     private TimerTask timerTaskPlayer = new TimerTask() {
         @Override
         public void run() {
-//            setX(getX() - getSpeed());
+            setX(getX() - getSpeed());
             time++;
         }
     };
