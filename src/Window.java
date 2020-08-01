@@ -6,6 +6,8 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -14,7 +16,6 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window implements Runnable {
-    boolean running = false;
     private long window;
 //    int[] idTextures;
     int idBox, idPlayerStand, idLevel0, idLevel1;
@@ -57,7 +58,8 @@ public class Window implements Runnable {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> { // Клашива ESC на выход(закрытие приложения)
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
-                running = false;
+                player.getTimerPlayer().cancel();
+                player.getTimerPlayer().purge();
             }
         });
 
@@ -407,9 +409,14 @@ public class Window implements Runnable {
 
             //Обновление хитбокса игрока и переходы м/у уровнями
             player.getHitbox().update(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
-            if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && level == "FirstLevel" && !player.getDead()) {
+            if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && level == "FirstLevel" && !player.getDead() && !player.getImmortal()) {
                 player.setHealth(player.getHealth() - slime.getDamage());
-                player.setX(player.getX() - 100);
+                player.setImmortal(true);
+                player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
+            }
+            if(player.time == 50) {
+                player.stopTimerPlayer();
+                player.setImmortal(false);
             }
             if(AABB.AABBvsAABB(player.getHitbox(), entranceToSecondLevel) && level == "FirstLevel") {
                 level = "SecondLevel";
