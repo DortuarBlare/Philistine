@@ -133,8 +133,6 @@ public class Window implements Runnable {
                 IntBuffer pWidth = stack.mallocInt(1);
                 IntBuffer pHeight = stack.mallocInt(1);
                 glfwGetWindowSize(window, pWidth, pHeight);
-                /*GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-                glfwSetWindowPos(window, (vidMode.width() - pWidth.get(0)) / 2, (vidMode.height() - pHeight.get(0)) / 2);*/
                 reshape(pWidth.get(0), pHeight.get(0));
             }
 
