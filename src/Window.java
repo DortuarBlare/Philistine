@@ -128,6 +128,14 @@ public class Window implements Runnable {
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            try (MemoryStack stack = stackPush()) {
+                IntBuffer pWidth = stack.mallocInt(1);
+                IntBuffer pHeight = stack.mallocInt(1);
+                glfwGetWindowSize(window, pWidth, pHeight);
+                /*GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+                glfwSetWindowPos(window, (vidMode.width() - pWidth.get(0)) / 2, (vidMode.height() - pHeight.get(0)) / 2);*/
+                reshape(pWidth.get(0), pHeight.get(0));
+            }
 
             switch (level) {
                 case "FirstLevel": {
@@ -445,5 +453,14 @@ public class Window implements Runnable {
         glTexCoord2d(0, 1);
         glVertex2f(xmin, ymax);
         glEnd();
+    }
+
+    void reshape(int w, int h)
+    {
+        glViewport(0, 0, w, h);
+        glMatrixMode(GL_PROJECTION); // Выставление камеры
+        glLoadIdentity(); // По видимости ненужная строка(что-то с единичной матрицей)
+        glOrtho(0, w, h, 0, 1, -1); // Камера на место окна
+        glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
     }
 }
