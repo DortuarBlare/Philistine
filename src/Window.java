@@ -20,9 +20,9 @@ public class Window {
 //    int[] idTextures;
     int idBox, idPlayerStand, idLevel0, idLevel1;
     int idPlayerLeft, idPlayerLeft2, idPlayerLeft3;
-    int idPlayerRight, idPlayerRight2, idPlayerRight3;
+    int idPlayerRight, idPlayerRight2, idPlayerRight3, idPlayerRight4, idPlayerRight5, idPlayerRight6, idPlayerRight7, idPlayerRight8, idPlayerRight9;
     int idPlayerUp, idPlayerUp2, idPlayerUp3;
-    int idPlayerDown, idPlayerDown2, idPlayerDown3;
+    int idPlayerDown, idPlayerDown2, idPlayerDown3, idPlayerDown4, idPlayerDown5, idPlayerDown6, idPlayerDown7, idPlayerDown8;
     int idSlime, idSlime2;
     ArrayList<Mob> mobList;
     AABB wall0, wall1, wall2, wall3, wall4, wall5, wall6, entranceToFirstLevel, entranceToSecondLevel;
@@ -99,6 +99,12 @@ public class Window {
         idPlayerRight = Texture.loadTexture("player_right");
         idPlayerRight2 = Texture.loadTexture("player_right2");
         idPlayerRight3 = Texture.loadTexture("player_right3");
+        idPlayerRight4 = Texture.loadTexture("player_right4");
+        idPlayerRight5 = Texture.loadTexture("player_right5");
+        idPlayerRight6 = Texture.loadTexture("player_right6");
+        idPlayerRight7 = Texture.loadTexture("player_right7");
+        idPlayerRight8 = Texture.loadTexture("player_right8");
+        idPlayerRight9 = Texture.loadTexture("player_right9");
         idPlayerLeft = Texture.loadTexture("player_left");
         idPlayerLeft2 = Texture.loadTexture("player_left2");
         idPlayerLeft3 = Texture.loadTexture("player_left3");
@@ -108,6 +114,11 @@ public class Window {
         idPlayerDown = Texture.loadTexture("player_down");
         idPlayerDown2 = Texture.loadTexture("player_down2");
         idPlayerDown3 = Texture.loadTexture("player_down3");
+        idPlayerDown4 = Texture.loadTexture("player_down4");
+        idPlayerDown5 = Texture.loadTexture("player_down5");
+        idPlayerDown6 = Texture.loadTexture("player_down6");
+        idPlayerDown7 = Texture.loadTexture("player_down7");
+        idPlayerDown8 = Texture.loadTexture("player_down8");
         idSlime = Texture.loadTexture("slime");
         idSlime2 = Texture.loadTexture("slime2");
         idHealthbar[0] = Texture.loadTexture("healthbar/0hp");
@@ -266,17 +277,32 @@ public class Window {
                         glBindTexture(GL_TEXTURE_2D, idPlayerRight);
                         break;
                     case 1:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
-                        break;
-                    case 2:
                         glBindTexture(GL_TEXTURE_2D, idPlayerRight2);
                         break;
-                    case 3:
-                        i1 = 0;
+                    case 2:
                         glBindTexture(GL_TEXTURE_2D, idPlayerRight3);
                         break;
+                    case 3:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight4);
+                        break;
+                    case 4:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight5);
+                        break;
+                    case 5:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight6);
+                        break;
+                    case 6:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight7);
+                        break;
+                    case 7:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight8);
+                        break;
+                    case 8:
+                        i1 = 0;
+                        glBindTexture(GL_TEXTURE_2D, idPlayerRight9);
+                        break;
                 }
-                if (g == 12){
+                if (g == 8){
                     i1++;
                     g = 0;
                 }
@@ -299,7 +325,7 @@ public class Window {
                         glBindTexture(GL_TEXTURE_2D, idPlayerLeft3);
                         break;
                 }
-                if (g == 12) {
+                if (g == 8) {
                     i2++;
                     g = 0;
                 }
@@ -322,7 +348,7 @@ public class Window {
                         glBindTexture(GL_TEXTURE_2D, idPlayerUp3);
                         break;
                 }
-                if (g == 12) {
+                if (g == 8) {
                     i3++;
                     g = 0;
                 }
@@ -335,17 +361,29 @@ public class Window {
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown);
                         break;
                     case 1:
-                        glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
-                        break;
-                    case 2:
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown2);
                         break;
-                    case 3:
-                        i4 = 0;
+                    case 2:
                         glBindTexture(GL_TEXTURE_2D, idPlayerDown3);
                         break;
+                    case 3:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown4);
+                        break;
+                    case 4:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown5);
+                        break;
+                    case 5:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown6);
+                        break;
+                    case 6:
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown7);
+                        break;
+                    case 7:
+                        i4 = 0;
+                        glBindTexture(GL_TEXTURE_2D, idPlayerDown8);
+                        break;
                 }
-                if (g == 12){
+                if (g == 8){
                     i4++;
                     g = 0;
                 }
