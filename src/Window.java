@@ -56,7 +56,7 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        window = glfwCreateWindow(1920, 1080, "Philistine", NULL, NULL);
+        window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
         // Работа с экраном
@@ -194,13 +194,13 @@ public class Window {
 
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall4))
-                            mob.setX(mob.getX() - mob.getSpeed());
                         if (AABB.AABBvsAABB(mob.getHitbox(), wall1))
+                            mob.setX(mob.getX() - mob.getSpeed());
+                        if (AABB.AABBvsAABB(mob.getHitbox(), wall4))
                             mob.setX(mob.getX() + mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall0) || AABB.AABBvsAABB(mob.getHitbox(), wall3))
+                        if (AABB.AABBvsAABB(mob.getHitbox(), wall0) || AABB.AABBvsAABB(mob.getHitbox(), wall2))
                             mob.setY(mob.getY() + mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall2))
+                        if (AABB.AABBvsAABB(mob.getHitbox(), wall3))
                             mob.setY(mob.getY() - mob.getSpeed());
                     }
 
