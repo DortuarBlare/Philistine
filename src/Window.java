@@ -6,6 +6,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import java.awt.*;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class Window {
             IntBuffer pHeight = stack.mallocInt(1);
             glfwGetWindowSize(window, pWidth, pHeight);
             GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowPos(window, (vidMode.width() - pWidth.get(0)) / 2, (vidMode.height() - pHeight.get(0)) / 2);
+            glfwSetWindowPos(window, (vidMode.width() - pWidth.get(0)) / 2, ((vidMode.height() - pHeight.get(0)) / 2) - 10);
         }
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);
@@ -73,7 +74,7 @@ public class Window {
         GL.createCapabilities(); // создает instance для OpenGL в текущем потоке
         glMatrixMode(GL_PROJECTION); // Выставление камеры
         glLoadIdentity(); // По видимости ненужная строка(что-то с единичной матрицей)
-        glOrtho(0, 640, 480, 0, 1, -1); // Камера на место окна
+        glOrtho(0, 640, 360, 0, 1, -1); // Камера на место окна
         glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
         glEnable(GL_TEXTURE_2D);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
@@ -144,14 +145,14 @@ public class Window {
 
                     Slime slime = (Slime) mobList.get(1);
                     // Установление хитбоксов стен
-                    wall0.update(60, 60, 455, 130);
-                    wall1.update(0, 189, 65, 456);
-                    wall2.update(60, 451, 640, 480);
-                    wall3.update(451, 312, 640, 261);
-                    wall4.update(449, 188, 451, 259);
+                    wall0.update(111, 128, 495, 140);
+                    wall1.update(496, 143, 498, 232);
+                    wall2.update(499, 232, 639, 236);
+                    wall3.update(111, 339, 639, 341);
+                    wall4.update(103, 139, 111, 332);
 
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
-                    createQuadTexture(0, 0, 640, 480);
+                    createQuadTexture(0, 0, 640, 360);
 
                     // Все операции со слизнем
                     if (!slime.getDead()) {
@@ -171,12 +172,12 @@ public class Window {
                         }
                         g2++;
                         // Преследование игрока слаймом
-                        if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
+                        /*if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
                             if(slime.getX() > player.getX()) slime.setX(slime.getX() - slime.getSpeed());
                             if(slime.getX() < player.getX()) slime.setX(slime.getX() + slime.getSpeed());
                             if(slime.getY() > player.getY()) slime.setY(slime.getY() - slime.getSpeed());
                             if(slime.getY() < player.getY()) slime.setY(slime.getY() + slime.getSpeed());
-                        }
+                        }*/
                         slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 30, slime.getY() + 30); // Обновление хитбокса слаймв
                         createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 30, slime.getY() + 30);
                     }
@@ -217,16 +218,16 @@ public class Window {
                 }
                 case "SecondLevel": {
                     // Установление хитбоксов стен
-                    wall0.update(0, 190, 126, 192);
-                    wall1.update(126, 185, 128, 190);
-                    wall2.update(128, 186, 580, 128);
-                    wall3.update(577, 188, 580, 452);
-                    wall4.update(128, 452, 580, 458);
-                    wall5.update(126, 385, 128, 453);
-                    wall6.update(0, 384, 126, 388);
+                    wall0.update(0, 182, 94, 188);
+                    wall1.update(92, 140, 96, 184);
+                    wall2.update(98, 134, 526, 140);
+                    wall3.update(529, 143, 534, 334);
+                    wall4.update(97, 335, 528, 340);
+                    wall5.update(92, 290, 96, 334);
+                    wall6.update(0, 287, 92, 291);
 
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level1")); // Фон второго уровня
-                    createQuadTexture(0, 0, 640, 480);
+                    createQuadTexture(0, 0, 640, 360);
 
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {
@@ -316,6 +317,7 @@ public class Window {
                 }
                 g++;
                 player.setX(player.getX() - player.getSpeed());
+                System.out.println(MouseInfo.getPointerInfo().getLocation());
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                 switch (i3){
@@ -423,7 +425,7 @@ public class Window {
         glOrtho(0, w, h, 0, 1, -1);
         glMatrixMode(GL_MODELVIEW);
         if (a) {
-            glScaled(2, 2, 1);
+            glScaled(1, 1, 1);
             a = false;
         }
     }
