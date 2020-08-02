@@ -21,22 +21,42 @@ public class Window {
     private long window;
     private ArrayList<Mob> mobList;
     private HashMap<String, Integer> textureMap;
-    AABB wall0, wall1, wall2, wall3, wall4, wall5, wall6;
-    AABB entranceToFirstLevel, entranceToSecondLevel, entranceToThirdLevel, entranceToFourthLevel;
-    int[] idHealthbar;
-    boolean a = true;
+    private HashMap<String, AABB> aabbMap;
     String level = "FirstLevel";
+    boolean forScale = true;
+    private final int[] firstLevelWalls = {
+            111, 128, 495, 140, // wall0
+            496, 143, 498, 232, // wall1
+            499, 232, 639, 236, // wall2
+            111, 339, 639, 341, // wall3
+            103, 139, 111, 332 // wall4
+    };
+    private final int[] secondLevelWalls = {
+            0, 182, 94, 188, // wall0
+            92, 140, 96, 184, // wall1
+            98, 134, 526, 140, // wall2
+            529, 143, 534, 334, // wall3
+            97, 335, 528, 340, // wall4
+            92, 290, 96, 334, // wall5
+            0, 287, 92, 291 // wall6
+    };
     private final String[] textureString = {
-            "level0", "level1", "level2", "level3", "box", "playerStand",
+            "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
             "playerLeft", "playerLeft2", "playerLeft3",
             "playerRight", "playerRight2", "playerRight3", "playerRight4", "playerRight5", "playerRight6", "playerRight7", "playerRight8", "playerRight9",
             "playerUp", "playerUp2", "playerUp3",
             "playerDown", "playerDown2", "playerDown3", "playerDown4", "playerDown5", "playerDown6", "playerDown7", "playerDown8",
-            "slime", "slime2"
+            "slimeLeft", "slimeLeft2", "slimeLeft3",
+            "slimeRight", "slimeRight2", "slimeRight3",
+            "level0", "level1", "level2", "level3", "box", "playerStand"
+    };
+    private final String[] aabbString = {
+            "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel"
     };
 
     public void run() {
-        System.out.println("Start");
+        System.out.println("Игра запущена");
 
         init();
         loop();
@@ -56,10 +76,9 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
+        // Работа с экраном
         window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
-
-        // Работа с экраном
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
             IntBuffer pHeight = stack.mallocInt(1);
@@ -80,40 +99,27 @@ public class Window {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
         glEnable(GL_BLEND);
 
-        idHealthbar = new int[11];
         mobList = new ArrayList<>();
+        textureMap = new HashMap<String, Integer>();
+        aabbMap = new HashMap<String, AABB>();
         mobList.add(new Player(150, 250, 2, 100, 0, 1));
         mobList.add(new Slime(300, 300, 1, 5, 0, 10));
-        textureMap = new HashMap<String, Integer>();
-        for (int i = 0; i < textureString.length; i++) { // Единичная загрузка всех текстур
-            int id = Texture.loadTexture(textureString[i]);
+
+        // Единичная загрузка всех текстур
+        for (int i = 0, id = 0; i < textureString.length; i++) {
+            if(i < 11) id = Texture.loadTexture("healthbar/" + textureString[i]);
+            else id = Texture.loadTexture(textureString[i]);
             textureMap.put(textureString[i], id);
         }
-        wall0 = new AABB();
-        wall1 = new AABB();
-        wall2 = new AABB();
-        wall3 = new AABB();
-        wall4 = new AABB();
-        wall5 = new AABB();
-        wall6 = new AABB();
-        entranceToSecondLevel = new AABB();
-        entranceToFirstLevel = new AABB();
-        entranceToThirdLevel = new AABB();
-        entranceToFourthLevel = new AABB();
+        // Единичная загрузка всех хитбоксов
+        for(int i = 0; i < aabbString.length; i++)
+            aabbMap.put(aabbString[i], new AABB());
+        // Установление хитбоксов стен первого уровня
+        for(int i = 0, j = 0; i < 5; i++, j+=4)
+            aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
 
-        idHealthbar[0] = Texture.loadTexture("healthbar/0hp");
-        idHealthbar[1] = Texture.loadTexture("healthbar/10hp");
-        idHealthbar[2] = Texture.loadTexture("healthbar/20hp");
-        idHealthbar[3] = Texture.loadTexture("healthbar/30hp");
-        idHealthbar[4] = Texture.loadTexture("healthbar/40hp");
-        idHealthbar[5] = Texture.loadTexture("healthbar/50hp");
-        idHealthbar[6] = Texture.loadTexture("healthbar/60hp");
-        idHealthbar[7] = Texture.loadTexture("healthbar/70hp");
-        idHealthbar[8] = Texture.loadTexture("healthbar/80hp");
-        idHealthbar[9] = Texture.loadTexture("healthbar/90hp");
-        idHealthbar[10] = Texture.loadTexture("healthbar/100hp");
-
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> { // Клашива ESC на выход(закрытие приложения)
+        // Клашива ESC на выход(закрытие приложения)
+        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
                 Player player = (Player) mobList.get(0);
@@ -124,7 +130,6 @@ public class Window {
     }
 
     private void loop() {
-
         Player player = (Player) mobList.get(0);
         int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
         int g = 0, g2 = 0;
@@ -142,27 +147,24 @@ public class Window {
             // Переключение уровня
             switch (level) {
                 case "FirstLevel": {
-
                     Slime slime = (Slime) mobList.get(1);
-                    // Установление хитбоксов стен
-                    wall0.update(111, 128, 495, 140);
-                    wall1.update(496, 143, 498, 232);
-                    wall2.update(499, 232, 639, 236);
-                    wall3.update(111, 339, 639, 341);
-                    wall4.update(103, 139, 111, 332);
-
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
 
+
+
                     // Все операции со слизнем
                     if (!slime.getDead()) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("slime"));  // Текстура слайма
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft"));  // Текстура слайма
                         switch (i5) { // Анимация слайма
                             case 0:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime"));
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft"));
                                 break;
                             case 1:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime2"));
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft2"));
+                                break;
+                            case 2:
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft3"));
                                 break;
                         }
                         if (g2 == 8) {
@@ -171,15 +173,16 @@ public class Window {
                             g2 = 0;
                         }
                         g2++;
-                        // Преследование игрока слаймом
-                        /*if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
-                            if(slime.getX() > player.getX()) slime.setX(slime.getX() - slime.getSpeed());
-                            if(slime.getX() < player.getX()) slime.setX(slime.getX() + slime.getSpeed());
-                            if(slime.getY() > player.getY()) slime.setY(slime.getY() - slime.getSpeed());
-                            if(slime.getY() < player.getY()) slime.setY(slime.getY() + slime.getSpeed());
-                        }*/
-                        slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 30, slime.getY() + 30); // Обновление хитбокса слаймв
-                        createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 30, slime.getY() + 30);
+                        // Преследование игрока слаймом, обновление хитбокса и перерисовка текстуры
+                        if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
+                            if(slime.getX() > player.getX()) slime.moveLeft();
+                            if(slime.getX() < player.getX()) slime.moveRight();
+                            if(slime.getY() > player.getY()) slime.moveUp();
+                            if(slime.getY() < player.getY()) slime.moveDown();
+                        }
+                        slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
+                        slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
+                        createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                     }
 
                     if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead() && !player.getImmortal()) {
@@ -194,62 +197,62 @@ public class Window {
 
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall1))
-                            mob.setX(mob.getX() - mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall4))
-                            mob.setX(mob.getX() + mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall0) || AABB.AABBvsAABB(mob.getHitbox(), wall2))
-                            mob.setY(mob.getY() + mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall3))
-                            mob.setY(mob.getY() - mob.getSpeed());
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                            mob.moveLeft();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                            mob.moveRight();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                            mob.moveDown();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
+                            mob.moveUp();
                     }
 
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("box")); // Переход на второй уровень
-                    createQuadTexture(610, 315, 640, 445);
-                    entranceToSecondLevel.update(610, 315, 640, 445);
+                    createQuadTexture(610, 238, 640, 335);
+                    aabbMap.get("entranceToSecondLevel").update(610, 238, 640, 335);
 
                     // Проверка перехода на второй уровень
-                    if (AABB.AABBvsAABB(player.getHitbox(), entranceToSecondLevel)) {
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
                         level = "SecondLevel";
-                        player.setX(35);
-                        player.setY(280);
+                        // Обновление хитбоксов стен для второго уровня
+                        for(int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(secondLevelWalls[j], secondLevelWalls[j + 1], secondLevelWalls[j + 2], secondLevelWalls[j + 3]);
+                        }
+                        player.setX(31);
+                        player.setY(239);
                     }
                     break;
                 }
                 case "SecondLevel": {
-                    // Установление хитбоксов стен
-                    wall0.update(0, 182, 94, 188);
-                    wall1.update(92, 140, 96, 184);
-                    wall2.update(98, 134, 526, 140);
-                    wall3.update(529, 143, 534, 334);
-                    wall4.update(97, 335, 528, 340);
-                    wall5.update(92, 290, 96, 334);
-                    wall6.update(0, 287, 92, 291);
-
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("level1")); // Фон второго уровня
+                    // Фон второго уровня
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("level1"));
                     createQuadTexture(0, 0, 640, 360);
 
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall3))
-                            mob.setX(mob.getX() - mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall1) || AABB.AABBvsAABB(mob.getHitbox(), wall5))
-                            mob.setX(mob.getX() + mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall0) || AABB.AABBvsAABB(mob.getHitbox(), wall2))
-                            mob.setY(mob.getY() + mob.getSpeed());
-                        if (AABB.AABBvsAABB(mob.getHitbox(), wall6) || AABB.AABBvsAABB(mob.getHitbox(), wall4))
-                            mob.setY(mob.getY() - mob.getSpeed());
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
+                            mob.moveLeft();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                            mob.moveRight();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                            mob.moveDown();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                            mob.moveUp();
                     }
 
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("box")); // Переход на первый уровень
-                    createQuadTexture(0, 250, 30, 380);
-                    entranceToFirstLevel.update(0, 250, 30, 380);
+                    createQuadTexture(0, 190, 30, 286);
+                    aabbMap.get("entranceToFirstLevel").update(0, 190, 30, 286);
 
                     // Проверка перехода на первый уровень
-                    if(AABB.AABBvsAABB(player.getHitbox(), entranceToFirstLevel)) {
+                    if(AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
                         level = "FirstLevel";
-                        player.setX(565);
-                        player.setY(340);
+                        // Обновление хитбоксов стен для первого уровня
+                        for(int i = 0, j = 0; i < 5; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
+                        }
+                        player.setX(579);
+                        player.setY(291);
                     }
                     break;
                 }
@@ -293,7 +296,7 @@ public class Window {
                     g = 0;
                 }
                 g++;
-                player.setX(player.getX() + player.getSpeed());
+                player.moveRight();
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 switch (i2){
@@ -316,8 +319,8 @@ public class Window {
                     g = 0;
                 }
                 g++;
-                player.setX(player.getX() - player.getSpeed());
-                System.out.println(MouseInfo.getPointerInfo().getLocation());
+                player.moveLeft();
+//                System.out.println(MouseInfo.getPointerInfo().getLocation());
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                 switch (i3){
@@ -340,7 +343,7 @@ public class Window {
                     g = 0;
                 }
                 g++;
-                player.setY(player.getY() - player.getSpeed());
+                player.moveUp();
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                 switch (i4){
@@ -375,30 +378,31 @@ public class Window {
                     g = 0;
                 }
                 g++;
-                player.setY(player.getY() + player.getSpeed());
+                player.moveDown();
             }
-            createQuadTexture(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
-            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 42, player.getY() + 64);
+            createQuadTexture(player.getX(), player.getY(), player.getX() + 30, player.getY() + 48);
+            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 30, player.getY() + 48);
+            player.getCollisionBox().update(player.getX(), player.getY() + 32, player.getX() + 30, player.getY() + 48);
 
             //Полоска здоровья
-            if(player.getHealth() == 100) { glBindTexture(GL_TEXTURE_2D, idHealthbar[10]); }
+            if(player.getHealth() == 100) { glBindTexture(GL_TEXTURE_2D, textureMap.get("100hp")); }
             else {
-                if(player.getHealth() < 100 && player.getHealth() > 90) glBindTexture(GL_TEXTURE_2D, idHealthbar[10]);
-                if(player.getHealth() <= 90 && player.getHealth() > 80) glBindTexture(GL_TEXTURE_2D, idHealthbar[9]);
-                if(player.getHealth() <= 80 && player.getHealth() > 70) glBindTexture(GL_TEXTURE_2D, idHealthbar[8]);
-                if(player.getHealth() <= 70 && player.getHealth() > 60) glBindTexture(GL_TEXTURE_2D, idHealthbar[7]);
-                if(player.getHealth() <= 60 && player.getHealth() > 50) glBindTexture(GL_TEXTURE_2D, idHealthbar[6]);
-                if(player.getHealth() <= 50 && player.getHealth() > 40) glBindTexture(GL_TEXTURE_2D, idHealthbar[5]);
-                if(player.getHealth() <= 40 && player.getHealth() > 30) glBindTexture(GL_TEXTURE_2D, idHealthbar[4]);
-                if(player.getHealth() <= 30 && player.getHealth() > 20) glBindTexture(GL_TEXTURE_2D, idHealthbar[3]);
-                if(player.getHealth() <= 20 && player.getHealth() > 10) glBindTexture(GL_TEXTURE_2D, idHealthbar[2]);
-                if(player.getHealth() <= 10 && player.getHealth() > 0) glBindTexture(GL_TEXTURE_2D, idHealthbar[1]);
+                if(player.getHealth() < 100 && player.getHealth() > 90) glBindTexture(GL_TEXTURE_2D, textureMap.get("100hp"));
+                if(player.getHealth() <= 90 && player.getHealth() > 80) glBindTexture(GL_TEXTURE_2D, textureMap.get("90hp"));
+                if(player.getHealth() <= 80 && player.getHealth() > 70) glBindTexture(GL_TEXTURE_2D, textureMap.get("80hp"));
+                if(player.getHealth() <= 70 && player.getHealth() > 60) glBindTexture(GL_TEXTURE_2D, textureMap.get("70hp"));
+                if(player.getHealth() <= 60 && player.getHealth() > 50) glBindTexture(GL_TEXTURE_2D, textureMap.get("60hp"));
+                if(player.getHealth() <= 50 && player.getHealth() > 40) glBindTexture(GL_TEXTURE_2D, textureMap.get("50hp"));
+                if(player.getHealth() <= 40 && player.getHealth() > 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("40hp"));
+                if(player.getHealth() <= 30 && player.getHealth() > 20) glBindTexture(GL_TEXTURE_2D, textureMap.get("30hp"));
+                if(player.getHealth() <= 20 && player.getHealth() > 10) glBindTexture(GL_TEXTURE_2D, textureMap.get("20hp"));
+                if(player.getHealth() <= 10 && player.getHealth() > 0) glBindTexture(GL_TEXTURE_2D, textureMap.get("10hp"));
                 if(player.getHealth() == 0) {
-                    glBindTexture(GL_TEXTURE_2D, idHealthbar[0]);
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
                     player.setDead(true);
                 }
             }
-            createQuadTexture(5, 5, 205, 37);
+            createQuadTexture(5, 5, 105, 21);
 
             glfwSwapBuffers(window);
             glfwPollEvents();
@@ -424,9 +428,9 @@ public class Window {
         glLoadIdentity();
         glOrtho(0, w, h, 0, 1, -1);
         glMatrixMode(GL_MODELVIEW);
-        if (a) {
-            glScaled(1, 1, 1);
-            a = false;
+        if(forScale) {
+            glScaled(3, 3, 1);
+            forScale = false;
         }
     }
 }
