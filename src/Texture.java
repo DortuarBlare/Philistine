@@ -16,7 +16,6 @@ public class Texture {
 
         int width, height;
         ByteBuffer buffer;
-
         try (MemoryStack stack = MemoryStack.stackPush()){
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
