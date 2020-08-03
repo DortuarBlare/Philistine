@@ -191,13 +191,12 @@ public class Window {
                         slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
 
-                        if (slime.getHealth() <= 0) slime.setDead(true);
-
                         if (slime.getHealth() == 5) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp100"));
                         if (slime.getHealth() == 4) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp80"));
                         if (slime.getHealth() == 3) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp60"));
                         if (slime.getHealth() == 2) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp40"));
                         if (slime.getHealth() == 1) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp20"));
+                        if (slime.getHealth() <= 0) slime.setDead(true);
                         createQuadTexture(slime.getX(), slime.getY() - 2, slime.getX() + 16, slime.getY());
                     }
                     else slime.getHitbox().update(0,0,0,0);
