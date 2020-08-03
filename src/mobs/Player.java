@@ -6,19 +6,24 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Player extends Mob {
-    private boolean immortal = false;
     private int time = 0;
+    private String direction;
+    private AABB attackBox;
     private Timer timerPlayer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
         @Override
         public void run() {
-            moveLeft();
+            if (direction.equals("Right")) moveRight();
+            else if (direction.equals("Left")) moveLeft();
+            else if (direction.equals("Up")) moveUp();
+            else if (direction.equals("Down")) moveDown();
             time++;
         }
     };
 
     public Player(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
+        attackBox = new AABB();
     }
 
     public void stopTimerPlayer() {
@@ -29,7 +34,10 @@ public class Player extends Mob {
         timerTaskPlayer = new TimerTask() {
             @Override
             public void run() {
-                setX(getX() - getSpeed());
+                if (direction.equals("Right")) moveRight();
+                else if (direction.equals("Left")) moveLeft();
+                else if (direction.equals("Up")) moveUp();
+                else if (direction.equals("Down")) moveDown();
                 time++;
             }
         };
@@ -39,9 +47,9 @@ public class Player extends Mob {
 
     public TimerTask getTimerTaskPlayer() { return timerTaskPlayer; }
 
+    public AABB getAttackBox() { return attackBox; }
+
     public int getTime() { return time; }
 
-    public boolean getImmortal() { return immortal; }
-
-    public void setImmortal(boolean immortal) { this.immortal = immortal; }
+    public void setDirection(String direction) { this.direction = direction; }
 }

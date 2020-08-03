@@ -6,10 +6,14 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TimerTask;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -45,10 +49,12 @@ public class Window {
             "playerLeft", "playerLeft2", "playerLeft3",
             "playerRight", "playerRight2", "playerRight3", "playerRight4", "playerRight5", "playerRight6", "playerRight7", "playerRight8", "playerRight9",
             "playerUp", "playerUp2", "playerUp3",
-            "playerDown", "playerDown2", "playerDown3", "playerDown4", "playerDown5", "playerDown6", "playerDown7", "playerDown8",
+            "playerDown0", "playerDown1", "playerDown2", "playerDown3", "playerDown4", "playerDown5", "playerDown6", "playerDown7",
             "slimeLeft", "slimeLeft2", "slimeLeft3",
             "slimeRight", "slimeRight2", "slimeRight3",
-            "level0", "level1", "level2", "level3", "box", "playerStand"
+            "level0", "level1", "level2", "level3", "box", "playerStand", "playerAttack", "sword",
+            "torch0", "torch1", "torch2", "torch3",
+            "enemyHp20", "enemyHp40", "enemyHp60", "enemyHp80", "enemyHp100"
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
@@ -71,10 +77,6 @@ public class Window {
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
-
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         // Работа с экраном
         window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
@@ -114,9 +116,11 @@ public class Window {
         // Единичная загрузка всех хитбоксов
         for(int i = 0; i < aabbString.length; i++)
             aabbMap.put(aabbString[i], new AABB());
-        // Установление хитбоксов стен первого уровня
+        // Единичное установление хитбоксов стен первого уровня и переходов м/у уровнями
         for(int i = 0, j = 0; i < 5; i++, j+=4)
             aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
+        aabbMap.get("entranceToFirstLevel").update(0, 190, 30, 286);
+        aabbMap.get("entranceToSecondLevel").update(610, 238, 640, 335);
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -125,6 +129,9 @@ public class Window {
                 Player player = (Player) mobList.get(0);
                 player.getTimerPlayer().cancel();
                 player.getTimerPlayer().purge();
+                Slime slime = (Slime) mobList.get(1);
+                slime.getTimerSlime().cancel();
+                slime.getTimerSlime().purge();
             }
         });
     }
@@ -150,8 +157,8 @@ public class Window {
                     Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
-
-
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch0"));
+                    createQuadTexture(186, 83, 194, 107);
 
                     // Все операции со слизнем
                     if (!slime.getDead()) {
@@ -183,16 +190,40 @@ public class Window {
                         slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
-                    }
 
+                        if (slime.getHealth() <= 0) slime.setDead(true);
+
+                        if (slime.getHealth() == 5) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp100"));
+                        if (slime.getHealth() == 4) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp80"));
+                        if (slime.getHealth() == 3) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp60"));
+                        if (slime.getHealth() == 2) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp40"));
+                        if (slime.getHealth() == 1) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp20"));
+                        createQuadTexture(slime.getX(), slime.getY() - 2, slime.getX() + 16, slime.getY());
+                    }
+                    else slime.getHitbox().update(0,0,0,0);
+
+                    // Получение урона от слизня
                     if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead() && !player.getImmortal()) {
+                        if (player.getX() > slime.getX()) player.setDirection("Right");
+                        else if (player.getX() < slime.getX()) player.setDirection("Left");
+                        else if (player.getY() > slime.getY()) player.setDirection("Down");
+                        else if (player.getY() < slime.getY()) player.setDirection("Up");
                         player.setHealth(player.getHealth() - slime.getDamage());
                         player.setImmortal(true);
                         player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
                     }
+                    if (AABB.AABBvsAABB(player.getAttackBox(), slime.getHitbox()) && !slime.getImmortal()) {
+                        slime.setHealth(slime.getHealth() - player.getDamage());
+                        slime.setImmortal(true);
+                        slime.getTimerSlime().schedule(slime.getTimerTaskSlime(), 0, 10);
+                    }
                     if (player.getTime() >= 50) {
                         player.stopTimerPlayer();
                         player.setImmortal(false);
+                    }
+                    if (slime.getTime() >= 50) {
+                        slime.stopTimerSlime();
+                        slime.setImmortal(false);
                     }
 
                     // Проверка всех мобов на столкновение со стенами
@@ -207,9 +238,9 @@ public class Window {
                             mob.moveUp();
                     }
 
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("box")); // Переход на второй уровень
+                    // Переход на второй уровень
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("box"));
                     createQuadTexture(610, 238, 640, 335);
-                    aabbMap.get("entranceToSecondLevel").update(610, 238, 640, 335);
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
@@ -240,9 +271,9 @@ public class Window {
                             mob.moveUp();
                     }
 
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("box")); // Переход на первый уровень
+                    // Переход на первый уровень
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("box"));
                     createQuadTexture(0, 190, 30, 286);
-                    aabbMap.get("entranceToFirstLevel").update(0, 190, 30, 286);
 
                     // Проверка перехода на первый уровень
                     if(AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
@@ -261,7 +292,7 @@ public class Window {
             //Движение игрока и обновление хитбокса
             glBindTexture(GL_TEXTURE_2D, textureMap.get("playerStand"));
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-                switch (i1){
+                switch (i1) {
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("playerRight"));
                         break;
@@ -291,7 +322,7 @@ public class Window {
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("playerRight9"));
                         break;
                 }
-                if (g == 8){
+                if (g == 8) {
                     i1++;
                     g = 0;
                 }
@@ -348,29 +379,29 @@ public class Window {
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                 switch (i4){
                     case 0:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown0"));
                         break;
                     case 1:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown2"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown1"));
                         break;
                     case 2:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown3"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown2"));
                         break;
                     case 3:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown4"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown3"));
                         break;
                     case 4:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown5"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown4"));
                         break;
                     case 5:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown6"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown5"));
                         break;
                     case 6:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown7"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown6"));
                         break;
                     case 7:
                         i4 = 0;
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown8"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("playerDown7"));
                         break;
                 }
                 if (g == 8){
@@ -380,6 +411,14 @@ public class Window {
                 g++;
                 player.moveDown();
             }
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("sword"));
+                createQuadTexture(player.getX() + 20, player.getY() + 5, player.getX() + 20 + 67, player.getY() + 5 + 25);
+                player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 20 + 67, player.getY() + 15 + 25);
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("playerAttack"));
+            }
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) player.getAttackBox().update(0,0,0,0);
+
             createQuadTexture(player.getX(), player.getY(), player.getX() + 30, player.getY() + 48);
             player.getHitbox().update(player.getX(), player.getY(), player.getX() + 30, player.getY() + 48);
             player.getCollisionBox().update(player.getX(), player.getY() + 32, player.getX() + 30, player.getY() + 48);

@@ -9,6 +9,7 @@ public abstract class Mob {
     private int damage;
     private AABB hitBox, collisionBox;
     private boolean dead;
+    private boolean immortal = false;
 
     public Mob(int x, int y, int speed, int health, int armor, int damage, AABB hitBox, AABB collisionBox) {
         this.x = x;
@@ -63,4 +64,8 @@ public abstract class Mob {
     public boolean getDead() { return dead; }
 
     public void setDead(boolean dead) { this.dead = dead; }
+
+    public boolean getImmortal() { return immortal; }
+
+    public void setImmortal(boolean immortal) { this.immortal = immortal; }
 }

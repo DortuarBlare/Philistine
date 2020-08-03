@@ -20,7 +20,7 @@ public class Texture {
             IntBuffer h = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
-            File file = new File("res/" + resourceName  + ".png");
+            File file = new File("res/" + resourceName + ".png");
             String filePath = file.getAbsolutePath();
             buffer = STBImage.stbi_load(filePath, w, h, channels, 4);
             if (buffer == null) throw new Exception("Can't load file " + resourceName + " " + STBImage.stbi_failure_reason());
