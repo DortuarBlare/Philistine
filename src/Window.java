@@ -28,6 +28,7 @@ public class Window {
     private HashMap<String, AABB> aabbMap;
     String level = "FirstLevel";
     boolean forScale = true;
+    Player player;
     private final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
@@ -133,11 +134,18 @@ public class Window {
                 slime.getTimerSlime().cancel();
                 slime.getTimerSlime().purge();
             }
+            if (key == GLFW_KEY_Z && action == GLFW_PRESS){
+                player = (Player) mobList.get(0);
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("sword"));
+                createQuadTexture(player.getX() + 20, player.getY() + 5, player.getX() + 20 + 67, player.getY() + 5 + 25);
+                player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 20 + 67, player.getY() + 15 + 25);
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("playerAttack"));
+            }
         });
     }
 
     private void loop() {
-        Player player = (Player) mobList.get(0);
+        player = (Player) mobList.get(0);
         int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
         int g = 0, g2 = 0;
 
@@ -467,8 +475,9 @@ public class Window {
             }
             createQuadTexture(5, 5, 105, 21);
 
-            glfwSwapBuffers(window);
+
             glfwPollEvents();
+            glfwSwapBuffers(window);
         }
     }
 
