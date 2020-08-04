@@ -54,7 +54,7 @@ public class Window {
             "slimeRight", "slimeRight2", "slimeRight3",
             "level0", "level1", "level2", "level3", "box", "playerStand", "playerAttack", "sword",
             "torch0", "torch1", "torch2", "torch3",
-            "enemyHp20", "enemyHp40", "enemyHp60", "enemyHp80", "enemyHp100"
+            "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5", "pants"
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
@@ -162,7 +162,6 @@ public class Window {
 
                     // Все операции со слизнем
                     if (!slime.getDead()) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft"));  // Текстура слайма
                         switch (i5) { // Анимация слайма
                             case 0:
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft"));
@@ -191,12 +190,9 @@ public class Window {
                         slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
 
-                        if (slime.getHealth() == 5) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp100"));
-                        if (slime.getHealth() == 4) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp80"));
-                        if (slime.getHealth() == 3) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp60"));
-                        if (slime.getHealth() == 2) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp40"));
-                        if (slime.getHealth() == 1) glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp20"));
+                        // Отрисовка хелсбара
                         if (slime.getHealth() <= 0) slime.setDead(true);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + slime.getHealth()));
                         createQuadTexture(slime.getX(), slime.getY() - 2, slime.getX() + 16, slime.getY());
                     }
                     else slime.getHitbox().update(0,0,0,0);
@@ -418,9 +414,11 @@ public class Window {
             }
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) player.getAttackBox().update(0,0,0,0);
 
-            createQuadTexture(player.getX(), player.getY(), player.getX() + 30, player.getY() + 48);
-            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 30, player.getY() + 48);
-            player.getCollisionBox().update(player.getX(), player.getY() + 32, player.getX() + 30, player.getY() + 48);
+            createQuadTexture(player.getX(), player.getY(), player.getX() + 39, player.getY() + 48);
+//            glBindTexture(GL_TEXTURE_2D, textureMap.get("pants"));
+//            createQuadTexture(player.getX(), player.getY(), player.getX() + 39, player.getY() + 48);
+            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 39, player.getY() + 48);
+            player.getCollisionBox().update(player.getX(), player.getY() + 32, player.getX() + 39, player.getY() + 48);
 
             //Полоска здоровья
             if(player.getHealth() == 100) { glBindTexture(GL_TEXTURE_2D, textureMap.get("100hp")); }
