@@ -142,7 +142,7 @@ public class Window {
                 player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 20 + 67, player.getY() + 15 + 25);
                 glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_01"));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                glfwSwapBuffers(window);
+                    glfwSwapBuffers(window);
                 glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_02"));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                     glfwSwapBuffers(window);
@@ -484,7 +484,7 @@ public class Window {
                     player.setDead(true);
                 }
             }
-            createQuadTexture(5, 5, 105, 21);
+            createQuadTexture(0, 0, 103, 18);
 
 
             glfwPollEvents();
