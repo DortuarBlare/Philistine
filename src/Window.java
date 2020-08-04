@@ -21,8 +21,9 @@ public class Window {
     private ArrayList<Mob> mobList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, AABB> aabbMap;
-    String level = "FirstLevel";
-    boolean forScale = true;
+    private String level = "FirstLevel";
+    private boolean forScale = true;
+    private int tempHealth;
     Player player;
     private final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
@@ -463,26 +464,14 @@ public class Window {
             player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
 
-            //Полоска здоровья
-            if(player.getHealth() == 100) { glBindTexture(GL_TEXTURE_2D, textureMap.get("100hp")); }
-            else {
-                if(player.getHealth() < 100 && player.getHealth() > 90) glBindTexture(GL_TEXTURE_2D, textureMap.get("100hp"));
-                if(player.getHealth() <= 90 && player.getHealth() > 80) glBindTexture(GL_TEXTURE_2D, textureMap.get("90hp"));
-                if(player.getHealth() <= 80 && player.getHealth() > 70) glBindTexture(GL_TEXTURE_2D, textureMap.get("80hp"));
-                if(player.getHealth() <= 70 && player.getHealth() > 60) glBindTexture(GL_TEXTURE_2D, textureMap.get("70hp"));
-                if(player.getHealth() <= 60 && player.getHealth() > 50) glBindTexture(GL_TEXTURE_2D, textureMap.get("60hp"));
-                if(player.getHealth() <= 50 && player.getHealth() > 40) glBindTexture(GL_TEXTURE_2D, textureMap.get("50hp"));
-                if(player.getHealth() <= 40 && player.getHealth() > 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("40hp"));
-                if(player.getHealth() <= 30 && player.getHealth() > 20) glBindTexture(GL_TEXTURE_2D, textureMap.get("30hp"));
-                if(player.getHealth() <= 20 && player.getHealth() > 10) glBindTexture(GL_TEXTURE_2D, textureMap.get("20hp"));
-                if(player.getHealth() <= 10 && player.getHealth() > 0) glBindTexture(GL_TEXTURE_2D, textureMap.get("10hp"));
-                if(player.getHealth() == 0) {
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
-                    player.setDead(true);
-                }
+            // Полоска здоровья
+            tempHealth = player.getHealth() % 10 == 0 ? player.getHealth() : player.getHealth() + 10 - (player.getHealth() % 10);
+            glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
+            if (player.getHealth() == 0) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
+                player.setDead(true);
             }
             createQuadTexture(0, 0, 103, 18);
-
 
             glfwPollEvents();
             glfwSwapBuffers(window);
