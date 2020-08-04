@@ -6,14 +6,9 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TimerTask;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -47,13 +42,14 @@ public class Window {
     };
     private final String[] textureString = {
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
+            "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",
             "player_walk_left_01", "player_walk_left_02", "player_walk_left_03", "player_walk_left_04", "player_walk_left_05", "player_walk_left_06", "player_walk_left_07", "player_walk_left_08", "player_walk_left_09",
             "player_walk_right_01", "player_walk_right_02", "player_walk_right_03", "player_walk_right_04", "player_walk_right_05", "player_walk_right_06", "player_walk_right_07", "player_walk_right_08", "player_walk_right_09",
             "player_walk_up_01", "player_walk_up_02", "player_walk_up_03", "player_walk_up_04", "player_walk_up_05", "player_walk_up_06", "player_walk_up_07", "player_walk_up_08", "player_walk_up_09",
             "player_walk_down_01", "player_walk_down_02", "player_walk_down_03", "player_walk_down_04", "player_walk_down_05", "player_walk_down_06", "player_walk_down_07", "player_walk_down_08",
             "slimeLeft", "slimeLeft2", "slimeLeft3",
             "slimeRight", "slimeRight2", "slimeRight3",
-            "level0", "level1", "level2", "level3", "box", "player_stand", "playerAttack", "sword",
+            "level0", "level1", "level2", "level3", "box", "playerAttack", "sword",
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5", "pants",
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06"
@@ -135,7 +131,7 @@ public class Window {
                 slime.getTimerSlime().cancel();
                 slime.getTimerSlime().purge();
             }
-            if (key == GLFW_KEY_Z && action == GLFW_PRESS){
+            if (key == GLFW_KEY_Z && action == GLFW_PRESS) {
                 player = (Player) mobList.get(0);
                 glBindTexture(GL_TEXTURE_2D, textureMap.get("sword"));
                 createQuadTexture(player.getX() + 20, player.getY() + 5, player.getX() + 20 + 67, player.getY() + 5 + 25);
@@ -225,10 +221,10 @@ public class Window {
 
                     // Получение урона от слизня
                     if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead() && !player.getImmortal()) {
-                        if (player.getX() > slime.getX()) player.setDirection("Right");
-                        else if (player.getX() < slime.getX()) player.setDirection("Left");
-                        else if (player.getY() > slime.getY()) player.setDirection("Down");
-                        else if (player.getY() < slime.getY()) player.setDirection("Up");
+                        if (player.getX() > slime.getX()) player.setKnockbackDirection("Right");
+                        else if (player.getX() < slime.getX()) player.setKnockbackDirection("Left");
+                        else if (player.getY() > slime.getY()) player.setKnockbackDirection("Down");
+                        else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
                         player.setHealth(player.getHealth() - slime.getDamage());
                         player.setImmortal(true);
                         player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
@@ -311,7 +307,7 @@ public class Window {
             }
 
             //Движение игрока и обновление хитбокса
-            glBindTexture(GL_TEXTURE_2D, textureMap.get("player_stand"));
+            glBindTexture(GL_TEXTURE_2D, textureMap.get("player_stand_" + player.getDirection()));
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 switch (i2) {
                     case 0:
@@ -349,6 +345,7 @@ public class Window {
                 }
                 g++;
                 player.moveLeft();
+                player.setDirection("left");
             }
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
                 switch (i1) {
@@ -387,34 +384,32 @@ public class Window {
                 }
                 g++;
                 player.moveRight();
+                player.setDirection("right");
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                 switch (i3) {
                     case 0:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_01"));
-                        break;
-                    case 1:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_02"));
                         break;
-                    case 2:
+                    case 1:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_03"));
                         break;
-                    case 3:
+                    case 2:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_04"));
                         break;
-                    case 4:
+                    case 3:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_05"));
                         break;
-                    case 5:
+                    case 4:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_06"));
                         break;
-                    case 6:
+                    case 5:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_07"));
                         break;
-                    case 7:
+                    case 6:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_08"));
                         break;
-                    case 8:
+                    case 7:
                         i3 = 0;
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_09"));
                         break;
@@ -425,6 +420,7 @@ public class Window {
                 }
                 g++;
                 player.moveUp();
+                player.setDirection("up");
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                 switch (i4) {
@@ -460,6 +456,7 @@ public class Window {
                 }
                 g++;
                 player.moveDown();
+                player.setDirection("down");
             }
 
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);

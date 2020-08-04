@@ -7,16 +7,16 @@ import java.util.TimerTask;
 
 public class Player extends Mob {
     private int time = 0;
-    private String direction;
+    private String knockbackDirection, direction;
     private AABB attackBox;
     private Timer timerPlayer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
         @Override
         public void run() {
-            if (direction.equals("Right")) moveRight();
-            else if (direction.equals("Left")) moveLeft();
-            else if (direction.equals("Up")) moveUp();
-            else if (direction.equals("Down")) moveDown();
+            if (knockbackDirection.equals("Right")) moveRight();
+            else if (knockbackDirection.equals("Left")) moveLeft();
+            else if (knockbackDirection.equals("Up")) moveUp();
+            else if (knockbackDirection.equals("Down")) moveDown();
             time++;
         }
     };
@@ -24,6 +24,7 @@ public class Player extends Mob {
     public Player(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
+        direction = "down";
     }
 
     public void stopTimerPlayer() {
@@ -34,10 +35,10 @@ public class Player extends Mob {
         timerTaskPlayer = new TimerTask() {
             @Override
             public void run() {
-                if (direction.equals("Right")) moveRight();
-                else if (direction.equals("Left")) moveLeft();
-                else if (direction.equals("Up")) moveUp();
-                else if (direction.equals("Down")) moveDown();
+                if (knockbackDirection.equals("Right")) moveRight();
+                else if (knockbackDirection.equals("Left")) moveLeft();
+                else if (knockbackDirection.equals("Up")) moveUp();
+                else if (knockbackDirection.equals("Down")) moveDown();
                 time++;
             }
         };
@@ -50,6 +51,10 @@ public class Player extends Mob {
     public AABB getAttackBox() { return attackBox; }
 
     public int getTime() { return time; }
+
+    public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
+
+    public String getDirection() { return direction; }
 
     public void setDirection(String direction) { this.direction = direction; }
 }
