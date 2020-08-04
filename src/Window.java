@@ -119,8 +119,8 @@ public class Window {
         // Единичное установление хитбоксов стен первого уровня и переходов м/у уровнями
         for(int i = 0, j = 0; i < 5; i++, j+=4)
             aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
-        aabbMap.get("entranceToFirstLevel").update(0, 190, 30, 286);
-        aabbMap.get("entranceToSecondLevel").update(610, 238, 640, 335);
+        aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
+        aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -235,7 +235,7 @@ public class Window {
 
                     // Переход на второй уровень
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("box"));
-                    createQuadTexture(610, 238, 640, 335);
+                    createQuadTexture(638, 238, 640, 335);
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
@@ -268,7 +268,7 @@ public class Window {
 
                     // Переход на первый уровень
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("box"));
-                    createQuadTexture(0, 190, 30, 286);
+                    createQuadTexture(0, 190, 2, 286);
 
                     // Проверка перехода на первый уровень
                     if(AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
