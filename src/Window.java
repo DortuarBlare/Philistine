@@ -444,7 +444,7 @@ public class Window {
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) player.getAttackBox().update(0,0,0,0);
 
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            player.getHitbox().update(player.getX(), player.getY(), player.getX() + 39, player.getY() + 48);
+            player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
 
             //Полоска здоровья
