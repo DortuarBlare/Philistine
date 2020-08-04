@@ -109,7 +109,7 @@ public class Window {
 
         // Единичная загрузка всех текстур
         for (int i = 0, id = 0; i < textureString.length; i++) {
-            if(i < 11) id = Texture.loadTexture("healthbar/" + textureString[i]);
+            if (i < 11) id = Texture.loadTexture("healthbar/" + textureString[i]);
             else id = Texture.loadTexture(textureString[i]);
             textureMap.put(textureString[i], id);
         }
@@ -124,7 +124,7 @@ public class Window {
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
                 Player player = (Player) mobList.get(0);
                 player.getTimerPlayer().cancel();
