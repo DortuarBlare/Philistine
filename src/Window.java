@@ -6,6 +6,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import javax.swing.*;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,24 +141,12 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get("sword"));
                 createQuadTexture(player.getX() + 20, player.getY() + 5, player.getX() + 20 + 67, player.getY() + 5 + 25);
                 player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 20 + 67, player.getY() + 15 + 25);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_01"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                for(int i = 1; i <= 6; i++) {
+                    glClear(GL_TEXTURE_BIT);
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_0" + i));
+                    createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                     glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_02"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_03"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_04"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_05"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_06"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
+                }
             }
         });
     }

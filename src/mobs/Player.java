@@ -8,6 +8,7 @@ import java.util.TimerTask;
 public class Player extends Mob {
     private int time = 0;
     private String knockbackDirection, direction;
+    private String headArmor, torsoArmor, legsArmor, feetArmor;
     private AABB attackBox;
     private Timer timerPlayer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
@@ -25,6 +26,7 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
         direction = "down";
+        headArmor = torsoArmor = legsArmor = feetArmor = "nothing";
     }
 
     public void stopTimerPlayer() {
