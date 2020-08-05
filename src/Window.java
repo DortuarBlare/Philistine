@@ -179,8 +179,9 @@ public class Window {
     private void loop() {
         player = (Player) mobList.get(0);
         int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
-        int g = 0, g2 = 0, g3 = 0;
+        int g = 0, g2 = 0, g3 = 0, g4 = 0;
         int j1 = 0, j2 = 0, j3 = 0, j4 = 0;
+        int j5 = 1;
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -198,6 +199,36 @@ public class Window {
                     Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
+                    //факел
+                    switch (j5){
+                        case 0:
+                            break;
+                        case 1:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch1"));
+                            createQuadTexture(250, 80, 258, 104);
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch3"));
+                            createQuadTexture(350, 80, 358, 104);
+                            break;
+                        case 2:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch2"));
+                            createQuadTexture(250, 80, 258, 104);
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch1"));
+                            createQuadTexture(350, 80, 358, 104);
+                            break;
+                        case 3:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch3"));
+                            createQuadTexture(250, 80, 258, 104);
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch2"));
+                            createQuadTexture(350, 80, 358, 104);
+                            break;
+                    }
+                    if (g4 == 40){
+                        j5++;
+                        if (j5 == 4)
+                            j5 = 1;
+                        g4 = 0;
+                    }
+                    g4++;
 
                     //штаны
                     if (bfe){
