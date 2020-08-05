@@ -6,7 +6,6 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import javax.swing.*;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +24,7 @@ public class Window {
     private String level = "FirstLevel";
     private boolean forScale = true;
     boolean isAttack = false;
-    boolean isStand = false;
-    String movement = "player_stand_down", pants = "pantsGreenish_down_01";
+    String player_animation = "player_stand_down", pants = "pantsGreenish_down_01", weapon;
     Player player;
     private final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
@@ -63,7 +61,8 @@ public class Window {
             "pantsGreenish_left_01", "pantsGreenish_left_02", "pantsGreenish_left_03", "pantsGreenish_left_04", "pantsGreenish_left_05", "pantsGreenish_left_06", "pantsGreenish_left_07", "pantsGreenish_left_08", "pantsGreenish_left_09",
             "pantsGreenish_right_01", "pantsGreenish_right_02", "pantsGreenish_right_03", "pantsGreenish_right_04", "pantsGreenish_right_05", "pantsGreenish_right_06", "pantsGreenish_right_07", "pantsGreenish_right_08", "pantsGreenish_right_09",
             "pantsGreenish_up_01", "pantsGreenish_up_02", "pantsGreenish_up_03", "pantsGreenish_up_04", "pantsGreenish_up_05", "pantsGreenish_up_06", "pantsGreenish_up_07", "pantsGreenish_up_08", "pantsGreenish_up_09",
-            "pantsGreenish_down_01", "pantsGreenish_down_02", "pantsGreenish_down_03", "pantsGreenish_down_04", "pantsGreenish_down_05", "pantsGreenish_down_06", "pantsGreenish_down_07", "pantsGreenish_down_08", "pantsGreenish_down_09"
+            "pantsGreenish_down_01", "pantsGreenish_down_02", "pantsGreenish_down_03", "pantsGreenish_down_04", "pantsGreenish_down_05", "pantsGreenish_down_06", "pantsGreenish_down_07", "pantsGreenish_down_08", "pantsGreenish_down_09",
+            "LEGS_pants_greenish_right_01", "LEGS_pants_greenish_right_02", "LEGS_pants_greenish_right_03", "LEGS_pants_greenish_right_04", "LEGS_pants_greenish_right_05", "LEGS_pants_greenish_right_06"
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
@@ -294,59 +293,53 @@ public class Window {
                     break;
                 }
             }
-            isStand = false;
             //Движение игрока и обновление хитбокса
             if (!isAttack){
                 if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE &&
                         glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
-                    isStand = true;
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("player_stand_" + player.getDirection()));
-                    createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_" + player.getDirection() + "_01"));
-                    createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                    player_animation = "player_stand_" + player.getDirection();
+                    pants = "pantsGreenish_" + player.getDirection() + "_01";
                 }
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-                if (!isAttack){
-                    switch (i2) {
-                        case 0:
-                            movement = "player_walk_left_01";
-                            pants = "pantsGreenish_left_01";
-                            break;
-                        case 1:
-                            movement = "player_walk_left_02";
-                            pants = "pantsGreenish_left_02";
-                            break;
-                        case 2:
-                            movement = "player_walk_left_03";
-                            pants = "pantsGreenish_left_03";
-                            break;
-                        case 3:
-                            movement = "player_walk_left_04";
-                            pants = "pantsGreenish_left_04";
-                            break;
-                        case 4:
-                            movement = "player_walk_left_05";
-                            pants = "pantsGreenish_left_05";
-                            break;
-                        case 5:
-                            movement = "player_walk_left_06";
-                            pants = "pantsGreenish_left_06";
-                            break;
-                        case 6:
-                            movement = "player_walk_left_07";
-                            pants = "pantsGreenish_left_07";
-                            break;
-                        case 7:
-                            movement = "player_walk_left_08";
-                            pants = "pantsGreenish_left_08";
-                            break;
-                        case 8:
-                            i2 = 0;
-                            movement = "player_walk_left_09";
-                            pants = "pantsGreenish_left_09";
-                            break;
-                    }
+                switch (i2) {
+                    case 0:
+                        player_animation = "player_walk_left_01";
+                        pants = "pantsGreenish_left_01";
+                        break;
+                    case 1:
+                        player_animation = "player_walk_left_02";
+                        pants = "pantsGreenish_left_02";
+                        break;
+                    case 2:
+                        player_animation = "player_walk_left_03";
+                        pants = "pantsGreenish_left_03";
+                        break;
+                    case 3:
+                        player_animation = "player_walk_left_04";
+                        pants = "pantsGreenish_left_04";
+                        break;
+                    case 4:
+                        player_animation = "player_walk_left_05";
+                        pants = "pantsGreenish_left_05";
+                        break;
+                    case 5:
+                        player_animation = "player_walk_left_06";
+                        pants = "pantsGreenish_left_06";
+                        break;
+                    case 6:
+                        player_animation = "player_walk_left_07";
+                        pants = "pantsGreenish_left_07";
+                        break;
+                    case 7:
+                        player_animation = "player_walk_left_08";
+                        pants = "pantsGreenish_left_08";
+                        break;
+                    case 8:
+                        i2 = 0;
+                        player_animation = "player_walk_left_09";
+                        pants = "pantsGreenish_left_09";
+                        break;
                 }
                 if (g == 8) {
                     i2++;
@@ -357,46 +350,44 @@ public class Window {
                 player.setDirection("left");
             }
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-                if (!isAttack){
-                    switch (i1) {
-                        case 0:
-                            movement = "player_walk_right_01";
-                            pants = "pantsGreenish_right_01";
-                            break;
-                        case 1:
-                            movement = "player_walk_right_02";
-                            pants = "pantsGreenish_right_02";
-                            break;
-                        case 2:
-                            movement = "player_walk_right_03";
-                            pants = "pantsGreenish_right_03";
-                            break;
-                        case 3:
-                            movement = "player_walk_right_04";
-                            pants = "pantsGreenish_right_04";
-                            break;
-                        case 4:
-                            movement = "player_walk_right_05";
-                            pants = "pantsGreenish_right_05";
-                            break;
-                        case 5:
-                            movement = "player_walk_right_06";
-                            pants = "pantsGreenish_right_06";
-                            break;
-                        case 6:
-                            movement = "player_walk_right_07";
-                            pants = "pantsGreenish_right_07";
-                            break;
-                        case 7:
-                            movement = "player_walk_right_08";
-                            pants = "pantsGreenish_right_08";
-                            break;
-                        case 8:
-                            i1 = 0;
-                            movement = "player_walk_right_09";
-                            pants = "pantsGreenish_right_09";
-                            break;
-                    }
+                switch (i1) {
+                    case 0:
+                        player_animation = "player_walk_right_01";
+                        pants = "pantsGreenish_right_01";
+                        break;
+                    case 1:
+                        player_animation = "player_walk_right_02";
+                        pants = "pantsGreenish_right_02";
+                        break;
+                    case 2:
+                        player_animation = "player_walk_right_03";
+                        pants = "pantsGreenish_right_03";
+                        break;
+                    case 3:
+                        player_animation = "player_walk_right_04";
+                        pants = "pantsGreenish_right_04";
+                        break;
+                    case 4:
+                        player_animation = "player_walk_right_05";
+                        pants = "pantsGreenish_right_05";
+                        break;
+                    case 5:
+                        player_animation = "player_walk_right_06";
+                        pants = "pantsGreenish_right_06";
+                        break;
+                    case 6:
+                        player_animation = "player_walk_right_07";
+                        pants = "pantsGreenish_right_07";
+                        break;
+                    case 7:
+                        player_animation = "player_walk_right_08";
+                        pants = "pantsGreenish_right_08";
+                        break;
+                    case 8:
+                        i1 = 0;
+                        player_animation = "player_walk_right_09";
+                        pants = "pantsGreenish_right_09";
+                        break;
                 }
                 if (g == 8) {
                     i1++;
@@ -407,42 +398,40 @@ public class Window {
                 player.setDirection("right");
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-                if (!isAttack){
-                    switch (i3) {
-                        case 0:
-                            movement = "player_walk_up_02";
-                            pants = "pantsGreenish_up_02";
-                            break;
-                        case 1:
-                            movement = "player_walk_up_03";
-                            pants = "pantsGreenish_up_03";
-                            break;
-                        case 2:
-                            movement = "player_walk_up_04";
-                            pants = "pantsGreenish_up_04";
-                            break;
-                        case 3:
-                            movement = "player_walk_up_05";
-                            pants = "pantsGreenish_up_05";
-                            break;
-                        case 4:
-                            movement = "player_walk_up_06";
-                            pants = "pantsGreenish_up_06";
-                            break;
-                        case 5:
-                            movement = "player_walk_up_07";
-                            pants = "pantsGreenish_up_07";
-                            break;
-                        case 6:
-                            movement = "player_walk_up_08";
-                            pants = "pantsGreenish_up_08";
-                            break;
-                        case 7:
-                            i3 = 0;
-                            movement = "player_walk_up_09";
-                            pants = "pantsGreenish_up_09";
-                            break;
-                    }
+                switch (i3) {
+                    case 0:
+                        player_animation = "player_walk_up_02";
+                        pants = "pantsGreenish_up_02";
+                        break;
+                    case 1:
+                        player_animation = "player_walk_up_03";
+                        pants = "pantsGreenish_up_03";
+                        break;
+                    case 2:
+                        player_animation = "player_walk_up_04";
+                        pants = "pantsGreenish_up_04";
+                        break;
+                    case 3:
+                        player_animation = "player_walk_up_05";
+                        pants = "pantsGreenish_up_05";
+                        break;
+                    case 4:
+                        player_animation = "player_walk_up_06";
+                        pants = "pantsGreenish_up_06";
+                        break;
+                    case 5:
+                        player_animation = "player_walk_up_07";
+                        pants = "pantsGreenish_up_07";
+                        break;
+                    case 6:
+                        player_animation = "player_walk_up_08";
+                        pants = "pantsGreenish_up_08";
+                        break;
+                    case 7:
+                        i3 = 0;
+                        player_animation = "player_walk_up_09";
+                        pants = "pantsGreenish_up_09";
+                        break;
                 }
                 if (g == 8) {
                     i3++;
@@ -453,42 +442,40 @@ public class Window {
                 player.setDirection("up");
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-                if (!isAttack){
-                    switch (i4) {
-                        case 0:
-                            movement = "player_walk_down_01";
-                            pants = "pantsGreenish_down_02";
-                            break;
-                        case 1:
-                            movement = "player_walk_down_02";
-                            pants = "pantsGreenish_down_03";
-                            break;
-                        case 2:
-                            movement = "player_walk_down_03";
-                            pants = "pantsGreenish_down_04";
-                            break;
-                        case 3:
-                            movement = "player_walk_down_04";
-                            pants = "pantsGreenish_down_05";
-                            break;
-                        case 4:
-                            movement = "player_walk_down_05";
-                            pants = "pantsGreenish_down_06";
-                            break;
-                        case 5:
-                            movement = "player_walk_down_06";
-                            pants = "pantsGreenish_down_07";
-                            break;
-                        case 6:
-                            movement = "player_walk_down_07";
-                            pants = "pantsGreenish_down_08";
-                            break;
-                        case 7:
-                            i4 = 0;
-                            movement = "player_walk_down_08";
-                            pants = "pantsGreenish_down_09";
-                            break;
-                    }
+                switch (i4) {
+                    case 0:
+                        player_animation = "player_walk_down_01";
+                        pants = "pantsGreenish_down_02";
+                        break;
+                    case 1:
+                        player_animation = "player_walk_down_02";
+                        pants = "pantsGreenish_down_03";
+                        break;
+                    case 2:
+                        player_animation = "player_walk_down_03";
+                        pants = "pantsGreenish_down_04";
+                        break;
+                    case 3:
+                        player_animation = "player_walk_down_04";
+                        pants = "pantsGreenish_down_05";
+                        break;
+                    case 4:
+                        player_animation = "player_walk_down_05";
+                        pants = "pantsGreenish_down_06";
+                        break;
+                    case 5:
+                        player_animation = "player_walk_down_06";
+                        pants = "pantsGreenish_down_07";
+                        break;
+                    case 6:
+                        player_animation = "player_walk_down_07";
+                        pants = "pantsGreenish_down_08";
+                        break;
+                    case 7:
+                        i4 = 0;
+                        player_animation = "player_walk_down_08";
+                        pants = "pantsGreenish_down_09";
+                        break;
                 }
                 if (g == 8) {
                     i4++;
@@ -501,41 +488,35 @@ public class Window {
             if (isAttack){
                 switch (j1){
                     case 0:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_01"));
-                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_01"));
-                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        player_animation = "player_slash_right_01";
+                        pants = "LEGS_pants_greenish_right_01";
+                        weapon = "weapon_rapier_right_01";
                         break;
                     case 1:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_02"));
-                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_02"));
-                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        player_animation = "player_slash_right_02";
+                        pants = "LEGS_pants_greenish_right_02";
+                        weapon = "weapon_rapier_right_02";
                         break;
                     case 2:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_03"));
-                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_03"));
-                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        player_animation = "player_slash_right_03";
+                        pants = "LEGS_pants_greenish_right_03";
+                        weapon = "weapon_rapier_right_03";
                         break;
                     case 3:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_04"));
-                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_04"));
-                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        player_animation = "player_slash_right_04";
+                        pants = "LEGS_pants_greenish_right_04";
+                        weapon = "weapon_rapier_right_04";
                         break;
                     case 4:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_05"));
-                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_05"));
-                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        player_animation = "player_slash_right_05";
+                        pants = "LEGS_pants_greenish_right_05";
+                        weapon = "weapon_rapier_right_05";
                         player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
                         break;
                     case 5:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_06"));
-                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_06"));
-                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        player_animation = "player_slash_right_06";
+                        pants = "LEGS_pants_greenish_right_06";
+                        weapon = "weapon_rapier_right_06";
                         j1 = 0;
                         isAttack = false;
                         break;
@@ -545,14 +526,17 @@ public class Window {
                     j1++;
                 }
                 g3++;
-            } else {
-                if (!isStand){
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get(movement));
-                    createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
-                    createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                }
             }
+            // отрисовка экипировки
+            glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
+            createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
+            createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            if (isAttack){
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
+                createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+            }
+
             player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
 
