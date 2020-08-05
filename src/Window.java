@@ -7,13 +7,9 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TimerTask;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -26,8 +22,8 @@ public class Window {
     private ArrayList<Mob> mobList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, AABB> aabbMap;
-    String level = "FirstLevel";
-    boolean forScale = true;
+    private String level = "FirstLevel";
+    private boolean forScale = true;
     boolean isAttack = false;
     Player player;
     private final int[] firstLevelWalls = {
@@ -48,17 +44,24 @@ public class Window {
     };
     private final String[] textureString = {
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
+            "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",
             "player_walk_left_01", "player_walk_left_02", "player_walk_left_03", "player_walk_left_04", "player_walk_left_05", "player_walk_left_06", "player_walk_left_07", "player_walk_left_08", "player_walk_left_09",
             "player_walk_right_01", "player_walk_right_02", "player_walk_right_03", "player_walk_right_04", "player_walk_right_05", "player_walk_right_06", "player_walk_right_07", "player_walk_right_08", "player_walk_right_09",
             "player_walk_up_01", "player_walk_up_02", "player_walk_up_03", "player_walk_up_04", "player_walk_up_05", "player_walk_up_06", "player_walk_up_07", "player_walk_up_08", "player_walk_up_09",
             "player_walk_down_01", "player_walk_down_02", "player_walk_down_03", "player_walk_down_04", "player_walk_down_05", "player_walk_down_06", "player_walk_down_07", "player_walk_down_08",
             "slimeLeft", "slimeLeft2", "slimeLeft3",
             "slimeRight", "slimeRight2", "slimeRight3",
-            "level0", "level1", "level2", "level3", "box", "player_stand", "playerAttack", "sword",
+            "level0", "level1", "level2", "level3", "box", "playerAttack", "sword",
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5", "pants",
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
-            "weapon_rapier_right_01", "weapon_rapier_right_02", "weapon_rapier_right_03", "weapon_rapier_right_04", "weapon_rapier_right_05", "weapon_rapier_right_06"
+            "weapon_rapier_right_01", "weapon_rapier_right_02", "weapon_rapier_right_03", "weapon_rapier_right_04", "weapon_rapier_right_05", "weapon_rapier_right_06",
+            "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
+            "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
+            "pantsGreenish_left_01", "pantsGreenish_left_02", "pantsGreenish_left_03", "pantsGreenish_left_04", "pantsGreenish_left_05", "pantsGreenish_left_06", "pantsGreenish_left_07", "pantsGreenish_left_08", "pantsGreenish_left_09",
+            "pantsGreenish_right_01", "pantsGreenish_right_02", "pantsGreenish_right_03", "pantsGreenish_right_04", "pantsGreenish_right_05", "pantsGreenish_right_06", "pantsGreenish_right_07", "pantsGreenish_right_08", "pantsGreenish_right_09",
+            "pantsGreenish_up_01", "pantsGreenish_up_02", "pantsGreenish_up_03", "pantsGreenish_up_04", "pantsGreenish_up_05", "pantsGreenish_up_06", "pantsGreenish_up_07", "pantsGreenish_up_08", "pantsGreenish_up_09",
+            "pantsGreenish_down_01", "pantsGreenish_down_02", "pantsGreenish_down_03", "pantsGreenish_down_04", "pantsGreenish_down_05", "pantsGreenish_down_06", "pantsGreenish_down_07", "pantsGreenish_down_08", "pantsGreenish_down_09"
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
@@ -113,7 +116,7 @@ public class Window {
 
         // Единичная загрузка всех текстур
         for (int i = 0, id = 0; i < textureString.length; i++) {
-            if(i < 11) id = Texture.loadTexture("healthbar/" + textureString[i]);
+            if (i < 11) id = Texture.loadTexture("healthbar/" + textureString[i]);
             else id = Texture.loadTexture(textureString[i]);
             textureMap.put(textureString[i], id);
         }
@@ -128,7 +131,7 @@ public class Window {
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
                 Player player = (Player) mobList.get(0);
                 player.getTimerPlayer().cancel();
@@ -165,8 +168,6 @@ public class Window {
                     Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch0"));
-                    createQuadTexture(186, 83, 194, 107);
 
                     // Все операции со слизнем
                     if (!slime.getDead()) {
@@ -207,10 +208,10 @@ public class Window {
 
                     // Получение урона от слизня
                     if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead() && !player.getImmortal()) {
-                        if (player.getX() > slime.getX()) player.setDirection("Right");
-                        else if (player.getX() < slime.getX()) player.setDirection("Left");
-                        else if (player.getY() > slime.getY()) player.setDirection("Down");
-                        else if (player.getY() < slime.getY()) player.setDirection("Up");
+                        if (player.getX() > slime.getX()) player.setKnockbackDirection("Right");
+                        else if (player.getX() < slime.getX()) player.setKnockbackDirection("Left");
+                        else if (player.getY() > slime.getY()) player.setKnockbackDirection("Down");
+                        else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
                         player.setHealth(player.getHealth() - slime.getDamage());
                         player.setImmortal(true);
                         player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
@@ -293,36 +294,69 @@ public class Window {
             }
 
             //Движение игрока и обновление хитбокса
-            glBindTexture(GL_TEXTURE_2D, textureMap.get("player_stand"));
+            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE &&
+                    glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_stand_" + player.getDirection()));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_" + player.getDirection() + "_01"));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 switch (i2) {
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_01"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_01"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 1:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 2:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 3:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 4:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 5:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 6:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 7:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 8:
                         i2 = 0;
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_left_09"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_left_09"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                 }
                 if (g == 8) {
@@ -331,36 +365,64 @@ public class Window {
                 }
                 g++;
                 player.moveLeft();
+                player.setDirection("left");
             }
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
                 switch (i1) {
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_01"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_01"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 1:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 2:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 3:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 4:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 5:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 6:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 7:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 8:
                         i1 = 0;
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_right_09"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_right_09"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                 }
                 if (g == 8) {
@@ -369,36 +431,58 @@ public class Window {
                 }
                 g++;
                 player.moveRight();
+                player.setDirection("right");
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                 switch (i3) {
                     case 0:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_01"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 1:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_02"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 2:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_03"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 3:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_04"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 4:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_05"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 5:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_06"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 6:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_07"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 7:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_08"));
-                        break;
-                    case 8:
                         i3 = 0;
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_up_09"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_up_09"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                 }
                 if (g == 8) {
@@ -407,33 +491,58 @@ public class Window {
                 }
                 g++;
                 player.moveUp();
+                player.setDirection("up");
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                 switch (i4) {
                     case 0:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_01"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 1:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 2:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 3:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 4:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 5:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 6:
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_07"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                     case 7:
                         i4 = 0;
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("player_walk_down_08"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_down_09"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                         break;
                 }
                 if (g == 8) {
@@ -442,6 +551,7 @@ public class Window {
                 }
                 g++;
                 player.moveDown();
+                player.setDirection("down");
             }
             if (isAttack){
                 switch (j1){
@@ -496,26 +606,14 @@ public class Window {
             player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
 
-            //Полоска здоровья
-            if(player.getHealth() == 100) { glBindTexture(GL_TEXTURE_2D, textureMap.get("100hp")); }
-            else {
-                if(player.getHealth() < 100 && player.getHealth() > 90) glBindTexture(GL_TEXTURE_2D, textureMap.get("100hp"));
-                if(player.getHealth() <= 90 && player.getHealth() > 80) glBindTexture(GL_TEXTURE_2D, textureMap.get("90hp"));
-                if(player.getHealth() <= 80 && player.getHealth() > 70) glBindTexture(GL_TEXTURE_2D, textureMap.get("80hp"));
-                if(player.getHealth() <= 70 && player.getHealth() > 60) glBindTexture(GL_TEXTURE_2D, textureMap.get("70hp"));
-                if(player.getHealth() <= 60 && player.getHealth() > 50) glBindTexture(GL_TEXTURE_2D, textureMap.get("60hp"));
-                if(player.getHealth() <= 50 && player.getHealth() > 40) glBindTexture(GL_TEXTURE_2D, textureMap.get("50hp"));
-                if(player.getHealth() <= 40 && player.getHealth() > 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("40hp"));
-                if(player.getHealth() <= 30 && player.getHealth() > 20) glBindTexture(GL_TEXTURE_2D, textureMap.get("30hp"));
-                if(player.getHealth() <= 20 && player.getHealth() > 10) glBindTexture(GL_TEXTURE_2D, textureMap.get("20hp"));
-                if(player.getHealth() <= 10 && player.getHealth() > 0) glBindTexture(GL_TEXTURE_2D, textureMap.get("10hp"));
-                if(player.getHealth() == 0) {
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
-                    player.setDead(true);
-                }
+            // Полоска здоровья
+            int tempHealth = player.getHealth() % 10 == 0 ? player.getHealth() : player.getHealth() + 10 - (player.getHealth() % 10);
+            glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
+            if (player.getHealth() == 0) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
+                player.setDead(true);
             }
-            createQuadTexture(5, 5, 105, 21);
-
+            createQuadTexture(0, 0, 103, 18);
 
             glfwPollEvents();
             glfwSwapBuffers(window);

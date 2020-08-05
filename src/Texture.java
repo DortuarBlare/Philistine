@@ -10,7 +10,7 @@ import org.lwjgl.system.MemoryStack;
 public class Texture {
     private static HashMap<String, Integer> idMap = new HashMap<String, Integer>();
 
-    public static int loadTexture(String resourceName){
+    public static int loadTexture(String resourceName) {
         if (idMap.containsKey(resourceName)) return idMap.get(resourceName);
 
         int width, height;
@@ -39,4 +39,5 @@ public class Texture {
         catch (Exception e) { e.printStackTrace(); }
         return 0;
     }
+
 }
