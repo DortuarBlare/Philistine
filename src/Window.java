@@ -25,6 +25,7 @@ public class Window {
     private String level = "FirstLevel";
     private boolean forScale = true;
     boolean isAttack = false;
+    boolean isStand = false;
     String movement = "player_stand_down", pants = "pantsGreenish_down_01";
     Player player;
     private final int[] firstLevelWalls = {
@@ -293,11 +294,12 @@ public class Window {
                     break;
                 }
             }
-
+            isStand = false;
             //Движение игрока и обновление хитбокса
             if (!isAttack){
                 if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE &&
                         glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+                    isStand = true;
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("player_stand_" + player.getDirection()));
                     createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("pantsGreenish_" + player.getDirection() + "_01"));
@@ -544,10 +546,12 @@ public class Window {
                 }
                 g3++;
             } else {
-                glBindTexture(GL_TEXTURE_2D, textureMap.get(movement));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                if (!isStand){
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get(movement));
+                    createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
+                    createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                }
             }
             player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
