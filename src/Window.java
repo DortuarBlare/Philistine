@@ -224,6 +224,7 @@ public class Window {
                         slime.setImmortal(true);
                         slime.getTimerSlime().schedule(slime.getTimerTaskSlime(), 0, 10);
                     }
+                    player.getAttackBox().update(0, 0, 0, 0);
                     if (player.getTime() >= 50) {
                         player.stopTimerPlayer();
                         player.setImmortal(false);
@@ -529,8 +530,6 @@ public class Window {
                 }
                 g3++;
             }
-            System.out.println(player.getLegs());
-            System.out.println(pants);
             // отрисовка экипировки
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
