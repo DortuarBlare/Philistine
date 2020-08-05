@@ -24,8 +24,8 @@ public class Window {
     private String level = "FirstLevel";
     private boolean forScale = true;
     boolean isAttack = false;
-    String player_animation = "player_stand_down", pants = "pantsGreenish_down_01", weapon;
     Player player;
+    String player_animation, pants, weapon;
     private final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
@@ -58,11 +58,13 @@ public class Window {
             "weapon_rapier_right_01", "weapon_rapier_right_02", "weapon_rapier_right_03", "weapon_rapier_right_04", "weapon_rapier_right_05", "weapon_rapier_right_06",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
-            "pantsGreenish_left_01", "pantsGreenish_left_02", "pantsGreenish_left_03", "pantsGreenish_left_04", "pantsGreenish_left_05", "pantsGreenish_left_06", "pantsGreenish_left_07", "pantsGreenish_left_08", "pantsGreenish_left_09",
-            "pantsGreenish_right_01", "pantsGreenish_right_02", "pantsGreenish_right_03", "pantsGreenish_right_04", "pantsGreenish_right_05", "pantsGreenish_right_06", "pantsGreenish_right_07", "pantsGreenish_right_08", "pantsGreenish_right_09",
-            "pantsGreenish_up_01", "pantsGreenish_up_02", "pantsGreenish_up_03", "pantsGreenish_up_04", "pantsGreenish_up_05", "pantsGreenish_up_06", "pantsGreenish_up_07", "pantsGreenish_up_08", "pantsGreenish_up_09",
-            "pantsGreenish_down_01", "pantsGreenish_down_02", "pantsGreenish_down_03", "pantsGreenish_down_04", "pantsGreenish_down_05", "pantsGreenish_down_06", "pantsGreenish_down_07", "pantsGreenish_down_08", "pantsGreenish_down_09",
-            "LEGS_pants_greenish_right_01", "LEGS_pants_greenish_right_02", "LEGS_pants_greenish_right_03", "LEGS_pants_greenish_right_04", "LEGS_pants_greenish_right_05", "LEGS_pants_greenish_right_06"
+
+            "LEGS_pants_greenish_left_move_01", "LEGS_pants_greenish_left_move_02", "LEGS_pants_greenish_left_move_03", "LEGS_pants_greenish_left_move_04", "LEGS_pants_greenish_left_move_05", "LEGS_pants_greenish_left_move_06", "LEGS_pants_greenish_left_move_07", "LEGS_pants_greenish_left_move_08", "LEGS_pants_greenish_left_move_09",
+            "LEGS_pants_greenish_right_move_01", "LEGS_pants_greenish_right_move_02", "LEGS_pants_greenish_right_move_03", "LEGS_pants_greenish_right_move_04", "LEGS_pants_greenish_right_move_05", "LEGS_pants_greenish_right_move_06", "LEGS_pants_greenish_right_move_07", "LEGS_pants_greenish_right_move_08", "LEGS_pants_greenish_right_move_09",
+            "LEGS_pants_greenish_up_move_01", "LEGS_pants_greenish_up_move_02", "LEGS_pants_greenish_up_move_03", "LEGS_pants_greenish_up_move_04", "LEGS_pants_greenish_up_move_05", "LEGS_pants_greenish_up_move_06", "LEGS_pants_greenish_up_move_07", "LEGS_pants_greenish_up_move_08", "LEGS_pants_greenish_up_move_09",
+            "LEGS_pants_greenish_down_move_01", "LEGS_pants_greenish_down_move_02", "LEGS_pants_greenish_down_move_03", "LEGS_pants_greenish_down_move_04", "LEGS_pants_greenish_down_move_05", "LEGS_pants_greenish_down_move_06", "LEGS_pants_greenish_down_move_07", "LEGS_pants_greenish_down_move_08", "LEGS_pants_greenish_down_move_09",
+
+            "LEGS_pants_greenish_right_slash_01", "LEGS_pants_greenish_right_slash_02", "LEGS_pants_greenish_right_slash_03", "LEGS_pants_greenish_right_slash_04", "LEGS_pants_greenish_right_slash_05", "LEGS_pants_greenish_right_slash_06"
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
@@ -298,47 +300,47 @@ public class Window {
                 if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE &&
                         glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
                     player_animation = "player_stand_" + player.getDirection();
-                    pants = "pantsGreenish_" + player.getDirection() + "_01";
+                    pants = "LEGS_" + player.getLegs() + "_" + player.getDirection() + "_move_01";
                 }
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 switch (i2) {
                     case 0:
                         player_animation = "player_walk_left_01";
-                        pants = "pantsGreenish_left_01";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_01";
                         break;
                     case 1:
                         player_animation = "player_walk_left_02";
-                        pants = "pantsGreenish_left_02";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_02";
                         break;
                     case 2:
                         player_animation = "player_walk_left_03";
-                        pants = "pantsGreenish_left_03";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_03";
                         break;
                     case 3:
                         player_animation = "player_walk_left_04";
-                        pants = "pantsGreenish_left_04";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_04";
                         break;
                     case 4:
                         player_animation = "player_walk_left_05";
-                        pants = "pantsGreenish_left_05";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_05";
                         break;
                     case 5:
                         player_animation = "player_walk_left_06";
-                        pants = "pantsGreenish_left_06";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_06";
                         break;
                     case 6:
                         player_animation = "player_walk_left_07";
-                        pants = "pantsGreenish_left_07";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_07";
                         break;
                     case 7:
                         player_animation = "player_walk_left_08";
-                        pants = "pantsGreenish_left_08";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_08";
                         break;
                     case 8:
                         i2 = 0;
                         player_animation = "player_walk_left_09";
-                        pants = "pantsGreenish_left_09";
+                        pants = "LEGS_" + player.getLegs() + "_left_move_09";
                         break;
                 }
                 if (g == 8) {
@@ -353,40 +355,40 @@ public class Window {
                 switch (i1) {
                     case 0:
                         player_animation = "player_walk_right_01";
-                        pants = "pantsGreenish_right_01";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_01";
                         break;
                     case 1:
                         player_animation = "player_walk_right_02";
-                        pants = "pantsGreenish_right_02";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_02";
                         break;
                     case 2:
                         player_animation = "player_walk_right_03";
-                        pants = "pantsGreenish_right_03";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_03";
                         break;
                     case 3:
                         player_animation = "player_walk_right_04";
-                        pants = "pantsGreenish_right_04";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_04";
                         break;
                     case 4:
                         player_animation = "player_walk_right_05";
-                        pants = "pantsGreenish_right_05";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_05";
                         break;
                     case 5:
                         player_animation = "player_walk_right_06";
-                        pants = "pantsGreenish_right_06";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_06";
                         break;
                     case 6:
                         player_animation = "player_walk_right_07";
-                        pants = "pantsGreenish_right_07";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_07";
                         break;
                     case 7:
                         player_animation = "player_walk_right_08";
-                        pants = "pantsGreenish_right_08";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_08";
                         break;
                     case 8:
                         i1 = 0;
                         player_animation = "player_walk_right_09";
-                        pants = "pantsGreenish_right_09";
+                        pants = "LEGS_" + player.getLegs() + "_right_move_09";
                         break;
                 }
                 if (g == 8) {
@@ -401,36 +403,36 @@ public class Window {
                 switch (i3) {
                     case 0:
                         player_animation = "player_walk_up_02";
-                        pants = "pantsGreenish_up_02";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_02";
                         break;
                     case 1:
                         player_animation = "player_walk_up_03";
-                        pants = "pantsGreenish_up_03";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_03";
                         break;
                     case 2:
                         player_animation = "player_walk_up_04";
-                        pants = "pantsGreenish_up_04";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_04";
                         break;
                     case 3:
                         player_animation = "player_walk_up_05";
-                        pants = "pantsGreenish_up_05";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_05";
                         break;
                     case 4:
                         player_animation = "player_walk_up_06";
-                        pants = "pantsGreenish_up_06";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_06";
                         break;
                     case 5:
                         player_animation = "player_walk_up_07";
-                        pants = "pantsGreenish_up_07";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_07";
                         break;
                     case 6:
                         player_animation = "player_walk_up_08";
-                        pants = "pantsGreenish_up_08";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_08";
                         break;
                     case 7:
                         i3 = 0;
                         player_animation = "player_walk_up_09";
-                        pants = "pantsGreenish_up_09";
+                        pants = "LEGS_" + player.getLegs() + "_up_move_09";
                         break;
                 }
                 if (g == 8) {
@@ -445,36 +447,36 @@ public class Window {
                 switch (i4) {
                     case 0:
                         player_animation = "player_walk_down_01";
-                        pants = "pantsGreenish_down_02";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_02";
                         break;
                     case 1:
                         player_animation = "player_walk_down_02";
-                        pants = "pantsGreenish_down_03";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_03";
                         break;
                     case 2:
                         player_animation = "player_walk_down_03";
-                        pants = "pantsGreenish_down_04";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_04";
                         break;
                     case 3:
                         player_animation = "player_walk_down_04";
-                        pants = "pantsGreenish_down_05";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_05";
                         break;
                     case 4:
                         player_animation = "player_walk_down_05";
-                        pants = "pantsGreenish_down_06";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_06";
                         break;
                     case 5:
                         player_animation = "player_walk_down_06";
-                        pants = "pantsGreenish_down_07";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_07";
                         break;
                     case 6:
                         player_animation = "player_walk_down_07";
-                        pants = "pantsGreenish_down_08";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_08";
                         break;
                     case 7:
                         i4 = 0;
                         player_animation = "player_walk_down_08";
-                        pants = "pantsGreenish_down_09";
+                        pants = "LEGS_" + player.getLegs() + "_down_move_09";
                         break;
                 }
                 if (g == 8) {
@@ -489,33 +491,33 @@ public class Window {
                 switch (j1){
                     case 0:
                         player_animation = "player_slash_right_01";
-                        pants = "LEGS_pants_greenish_right_01";
+                        pants = "LEGS_" + player.getLegs() + "_right_slash_01";
                         weapon = "weapon_rapier_right_01";
                         break;
                     case 1:
                         player_animation = "player_slash_right_02";
-                        pants = "LEGS_pants_greenish_right_02";
+                        pants = "LEGS_" + player.getLegs() + "_right_slash_02";
                         weapon = "weapon_rapier_right_02";
                         break;
                     case 2:
                         player_animation = "player_slash_right_03";
-                        pants = "LEGS_pants_greenish_right_03";
+                        pants = "LEGS_" + player.getLegs() + "_right_slash_03";
                         weapon = "weapon_rapier_right_03";
                         break;
                     case 3:
                         player_animation = "player_slash_right_04";
-                        pants = "LEGS_pants_greenish_right_04";
+                        pants = "LEGS_" + player.getLegs() + "_right_slash_04";
                         weapon = "weapon_rapier_right_04";
                         break;
                     case 4:
                         player_animation = "player_slash_right_05";
-                        pants = "LEGS_pants_greenish_right_05";
+                        pants = "LEGS_" + player.getLegs() + "_right_slash_05";
                         weapon = "weapon_rapier_right_05";
                         player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
                         break;
                     case 5:
                         player_animation = "player_slash_right_06";
-                        pants = "LEGS_pants_greenish_right_06";
+                        pants = "LEGS_" + player.getLegs() + "_right_slash_06";
                         weapon = "weapon_rapier_right_06";
                         j1 = 0;
                         isAttack = false;
@@ -527,6 +529,8 @@ public class Window {
                 }
                 g3++;
             }
+            System.out.println(player.getLegs());
+            System.out.println(pants);
             // отрисовка экипировки
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
