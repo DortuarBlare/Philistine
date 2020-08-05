@@ -566,7 +566,7 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_down_slash_06";
                         weapon = "weapon_rapier_down_06";
                         j2 = 0;
-                        isAttackR = false;
+                        isAttackD = false;
                         break;
                 }
                 if (g3 == 4){
@@ -607,7 +607,7 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_left_slash_06";
                         weapon = "weapon_rapier_left_06";
                         j3 = 0;
-                        isAttackR = false;
+                        isAttackL = false;
                         break;
                 }
                 if (g3 == 4){
@@ -648,7 +648,7 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_up_slash_06";
                         weapon = "weapon_rapier_up_06";
                         j4 = 0;
-                        isAttackR = false;
+                        isAttackU = false;
                         break;
                 }
                 if (g3 == 4){
