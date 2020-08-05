@@ -60,11 +60,7 @@ public class Player extends Mob {
 
     public void setDirection(String direction) { this.direction = direction; }
 
-    public String getLegs() {
-        return legs;
-    }
+    public String getLegs() { return legs; }
 
-    public void setLegs(String legs) {
-        this.legs = legs;
-    }
+    public void setLegs(String legs) { this.legs = legs; }
 }

@@ -53,7 +53,7 @@ public class Window {
             "player_walk_down_01", "player_walk_down_02", "player_walk_down_03", "player_walk_down_04", "player_walk_down_05", "player_walk_down_06", "player_walk_down_07", "player_walk_down_08",
             "slimeLeft", "slimeLeft2", "slimeLeft3",
             "slimeRight", "slimeRight2", "slimeRight3",
-            "level0", "level1", "level2", "level3", "box", "playerAttack", "sword",
+            "level0", "level1", "level2", "level3", "box",
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
 
@@ -553,7 +553,7 @@ public class Window {
                 player.moveDown();
                 player.setDirection("down");
             }
-            if (isAttackR){
+            if (isAttackR) {
                 switch (j1){
                     case 0:
                         player_animation = "player_slash_right_01";
@@ -579,7 +579,7 @@ public class Window {
                         player_animation = "player_slash_right_05";
                         pants = "LEGS_" + player.getLegs() + "_right_slash_05";
                         weapon = "weapon_rapier_right_05";
-                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        player.getAttackBox().update(player.getX() + 55, player.getY() + 20, player.getX() + 55 + 60, player.getY() + 20 + 28);
                         break;
                     case 5:
                         player_animation = "player_slash_right_06";
@@ -589,13 +589,14 @@ public class Window {
                         isAttackR = false;
                         break;
                 }
-                if (g3 == 4){
+                if (g3 == 4) {
                     g3 = 0;
                     j1++;
                 }
                 g3++;
-            } else if (isAttackD){
-                switch (j2){
+            }
+            else if (isAttackD) {
+                switch (j2) {
                     case 0:
                         player_animation = "player_slash_down_01";
                         pants = "LEGS_" + player.getLegs() + "_down_slash_01";
@@ -620,7 +621,7 @@ public class Window {
                         player_animation = "player_slash_down_05";
                         pants = "LEGS_" + player.getLegs() + "_down_slash_05";
                         weapon = "weapon_rapier_down_05";
-                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        player.getAttackBox().update(player.getX() + 10, player.getY() + 20, player.getX() + 10 + 55, player.getY() + 45 + 39);
                         break;
                     case 5:
                         player_animation = "player_slash_down_06";
@@ -630,13 +631,14 @@ public class Window {
                         isAttackD = false;
                         break;
                 }
-                if (g3 == 4){
+                if (g3 == 4) {
                     g3 = 0;
                     j2++;
                 }
                 g3++;
-            } else if (isAttackL){
-                switch (j3){
+            }
+            else if (isAttackL) {
+                switch (j3) {
                     case 0:
                         player_animation = "player_slash_left_01";
                         pants = "LEGS_" + player.getLegs() + "_left_slash_01";
@@ -661,7 +663,7 @@ public class Window {
                         player_animation = "player_slash_left_05";
                         pants = "LEGS_" + player.getLegs() + "_left_slash_05";
                         weapon = "weapon_rapier_left_05";
-                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        player.getAttackBox().update(player.getX() - 50, player.getY() + 20, player.getX() - 50 + 69, player.getY() + 20 + 27);
                         break;
                     case 5:
                         player_animation = "player_slash_left_06";
@@ -671,13 +673,14 @@ public class Window {
                         isAttackL = false;
                         break;
                 }
-                if (g3 == 4){
+                if (g3 == 4) {
                     g3 = 0;
                     j3++;
                 }
                 g3++;
-            } else if (isAttackU){
-                switch (j4){
+            }
+            else if (isAttackU) {
+                switch (j4) {
                     case 0:
                         player_animation = "player_slash_up_01";
                         pants = "LEGS_" + player.getLegs() + "_up_slash_01";
@@ -702,7 +705,7 @@ public class Window {
                         player_animation = "player_slash_up_05";
                         pants = "LEGS_" + player.getLegs() + "_up_slash_05";
                         weapon = "weapon_rapier_up_05";
-                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        player.getAttackBox().update(player.getX() + 18, player.getY() - 10, player.getX() + 18 + 56, player.getY() - 10 + 21);
                         break;
                     case 5:
                         player_animation = "player_slash_up_06";
@@ -712,7 +715,7 @@ public class Window {
                         isAttackU = false;
                         break;
                 }
-                if (g3 == 4){
+                if (g3 == 4) {
                     g3 = 0;
                     j4++;
                 }
@@ -725,7 +728,7 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if (isAttackR || isAttackU || isAttackL || isAttackD){
+            if (isAttackR || isAttackU || isAttackL || isAttackD) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
