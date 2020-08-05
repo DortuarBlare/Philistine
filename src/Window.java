@@ -289,6 +289,10 @@ public class Window {
                         player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
                     }
                     if (AABB.AABBvsAABB(player.getAttackBox(), slime.getHitbox()) && !slime.getImmortal()) {
+                        if (player.getX() > slime.getX()) slime.setDirection("Left");
+                        else if (player.getX() < slime.getX()) slime.setDirection("Right");
+                        else if (player.getY() > slime.getY()) slime.setDirection("Up");
+                        else if (player.getY() < slime.getY()) slime.setDirection("Down");
                         slime.setHealth(slime.getHealth() - player.getDamage());
                         slime.setImmortal(true);
                         slime.getTimerSlime().schedule(slime.getTimerTaskSlime(), 0, 10);
@@ -724,7 +728,7 @@ public class Window {
             // отрисовка экипировки
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            if (!player.getLegs().equals("nothing")){
+            if (!player.getLegs().equals("nothing")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }

@@ -12,11 +12,10 @@ public class Slime extends Mob {
     private TimerTask timerTaskSlime = new TimerTask() {
         @Override
         public void run() {
-//            if (direction.equals("Left")) moveRight();
-//            else if (direction.equals("Right")) moveLeft();
-//            else if (direction.equals("Up")) moveDown();
-//            else if (direction.equals("Down")) moveUp();
-            moveRight();
+            if (direction.equals("Left")) moveLeft();
+            else if (direction.equals("Right")) moveRight();
+            else if (direction.equals("Up")) moveUp();
+            else if (direction.equals("Down")) moveDown();
             time++;
         }
     };
@@ -33,7 +32,10 @@ public class Slime extends Mob {
         timerTaskSlime = new TimerTask() {
             @Override
             public void run() {
-                moveRight();
+                if (direction.equals("Left")) moveLeft();
+                else if (direction.equals("Right")) moveRight();
+                else if (direction.equals("Up")) moveUp();
+                else if (direction.equals("Down")) moveDown();
                 time++;
             }
         };
@@ -44,4 +46,6 @@ public class Slime extends Mob {
     public TimerTask getTimerTaskSlime() { return timerTaskSlime; }
 
     public int getTime() { return time; }
+
+    public void setDirection(String direction) { this.direction = direction; }
 }
