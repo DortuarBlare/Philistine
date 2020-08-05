@@ -23,7 +23,7 @@ public class Window {
     private HashMap<String, AABB> aabbMap;
     private String level = "FirstLevel";
     private boolean forScale = true;
-    boolean isAttack = false;
+    boolean isAttackR = false, isAttackL = false, isAttackU = false, isAttackD = false;
     Player player;
     String player_animation, pants, weapon;
     private final int[] firstLevelWalls = {
@@ -143,8 +143,17 @@ public class Window {
                 slime.getTimerSlime().cancel();
                 slime.getTimerSlime().purge();
             }
-            if (key == GLFW_KEY_Z && action == GLFW_PRESS){
-                isAttack = true;
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
+                isAttackR = true;
+            }
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
+                isAttackL = true;
+            }
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS){
+                isAttackU = true;
+            }
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS){
+                isAttackD = true;
             }
         });
     }
@@ -153,7 +162,7 @@ public class Window {
         player = (Player) mobList.get(0);
         int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
         int g = 0, g2 = 0, g3 = 0;
-        int j1 = 0;
+        int j1 = 0, j2 = 0, j3 = 0, j4 = 0;
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -297,14 +306,9 @@ public class Window {
                 }
             }
             //Движение игрока и обновление хитбокса
-            if (!isAttack){
-                if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE &&
-                        glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
-                    player_animation = "player_stand_" + player.getDirection();
-                    pants = "LEGS_" + player.getLegs() + "_" + player.getDirection() + "_move_01";
-                }
-            }
-            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            player_animation = "player_stand_" + player.getDirection();
+            pants = "LEGS_" + player.getLegs() + "_" + player.getDirection() + "_move_01";
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
                 switch (i2) {
                     case 0:
                         player_animation = "player_walk_left_01";
@@ -352,7 +356,7 @@ public class Window {
                 player.moveLeft();
                 player.setDirection("left");
             }
-            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
                 switch (i1) {
                     case 0:
                         player_animation = "player_walk_right_01";
@@ -400,7 +404,7 @@ public class Window {
                 player.moveRight();
                 player.setDirection("right");
             }
-            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
                 switch (i3) {
                     case 0:
                         player_animation = "player_walk_up_02";
@@ -444,7 +448,7 @@ public class Window {
                 player.moveUp();
                 player.setDirection("up");
             }
-            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 switch (i4) {
                     case 0:
                         player_animation = "player_walk_down_01";
@@ -488,7 +492,7 @@ public class Window {
                 player.moveDown();
                 player.setDirection("down");
             }
-            if (isAttack){
+            if (isAttackR){
                 switch (j1){
                     case 0:
                         player_animation = "player_slash_right_01";
@@ -521,12 +525,135 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_right_slash_06";
                         weapon = "weapon_rapier_right_06";
                         j1 = 0;
-                        isAttack = false;
+                        isAttackR = false;
                         break;
                 }
                 if (g3 == 4){
                     g3 = 0;
                     j1++;
+                }
+                g3++;
+            } else if (isAttackD){
+                switch (j2){
+                    case 0:
+                        player_animation = "player_slash_down_01";
+                        pants = "LEGS_" + player.getLegs() + "_down_slash_01";
+                        weapon = "weapon_rapier_down_01";
+                        break;
+                    case 1:
+                        player_animation = "player_slash_down_02";
+                        pants = "LEGS_" + player.getLegs() + "_down_slash_02";
+                        weapon = "weapon_rapier_down_02";
+                        break;
+                    case 2:
+                        player_animation = "player_slash_down_03";
+                        pants = "LEGS_" + player.getLegs() + "_down_slash_03";
+                        weapon = "weapon_rapier_down_03";
+                        break;
+                    case 3:
+                        player_animation = "player_slash_down_04";
+                        pants = "LEGS_" + player.getLegs() + "_down_slash_04";
+                        weapon = "weapon_rapier_down_04";
+                        break;
+                    case 4:
+                        player_animation = "player_slash_down_05";
+                        pants = "LEGS_" + player.getLegs() + "_down_slash_05";
+                        weapon = "weapon_rapier_down_05";
+                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 5:
+                        player_animation = "player_slash_down_06";
+                        pants = "LEGS_" + player.getLegs() + "_down_slash_06";
+                        weapon = "weapon_rapier_down_06";
+                        j2 = 0;
+                        isAttackR = false;
+                        break;
+                }
+                if (g3 == 4){
+                    g3 = 0;
+                    j2++;
+                }
+                g3++;
+            } else if (isAttackL){
+                switch (j3){
+                    case 0:
+                        player_animation = "player_slash_left_01";
+                        pants = "LEGS_" + player.getLegs() + "_left_slash_01";
+                        weapon = "weapon_rapier_left_01";
+                        break;
+                    case 1:
+                        player_animation = "player_slash_left_02";
+                        pants = "LEGS_" + player.getLegs() + "_left_slash_02";
+                        weapon = "weapon_rapier_left_02";
+                        break;
+                    case 2:
+                        player_animation = "player_slash_left_03";
+                        pants = "LEGS_" + player.getLegs() + "_left_slash_03";
+                        weapon = "weapon_rapier_left_03";
+                        break;
+                    case 3:
+                        player_animation = "player_slash_left_04";
+                        pants = "LEGS_" + player.getLegs() + "_left_slash_04";
+                        weapon = "weapon_rapier_left_04";
+                        break;
+                    case 4:
+                        player_animation = "player_slash_left_05";
+                        pants = "LEGS_" + player.getLegs() + "_left_slash_05";
+                        weapon = "weapon_rapier_left_05";
+                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 5:
+                        player_animation = "player_slash_left_06";
+                        pants = "LEGS_" + player.getLegs() + "_left_slash_06";
+                        weapon = "weapon_rapier_left_06";
+                        j3 = 0;
+                        isAttackR = false;
+                        break;
+                }
+                if (g3 == 4){
+                    g3 = 0;
+                    j3++;
+                }
+                g3++;
+            } else if (isAttackU){
+                switch (j4){
+                    case 0:
+                        player_animation = "player_slash_up_01";
+                        pants = "LEGS_" + player.getLegs() + "_up_slash_01";
+                        weapon = "weapon_rapier_up_01";
+                        break;
+                    case 1:
+                        player_animation = "player_slash_up_02";
+                        pants = "LEGS_" + player.getLegs() + "_up_slash_02";
+                        weapon = "weapon_rapier_up_02";
+                        break;
+                    case 2:
+                        player_animation = "player_slash_up_03";
+                        pants = "LEGS_" + player.getLegs() + "_up_slash_03";
+                        weapon = "weapon_rapier_up_03";
+                        break;
+                    case 3:
+                        player_animation = "player_slash_up_04";
+                        pants = "LEGS_" + player.getLegs() + "_up_slash_04";
+                        weapon = "weapon_rapier_up_04";
+                        break;
+                    case 4:
+                        player_animation = "player_slash_up_05";
+                        pants = "LEGS_" + player.getLegs() + "_up_slash_05";
+                        weapon = "weapon_rapier_up_05";
+                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 5:
+                        player_animation = "player_slash_up_06";
+                        pants = "LEGS_" + player.getLegs() + "_up_slash_06";
+                        weapon = "weapon_rapier_up_06";
+                        j4 = 0;
+                        isAttackR = false;
+                        break;
+                }
+                if (g3 == 4){
+                    g3 = 0;
+                    j4++;
                 }
                 g3++;
             }
@@ -535,7 +662,7 @@ public class Window {
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            if (isAttack){
+            if (isAttackR){
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
