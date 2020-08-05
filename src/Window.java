@@ -54,8 +54,17 @@ public class Window {
             "level0", "level1", "level2", "level3", "box", "playerAttack", "sword",
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
+
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
+            "player_slash_up_01", "player_slash_up_02", "player_slash_up_03", "player_slash_up_04", "player_slash_up_05", "player_slash_up_06",
+            "player_slash_left_01", "player_slash_left_02", "player_slash_left_03", "player_slash_left_04", "player_slash_left_05", "player_slash_left_06",
+            "player_slash_down_01", "player_slash_down_02", "player_slash_down_03", "player_slash_down_04", "player_slash_down_05", "player_slash_down_06",
+
             "weapon_rapier_right_01", "weapon_rapier_right_02", "weapon_rapier_right_03", "weapon_rapier_right_04", "weapon_rapier_right_05", "weapon_rapier_right_06",
+            "weapon_rapier_up_01", "weapon_rapier_up_02", "weapon_rapier_up_03", "weapon_rapier_up_04", "weapon_rapier_up_05", "weapon_rapier_up_06",
+            "weapon_rapier_down_01", "weapon_rapier_down_02", "weapon_rapier_down_03", "weapon_rapier_down_04", "weapon_rapier_down_05", "weapon_rapier_down_06",
+            "weapon_rapier_left_01", "weapon_rapier_left_02", "weapon_rapier_left_03", "weapon_rapier_left_04", "weapon_rapier_left_05", "weapon_rapier_left_06",
+
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
 
@@ -67,7 +76,7 @@ public class Window {
             "LEGS_pants_greenish_left_slash_01", "LEGS_pants_greenish_left_slash_02", "LEGS_pants_greenish_left_slash_03", "LEGS_pants_greenish_left_slash_04", "LEGS_pants_greenish_left_slash_05", "LEGS_pants_greenish_left_slash_06",
             "LEGS_pants_greenish_right_slash_01", "LEGS_pants_greenish_right_slash_02", "LEGS_pants_greenish_right_slash_03", "LEGS_pants_greenish_right_slash_04", "LEGS_pants_greenish_right_slash_05", "LEGS_pants_greenish_right_slash_06",
             "LEGS_pants_greenish_up_slash_01", "LEGS_pants_greenish_up_slash_02", "LEGS_pants_greenish_up_slash_03", "LEGS_pants_greenish_up_slash_04", "LEGS_pants_greenish_up_slash_05", "LEGS_pants_greenish_up_slash_06",
-            "LEGS_pants_greenish_down_slash_01", "LEGS_pants_greenish_down_slash_02", "LEGS_pants_greenish_down_slash_03", "LEGS_pants_greenish_down_slash_04", "LEGS_pants_greenish_down_slash_05", "LEGS_pants_greenish_down_slash_06"
+            "LEGS_pants_greenish_down_slash_01", "LEGS_pants_greenish_down_slash_02", "LEGS_pants_greenish_down_slash_03", "LEGS_pants_greenish_down_slash_04", "LEGS_pants_greenish_down_slash_05", "LEGS_pants_greenish_down_slash_06",
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
@@ -665,7 +674,7 @@ public class Window {
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            if (isAttackR){
+            if (isAttackR || isAttackU || isAttackL || isAttackD){
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
