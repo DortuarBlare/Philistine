@@ -28,6 +28,7 @@ public class Window {
     private HashMap<String, AABB> aabbMap;
     String level = "FirstLevel";
     boolean forScale = true;
+    boolean isAttack = false;
     Player player;
     private final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
@@ -56,7 +57,8 @@ public class Window {
             "level0", "level1", "level2", "level3", "box", "player_stand", "playerAttack", "sword",
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5", "pants",
-            "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06"
+            "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
+            "weapon_rapier_right_01", "weapon_rapier_right_02", "weapon_rapier_right_03", "weapon_rapier_right_04", "weapon_rapier_right_05", "weapon_rapier_right_06"
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
@@ -136,28 +138,7 @@ public class Window {
                 slime.getTimerSlime().purge();
             }
             if (key == GLFW_KEY_Z && action == GLFW_PRESS){
-                player = (Player) mobList.get(0);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("sword"));
-                createQuadTexture(player.getX() + 20, player.getY() + 5, player.getX() + 20 + 67, player.getY() + 5 + 25);
-                player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 20 + 67, player.getY() + 15 + 25);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_01"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_02"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_03"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_04"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_05"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_06"));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-                    glfwSwapBuffers(window);
+                isAttack = true;
             }
         });
     }
@@ -165,7 +146,8 @@ public class Window {
     private void loop() {
         player = (Player) mobList.get(0);
         int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
-        int g = 0, g2 = 0;
+        int g = 0, g2 = 0, g3 = 0;
+        int j1 = 0;
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -461,8 +443,56 @@ public class Window {
                 g++;
                 player.moveDown();
             }
-
-            createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            if (isAttack){
+                switch (j1){
+                    case 0:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_01"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_01"));
+                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 1:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_02"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_02"));
+                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 2:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_03"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_03"));
+                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 3:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_04"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_04"));
+                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 4:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_05"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_05"));
+                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        player.getAttackBox().update(player.getX() + 20, player.getY() + 15, player.getX() + 128, player.getY() + 128);
+                        break;
+                    case 5:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("player_slash_right_06"));
+                        createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("weapon_rapier_right_06"));
+                        createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                        j1 = 0;
+                        isAttack = false;
+                        break;
+                }
+                if (g3 == 4){
+                    g3 = 0;
+                    j1++;
+                }
+                g3++;
+            } else {
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
             player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
 
