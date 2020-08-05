@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Player extends Mob {
-    private int time = 0;
+    private int time = 1;
     private String knockbackDirection, direction;
     private String head, shoulders, hands, feet, torso, legs, belt;
     private AABB attackBox;
@@ -14,8 +14,8 @@ public class Player extends Mob {
     private TimerTask timerTaskPlayer = new TimerTask() {
         @Override
         public void run() {
-            if (knockbackDirection.equals("Right")) moveRight();
-            else if (knockbackDirection.equals("Left")) moveLeft();
+            if (knockbackDirection.equals("Left")) moveLeft();
+            else if (knockbackDirection.equals("Right")) moveRight();
             else if (knockbackDirection.equals("Up")) moveUp();
             else if (knockbackDirection.equals("Down")) moveDown();
             time++;
@@ -31,15 +31,15 @@ public class Player extends Mob {
     }
 
     public void stopTimerPlayer() {
-        time = 0;
+        time = 1;
         timerPlayer.cancel();
         timerPlayer.purge();
         timerPlayer = new Timer();
         timerTaskPlayer = new TimerTask() {
             @Override
             public void run() {
-                if (knockbackDirection.equals("Right")) moveRight();
-                else if (knockbackDirection.equals("Left")) moveLeft();
+                if (knockbackDirection.equals("Left")) moveLeft();
+                else if (knockbackDirection.equals("Right")) moveRight();
                 else if (knockbackDirection.equals("Up")) moveUp();
                 else if (knockbackDirection.equals("Down")) moveDown();
                 time++;
