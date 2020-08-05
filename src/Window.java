@@ -24,6 +24,8 @@ public class Window {
     private String level = "FirstLevel";
     private boolean forScale = true;
     boolean isAttackR = false, isAttackL = false, isAttackU = false, isAttackD = false;
+    boolean isCheck = false;
+    boolean bfe = true;
     Player player;
     String player_animation, pants, weapon;
     private final int[] firstLevelWalls = {
@@ -80,7 +82,7 @@ public class Window {
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish"
     };
 
     public void run() {
@@ -143,6 +145,7 @@ public class Window {
             aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
+        aabbMap.get("pants_greenish").update(300, 100, 364, 164);
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -166,6 +169,9 @@ public class Window {
             }
             if (key == GLFW_KEY_DOWN && action == GLFW_PRESS){
                 isAttackD = true;
+            }
+            if (key == GLFW_KEY_E && action == GLFW_PRESS){
+                isCheck = true;
             }
         });
     }
@@ -192,6 +198,16 @@ public class Window {
                     Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
+
+                    //штаны
+                    if (bfe){
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("LEGS_pants_greenish_down_move_01"));
+                        createQuadTexture(300, 100, 364, 164);
+                    }
+                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("pants_greenish"))){
+                        player.setLegs("pants_greenish");
+                        bfe = false;
+                    }
 
                     // Все операции со слизнем
                     if (!slime.getDead()) {
@@ -317,6 +333,7 @@ public class Window {
                     break;
                 }
             }
+
             //Движение игрока и обновление хитбокса
             player_animation = "player_stand_" + player.getDirection();
             pants = "LEGS_" + player.getLegs() + "_" + player.getDirection() + "_move_01";
@@ -672,8 +689,10 @@ public class Window {
             // отрисовка экипировки
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
-            createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            if (!player.getLegs().equals("nothing")){
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
             if (isAttackR || isAttackU || isAttackL || isAttackD){
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
