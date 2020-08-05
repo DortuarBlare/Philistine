@@ -207,6 +207,7 @@ public class Window {
                     if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("pants_greenish"))){
                         player.setLegs("pants_greenish");
                         bfe = false;
+                        isCheck = false;
                     }
 
                     // Все операции со слизнем
