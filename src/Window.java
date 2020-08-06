@@ -259,11 +259,11 @@ public class Window {
                         slime.getTimerSlime().schedule(slime.getTimerTaskSlime(), 0, 10);
                     }
                     player.getAttackBox().update(0, 0, 0, 0);
-                    if (player.getTime() >= 50) {
+                    if (player.getTime() >= 15) {
                         player.stopTimerPlayer();
                         player.setImmortal(false);
                     }
-                    if (slime.getTime() >= 50) {
+                    if (slime.getTime() >= 25) {
                         slime.stopTimerSlime();
                         slime.setImmortal(false);
                     }
@@ -271,13 +271,13 @@ public class Window {
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
-                            mob.moveLeft();
+                            mob.stopRight();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
-                            mob.moveRight();
+                            mob.stopLeft();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
-                            mob.moveDown();
+                            mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
-                            mob.moveUp();
+                            mob.stopDown();
                     }
 
                     // Проверка перехода на второй уровень
@@ -288,8 +288,8 @@ public class Window {
                             aabbMap.get("wall" + i).update(secondLevelWalls[j], secondLevelWalls[j + 1],
                                     secondLevelWalls[j + 2], secondLevelWalls[j + 3]);
                         }
-                        player.setX(2 - 15);
-                        player.setY(229);
+                        player.setX(2 - 14);
+                        player.setY(225);
                     }
                     break;
                 }
@@ -301,13 +301,13 @@ public class Window {
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
-                            mob.moveLeft();
+                            mob.stopRight();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
-                            mob.moveRight();
+                            mob.stopLeft();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
-                            mob.moveDown();
+                            mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
-                            mob.moveUp();
+                            mob.stopDown();
                     }
 
                     // Проверка перехода на первый уровень
@@ -374,7 +374,6 @@ public class Window {
                 }
                 g++;
                 player.moveLeft();
-                player.setMoveDirection("left");
             }
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
                 switch (i1) {
@@ -422,7 +421,6 @@ public class Window {
                 }
                 g++;
                 player.moveRight();
-                player.setMoveDirection("right");
             }
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
                 switch (i3) {
@@ -466,7 +464,6 @@ public class Window {
                 }
                 g++;
                 player.moveUp();
-                player.setMoveDirection("up");
             }
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 switch (i4) {
@@ -510,7 +507,6 @@ public class Window {
                 }
                 g++;
                 player.moveDown();
-                player.setMoveDirection("down");
             }
             if (isAttackRight) {
                 switch (j1) {

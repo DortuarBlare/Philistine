@@ -45,6 +45,14 @@ public abstract class Mob {
         moveDirection = "down";
     }
 
+    public void stopLeft() { x += speed; }
+
+    public void stopRight() { x -= speed; }
+
+    public void stopUp() { y += speed; }
+
+    public void stopDown() { y -= speed; }
+
     public int getX() { return x; };
 
     public void setX(int x) { this.x = x; };
