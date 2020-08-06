@@ -6,9 +6,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Player extends Mob {
-    private int time = 1;
+    private int time = 0;
     private String knockbackDirection, direction;
-    private String head, shoulders, hands, feet, torso, legs, belt;
+    private String head, torso, belt, hands, legs, feet;
     private AABB attackBox;
     private Timer timerPlayer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
@@ -26,11 +26,11 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
         direction = "down";
-        head = shoulders = hands = feet = torso = belt = legs = "nothing";
+        head = hands = feet = torso = belt = legs = "nothing";
     }
 
     public void stopTimerPlayer() {
-        time = 1;
+        time = 0;
         timerPlayer.cancel();
         timerPlayer.purge();
         timerPlayer = new Timer();

@@ -23,7 +23,7 @@ public class Window {
     private HashMap<String, AABB> aabbMap;
     private String level = "FirstLevel";
     private boolean forScale = true;
-    boolean isAttackR = false, isAttackL = false, isAttackU = false, isAttackD = false;
+    boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     boolean isCheck = false;
     boolean bfe = true;
     Player player;
@@ -130,6 +130,7 @@ public class Window {
         aabbMap = new HashMap<String, AABB>();
         mobList.add(new Player(150, 250, 2, 100, 0, 1));
         mobList.add(new Slime(300, 300, 1, 5, 0, 10));
+        player = (Player) mobList.get(0);
 
         // Единичная загрузка всех текстур
         for (int i = 0, id = 0; i < textureString.length; i++) {
@@ -158,40 +159,29 @@ public class Window {
                 slime.getTimerSlime().cancel();
                 slime.getTimerSlime().purge();
             }
-            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
-                isAttackR = true;
-            }
-            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
-                isAttackL = true;
-            }
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS){
-                isAttackU = true;
-            }
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS){
-                isAttackD = true;
-            }
-            if (key == GLFW_KEY_E && action == GLFW_PRESS){
-                isCheck = true;
-            }
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) isAttackRight = true;
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) isAttackLeft = true;
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS) isAttackUp = true;
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) isAttackDown = true;
+            if (key == GLFW_KEY_E && action == GLFW_PRESS) isCheck = true;
         });
     }
 
     private void loop() {
-        player = (Player) mobList.get(0);
         int i1 = 0, i2 = 0, i3 = 0, i4 = 0, i5 = 0;
-        int g = 0, g2 = 0, g3 = 0, g4 = 0;
+        int g = 0, g2 = 0, g3 = 0;
         int j1 = 0, j2 = 0, j3 = 0, j4 = 0;
-        int j5 = 1;
+
+        // Изменение скейла изображения
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer pWidth = stack.mallocInt(1);
+            IntBuffer pHeight = stack.mallocInt(1);
+            glfwGetWindowSize(window, pWidth, pHeight);
+            reshape(pWidth.get(0), pHeight.get(0));
+        }
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            // Изменение скейла изображения
-            try (MemoryStack stack = stackPush()) {
-                IntBuffer pWidth = stack.mallocInt(1);
-                IntBuffer pHeight = stack.mallocInt(1);
-                glfwGetWindowSize(window, pWidth, pHeight);
-                reshape(pWidth.get(0), pHeight.get(0));
-            }
 
             // Переключение уровня
             switch (level) {
@@ -199,43 +189,13 @@ public class Window {
                     Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
-                    //факел
-                    switch (j5){
-                        case 0:
-                            break;
-                        case 1:
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch1"));
-                            createQuadTexture(250, 80, 258, 104);
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch3"));
-                            createQuadTexture(350, 80, 358, 104);
-                            break;
-                        case 2:
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch2"));
-                            createQuadTexture(250, 80, 258, 104);
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch1"));
-                            createQuadTexture(350, 80, 358, 104);
-                            break;
-                        case 3:
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch3"));
-                            createQuadTexture(250, 80, 258, 104);
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("torch2"));
-                            createQuadTexture(350, 80, 358, 104);
-                            break;
-                    }
-                    if (g4 == 40){
-                        j5++;
-                        if (j5 == 4)
-                            j5 = 1;
-                        g4 = 0;
-                    }
-                    g4++;
 
-                    //штаны
-                    if (bfe){
+                    // Штаны, которые можно надеть)
+                    if (bfe) {
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("LEGS_pants_greenish_down_move_01"));
                         createQuadTexture(300, 100, 364, 164);
                     }
-                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("pants_greenish"))){
+                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("pants_greenish"))) {
                         player.setLegs("pants_greenish");
                         bfe = false;
                         isCheck = false;
@@ -262,10 +222,10 @@ public class Window {
                         g2++;
                         // Преследование игрока слаймом, обновление хитбокса и перерисовка текстуры
                         if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
-                            if(slime.getX() > player.getX()) slime.moveLeft();
-                            if(slime.getX() < player.getX()) slime.moveRight();
-                            if(slime.getY() > player.getY()) slime.moveUp();
-                            if(slime.getY() < player.getY()) slime.moveDown();
+                            if (slime.getHitbox().getMin()[0] > player.getHitbox().getMin()[0]) slime.moveLeft();
+                            else slime.moveRight();
+                            if (slime.getHitbox().getMin()[1] > player.getHitbox().getMin()[1]) slime.moveUp();
+                            else slime.moveDown();
                         }
                         slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
@@ -288,6 +248,7 @@ public class Window {
                         player.setImmortal(true);
                         player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
                     }
+                    // Слизень получает урон от игрока
                     if (AABB.AABBvsAABB(player.getAttackBox(), slime.getHitbox()) && !slime.getImmortal()) {
                         if (player.getX() > slime.getX()) slime.setDirection("Left");
                         else if (player.getX() < slime.getX()) slime.setDirection("Right");
@@ -319,19 +280,16 @@ public class Window {
                             mob.moveUp();
                     }
 
-                    // Переход на второй уровень
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("box"));
-                    createQuadTexture(638, 238, 640, 335);
-
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
                         level = "SecondLevel";
                         // Обновление хитбоксов стен для второго уровня
-                        for(int i = 0, j = 0; i < 7; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(secondLevelWalls[j], secondLevelWalls[j + 1], secondLevelWalls[j + 2], secondLevelWalls[j + 3]);
+                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(secondLevelWalls[j], secondLevelWalls[j + 1],
+                                    secondLevelWalls[j + 2], secondLevelWalls[j + 3]);
                         }
-                        player.setX(31);
-                        player.setY(239);
+                        player.setX(2 - 15);
+                        player.setY(229);
                     }
                     break;
                 }
@@ -352,19 +310,16 @@ public class Window {
                             mob.moveUp();
                     }
 
-                    // Переход на первый уровень
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("box"));
-                    createQuadTexture(0, 190, 2, 286);
-
                     // Проверка перехода на первый уровень
                     if(AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
                         level = "FirstLevel";
                         // Обновление хитбоксов стен для первого уровня
                         for(int i = 0, j = 0; i < 5; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
+                            aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1],
+                                    firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
                         }
-                        player.setX(579);
-                        player.setY(291);
+                        player.setX(638 - 64 + 15);
+                        player.setY(281);
                     }
                     break;
                 }
@@ -557,7 +512,7 @@ public class Window {
                 player.moveDown();
                 player.setDirection("down");
             }
-            if (isAttackR) {
+            if (isAttackRight) {
                 switch (j1){
                     case 0:
                         player_animation = "player_slash_right_01";
@@ -590,7 +545,7 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_right_slash_06";
                         weapon = "weapon_rapier_right_06";
                         j1 = 0;
-                        isAttackR = false;
+                        isAttackRight = false;
                         break;
                 }
                 if (g3 == 4) {
@@ -599,7 +554,7 @@ public class Window {
                 }
                 g3++;
             }
-            else if (isAttackD) {
+            else if (isAttackDown) {
                 switch (j2) {
                     case 0:
                         player_animation = "player_slash_down_01";
@@ -632,7 +587,7 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_down_slash_06";
                         weapon = "weapon_rapier_down_06";
                         j2 = 0;
-                        isAttackD = false;
+                        isAttackDown = false;
                         break;
                 }
                 if (g3 == 4) {
@@ -641,7 +596,7 @@ public class Window {
                 }
                 g3++;
             }
-            else if (isAttackL) {
+            else if (isAttackLeft) {
                 switch (j3) {
                     case 0:
                         player_animation = "player_slash_left_01";
@@ -674,7 +629,7 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_left_slash_06";
                         weapon = "weapon_rapier_left_06";
                         j3 = 0;
-                        isAttackL = false;
+                        isAttackLeft = false;
                         break;
                 }
                 if (g3 == 4) {
@@ -683,7 +638,7 @@ public class Window {
                 }
                 g3++;
             }
-            else if (isAttackU) {
+            else if (isAttackUp) {
                 switch (j4) {
                     case 0:
                         player_animation = "player_slash_up_01";
@@ -716,7 +671,7 @@ public class Window {
                         pants = "LEGS_" + player.getLegs() + "_up_slash_06";
                         weapon = "weapon_rapier_up_06";
                         j4 = 0;
-                        isAttackU = false;
+                        isAttackUp = false;
                         break;
                 }
                 if (g3 == 4) {
@@ -732,7 +687,7 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(pants));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if (isAttackR || isAttackU || isAttackL || isAttackD) {
+            if (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
