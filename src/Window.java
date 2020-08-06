@@ -51,8 +51,8 @@ public class Window {
             "player_walk_right_01", "player_walk_right_02", "player_walk_right_03", "player_walk_right_04", "player_walk_right_05", "player_walk_right_06", "player_walk_right_07", "player_walk_right_08", "player_walk_right_09",
             "player_walk_up_01", "player_walk_up_02", "player_walk_up_03", "player_walk_up_04", "player_walk_up_05", "player_walk_up_06", "player_walk_up_07", "player_walk_up_08", "player_walk_up_09",
             "player_walk_down_01", "player_walk_down_02", "player_walk_down_03", "player_walk_down_04", "player_walk_down_05", "player_walk_down_06", "player_walk_down_07", "player_walk_down_08",
-            "slimeLeft", "slimeLeft2", "slimeLeft3",
-            "slimeRight", "slimeRight2", "slimeRight3",
+            "slime_left_01", "slime_left_02", "slime_left_03",
+            "slime_right_01", "slime_right_02", "slime_right_03",
             "level0", "level1", "level2", "level3", "box",
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
@@ -205,13 +205,13 @@ public class Window {
                     if (!slime.getDead()) {
                         switch (i5) { // Анимация слайма
                             case 0:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft"));
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() +"_01"));
                                 break;
                             case 1:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft2"));
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() +"_02"));
                                 break;
                             case 2:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slimeLeft3"));
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() +"_03"));
                                 break;
                         }
                         if (g2 == 8) {
@@ -326,8 +326,8 @@ public class Window {
             }
 
             //Движение игрока и обновление хитбокса
-            player_animation = "player_stand_" + player.getDirection();
-            pants = "LEGS_" + player.getLegs() + "_" + player.getDirection() + "_move_01";
+            player_animation = "player_stand_" + player.getMoveDirection();
+            pants = "LEGS_" + player.getLegs() + "_" + player.getMoveDirection() + "_move_01";
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
                 switch (i2) {
                     case 0:
@@ -374,7 +374,7 @@ public class Window {
                 }
                 g++;
                 player.moveLeft();
-                player.setDirection("left");
+                player.setMoveDirection("left");
             }
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
                 switch (i1) {
@@ -422,7 +422,7 @@ public class Window {
                 }
                 g++;
                 player.moveRight();
-                player.setDirection("right");
+                player.setMoveDirection("right");
             }
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
                 switch (i3) {
@@ -466,7 +466,7 @@ public class Window {
                 }
                 g++;
                 player.moveUp();
-                player.setDirection("up");
+                player.setMoveDirection("up");
             }
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                 switch (i4) {
@@ -510,10 +510,10 @@ public class Window {
                 }
                 g++;
                 player.moveDown();
-                player.setDirection("down");
+                player.setMoveDirection("down");
             }
             if (isAttackRight) {
-                switch (j1){
+                switch (j1) {
                     case 0:
                         player_animation = "player_slash_right_01";
                         pants = "LEGS_" + player.getLegs() + "_right_slash_01";
@@ -680,7 +680,8 @@ public class Window {
                 }
                 g3++;
             }
-            // отрисовка экипировки
+
+            // Отрисовка экипировки
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             if (!player.getLegs().equals("nothing")) {

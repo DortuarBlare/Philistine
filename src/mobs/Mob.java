@@ -8,8 +8,9 @@ public abstract class Mob {
     private int health, armor;
     private int damage;
     private AABB hitBox, collisionBox;
+    private String moveDirection;
     private boolean dead;
-    private boolean immortal = false;
+    private boolean immortal;
 
     public Mob(int x, int y, int speed, int health, int armor, int damage, AABB hitBox, AABB collisionBox) {
         this.x = x;
@@ -21,15 +22,28 @@ public abstract class Mob {
         this.hitBox = hitBox;
         this.collisionBox = collisionBox;
         dead = false;
+        immortal = false;
     }
 
-    public void moveLeft() { x -= speed; }
+    public void moveLeft() {
+        x -= speed;
+        moveDirection = "left";
+    }
 
-    public void moveRight() { x += speed; }
+    public void moveRight() {
+        x += speed;
+        moveDirection = "right";
+    }
 
-    public void moveUp() { y -= speed; }
+    public void moveUp() {
+        y -= speed;
+        moveDirection = "up";
+    }
 
-    public void moveDown() { y += speed; }
+    public void moveDown() {
+        y += speed;
+        moveDirection = "down";
+    }
 
     public int getX() { return x; };
 
@@ -60,6 +74,10 @@ public abstract class Mob {
     public void setHitBox(AABB hitBox) { this.hitBox = hitBox; };
 
     public AABB getCollisionBox() { return collisionBox; }
+
+    public String getMoveDirection() { return moveDirection; }
+
+    public void setMoveDirection(String moveDirection) { this.moveDirection = moveDirection; }
 
     public boolean getDead() { return dead; }
 

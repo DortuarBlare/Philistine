@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 public class Player extends Mob {
     private int time = 0;
-    private String knockbackDirection, direction;
+    private String knockbackDirection;
     private String head, torso, belt, hands, legs, feet;
     private AABB attackBox;
     private Timer timerPlayer = new Timer();
@@ -25,7 +25,7 @@ public class Player extends Mob {
     public Player(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
-        direction = "down";
+        setMoveDirection("down");
         head = hands = feet = torso = belt = legs = "nothing";
     }
 
@@ -55,10 +55,6 @@ public class Player extends Mob {
     public int getTime() { return time; }
 
     public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
-
-    public String getDirection() { return direction; }
-
-    public void setDirection(String direction) { this.direction = direction; }
 
     public String getLegs() { return legs; }
 
