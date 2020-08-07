@@ -230,7 +230,6 @@ public class Window {
                         else if (player.getX() < slime.getX()) player.setKnockbackDirection("Left");
                         else if (player.getY() > slime.getY()) player.setKnockbackDirection("Down");
                         else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
-                        System.out.println(player.getHealth());
                         player.takeDamage(slime.getDamage());
                         player.setImmortal(true);
                         player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
@@ -943,6 +942,8 @@ public class Window {
             // Броня
             glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor()));
             createQuadTexture(0, 19, 34, 53);
+
+
 
 
             glfwPollEvents();
