@@ -26,6 +26,7 @@ public class Window {
     boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     boolean isCheck = false;
     boolean bfe = true;
+    boolean isChestOpen = false;
     Player player;
     String player_animation, weapon, torso, legs, feet;
     private final int[] firstLevelWalls = {
@@ -56,6 +57,7 @@ public class Window {
             "level0", "level1", "level2", "level3", "box",
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
+            "chestClosed", "chestOpened",
 
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
             "player_slash_up_01", "player_slash_up_02", "player_slash_up_03", "player_slash_up_04", "player_slash_up_05", "player_slash_up_06",
@@ -99,7 +101,7 @@ public class Window {
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "chestClosed"
     };
 
     public void run() {
@@ -164,6 +166,7 @@ public class Window {
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
         aabbMap.get("pants_greenish").update(300, 100, 364, 164);
+        aabbMap.get("chestClosed").update(250, 100, 314, 164);
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -207,6 +210,18 @@ public class Window {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
 
+                    //сундук
+                    if (!isChestOpen) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("chestClosed"));
+                        createQuadTexture(250, 132, 282, 164);
+                    } else {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("chestOpened"));
+                        createQuadTexture(250, 132, 282, 164);
+                    }
+                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("chestClosed"))) {
+                        isChestOpen = !isChestOpen;
+                    }
+
                     // Штаны, которые можно надеть)
                     if (bfe) {
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("LEGS_pants_greenish_down_move_01"));
@@ -215,8 +230,8 @@ public class Window {
                     if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("pants_greenish"))) {
                         player.setLegs("pants_greenish");
                         bfe = false;
-                        isCheck = false;
                     }
+                    isCheck = false;
 
                     // Все операции со слизнем
                     if (!slime.getDead()) {
