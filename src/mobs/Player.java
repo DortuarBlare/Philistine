@@ -26,9 +26,10 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
         setMoveDirection("down");
+        head = "hair";
         torso = "shirt_white";
         feet = "shoes_brown";
-        head = hands = belt = legs = "nothing";
+        hands = belt = legs = "nothing";
     }
 
     public void stopTimerPlayer() {
@@ -57,6 +58,10 @@ public class Player extends Mob {
     public int getTime() { return time; }
 
     public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
+
+    public String getHead() { return head; }
+
+    public void setHead(String head) { this.head = head; }
 
     public String getTorso() { return torso; }
 
