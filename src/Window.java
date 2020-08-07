@@ -31,22 +31,6 @@ public class Window {
     boolean isChestOpen = false;
     Player player;
     String player_animation, weapon, head, torso, belt, legs, feet;
-    private final int[] firstLevelWalls = {
-            111, 128, 495, 140, // wall0
-            496, 143, 498, 232, // wall1
-            499, 232, 639, 236, // wall2
-            111, 339, 639, 341, // wall3
-            103, 139, 111, 332 // wall4
-    };
-    private final int[] secondLevelWalls = {
-            0, 182, 94, 188, // wall0
-            92, 140, 96, 184, // wall1
-            98, 134, 526, 140, // wall2
-            529, 143, 534, 334, // wall3
-            97, 335, 528, 340, // wall4
-            92, 290, 96, 334, // wall5
-            0, 287, 92, 291 // wall6
-    };
 
     public void run() {
         System.out.println("Игра запущена");
@@ -955,8 +939,8 @@ public class Window {
                 player.setDead(true);
             }
             createQuadTexture(0, 0, 103, 18);
-            // броня
-            glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + String.valueOf(player.getArmor())));
+            // Броня
+            glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor()));
             createQuadTexture(0, 19, 34, 53);
 
 

@@ -29,7 +29,6 @@ public class Player extends Mob {
         head = "hair";
         belt = "leather";
         torso = hands = legs = feet = "nothing";
-        armor = 0;
     }
 
     public void stopTimerPlayer() {
