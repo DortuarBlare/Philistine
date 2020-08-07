@@ -94,4 +94,6 @@ public abstract class Mob {
     public boolean getImmortal() { return immortal; }
 
     public void setImmortal(boolean immortal) { this.immortal = immortal; }
+
+    public void takeDamage(int Damage){this.health = this.health - (int)(Damage * ((double)(10 - armor) / 10));}
 }

@@ -230,7 +230,8 @@ public class Window {
                         else if (player.getX() < slime.getX()) player.setKnockbackDirection("Left");
                         else if (player.getY() > slime.getY()) player.setKnockbackDirection("Down");
                         else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
-                        player.setHealth(player.getHealth() - slime.getDamage());
+                        System.out.println(player.getHealth());
+                        player.takeDamage(slime.getDamage());
                         player.setImmortal(true);
                         player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
                     }
