@@ -25,7 +25,7 @@ public class Storage {
             "slime_left_01", "slime_left_02", "slime_left_03",
             "slime_right_01", "slime_right_02", "slime_right_03",
             "level0", "level1", "level2", "level3", "box",
-            "torch0", "torch1", "torch2", "torch3",
+            "chestClosed", "chestOpened",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
 
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
@@ -80,6 +80,6 @@ public class Storage {
     };
     static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "chestClosed"
     };
 }

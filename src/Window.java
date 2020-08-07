@@ -756,7 +756,7 @@ public class Window {
                 switch (j2) {
                     case 0:
                         player_animation = "player_slash_down_01";
-                        head =  "HEAD_" + player.getHead() + "_down_slash_0";
+                        head =  "HEAD_" + player.getHead() + "_down_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_01";
                         feet = "FEET_" + player.getFeet() + "_down_slash_01";
