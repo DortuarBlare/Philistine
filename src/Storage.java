@@ -48,6 +48,7 @@ public class Storage {
             "HEAD_hair_right_slash_01", "HEAD_hair_right_slash_02", "HEAD_hair_right_slash_03", "HEAD_hair_right_slash_04", "HEAD_hair_right_slash_05", "HEAD_hair_right_slash_06",
             "HEAD_hair_up_slash_01", "HEAD_hair_up_slash_02", "HEAD_hair_up_slash_03", "HEAD_hair_up_slash_04", "HEAD_hair_up_slash_05", "HEAD_hair_up_slash_06",
             "HEAD_hair_down_slash_01", "HEAD_hair_down_slash_02", "HEAD_hair_down_slash_03", "HEAD_hair_down_slash_04", "HEAD_hair_down_slash_05", "HEAD_hair_down_slash_06",
+            "HEAD_hair_hurt_01", "HEAD_hair_hurt_02", "HEAD_hair_hurt_03", "HEAD_hair_hurt_04", "HEAD_hair_hurt_05", "HEAD_hair_hurt_06",
 
             "TORSO_shirt_white_left_move_01", "TORSO_shirt_white_left_move_02", "TORSO_shirt_white_left_move_03", "TORSO_shirt_white_left_move_04", "TORSO_shirt_white_left_move_05", "TORSO_shirt_white_left_move_06", "TORSO_shirt_white_left_move_07", "TORSO_shirt_white_left_move_08", "TORSO_shirt_white_left_move_09",
             "TORSO_shirt_white_right_move_01", "TORSO_shirt_white_right_move_02", "TORSO_shirt_white_right_move_03", "TORSO_shirt_white_right_move_04", "TORSO_shirt_white_right_move_05", "TORSO_shirt_white_right_move_06", "TORSO_shirt_white_right_move_07", "TORSO_shirt_white_right_move_08", "TORSO_shirt_white_right_move_09",
@@ -58,6 +59,7 @@ public class Storage {
             "TORSO_shirt_white_right_slash_01", "TORSO_shirt_white_right_slash_02", "TORSO_shirt_white_right_slash_03", "TORSO_shirt_white_right_slash_04", "TORSO_shirt_white_right_slash_05", "TORSO_shirt_white_right_slash_06",
             "TORSO_shirt_white_up_slash_01", "TORSO_shirt_white_up_slash_02", "TORSO_shirt_white_up_slash_03", "TORSO_shirt_white_up_slash_04", "TORSO_shirt_white_up_slash_05", "TORSO_shirt_white_up_slash_06",
             "TORSO_shirt_white_down_slash_01", "TORSO_shirt_white_down_slash_02", "TORSO_shirt_white_down_slash_03", "TORSO_shirt_white_down_slash_04", "TORSO_shirt_white_down_slash_05", "TORSO_shirt_white_down_slash_06",
+            "TORSO_shirt_white_hurt_01", "TORSO_shirt_white_hurt_02", "TORSO_shirt_white_hurt_03", "TORSO_shirt_white_hurt_04", "TORSO_shirt_white_hurt_05", "TORSO_shirt_white_hurt_06",
 
             "BELT_leather_left_move_01", "BELT_leather_left_move_02", "BELT_leather_left_move_03", "BELT_leather_left_move_04", "BELT_leather_left_move_05", "BELT_leather_left_move_06", "BELT_leather_left_move_07", "BELT_leather_left_move_08", "BELT_leather_left_move_09",
             "BELT_leather_right_move_01", "BELT_leather_right_move_02", "BELT_leather_right_move_03", "BELT_leather_right_move_04", "BELT_leather_right_move_05", "BELT_leather_right_move_06", "BELT_leather_right_move_07", "BELT_leather_right_move_08", "BELT_leather_right_move_09",
@@ -68,11 +70,13 @@ public class Storage {
             "BELT_leather_right_slash_01", "BELT_leather_right_slash_02", "BELT_leather_right_slash_03", "BELT_leather_right_slash_04", "BELT_leather_right_slash_05", "BELT_leather_right_slash_06",
             "BELT_leather_up_slash_01", "BELT_leather_up_slash_02", "BELT_leather_up_slash_03", "BELT_leather_up_slash_04", "BELT_leather_up_slash_05", "BELT_leather_up_slash_06",
             "BELT_leather_down_slash_01", "BELT_leather_down_slash_02", "BELT_leather_down_slash_03", "BELT_leather_down_slash_04", "BELT_leather_down_slash_05", "BELT_leather_down_slash_06",
+            "BELT_leather_hurt_01", "BELT_leather_hurt_02", "BELT_leather_hurt_03", "BELT_leather_hurt_04", "BELT_leather_hurt_05", "BELT_leather_hurt_06",
 
             "LEGS_pants_greenish_left_move_01", "LEGS_pants_greenish_left_move_02", "LEGS_pants_greenish_left_move_03", "LEGS_pants_greenish_left_move_04", "LEGS_pants_greenish_left_move_05", "LEGS_pants_greenish_left_move_06", "LEGS_pants_greenish_left_move_07", "LEGS_pants_greenish_left_move_08", "LEGS_pants_greenish_left_move_09",
             "LEGS_pants_greenish_right_move_01", "LEGS_pants_greenish_right_move_02", "LEGS_pants_greenish_right_move_03", "LEGS_pants_greenish_right_move_04", "LEGS_pants_greenish_right_move_05", "LEGS_pants_greenish_right_move_06", "LEGS_pants_greenish_right_move_07", "LEGS_pants_greenish_right_move_08", "LEGS_pants_greenish_right_move_09",
             "LEGS_pants_greenish_up_move_01", "LEGS_pants_greenish_up_move_02", "LEGS_pants_greenish_up_move_03", "LEGS_pants_greenish_up_move_04", "LEGS_pants_greenish_up_move_05", "LEGS_pants_greenish_up_move_06", "LEGS_pants_greenish_up_move_07", "LEGS_pants_greenish_up_move_08", "LEGS_pants_greenish_up_move_09",
             "LEGS_pants_greenish_down_move_01", "LEGS_pants_greenish_down_move_02", "LEGS_pants_greenish_down_move_03", "LEGS_pants_greenish_down_move_04", "LEGS_pants_greenish_down_move_05", "LEGS_pants_greenish_down_move_06", "LEGS_pants_greenish_down_move_07", "LEGS_pants_greenish_down_move_08", "LEGS_pants_greenish_down_move_09",
+            "LEGS_pants_greenish_hurt_01", "LEGS_pants_greenish_hurt_02", "LEGS_pants_greenish_hurt_03", "LEGS_pants_greenish_hurt_04", "LEGS_pants_greenish_hurt_05", "LEGS_pants_greenish_hurt_06",
 
             "LEGS_pants_greenish_left_slash_01", "LEGS_pants_greenish_left_slash_02", "LEGS_pants_greenish_left_slash_03", "LEGS_pants_greenish_left_slash_04", "LEGS_pants_greenish_left_slash_05", "LEGS_pants_greenish_left_slash_06",
             "LEGS_pants_greenish_right_slash_01", "LEGS_pants_greenish_right_slash_02", "LEGS_pants_greenish_right_slash_03", "LEGS_pants_greenish_right_slash_04", "LEGS_pants_greenish_right_slash_05", "LEGS_pants_greenish_right_slash_06",
@@ -88,6 +92,9 @@ public class Storage {
             "FEET_shoes_brown_right_slash_01", "FEET_shoes_brown_right_slash_02", "FEET_shoes_brown_right_slash_03", "FEET_shoes_brown_right_slash_04", "FEET_shoes_brown_right_slash_05", "FEET_shoes_brown_right_slash_06",
             "FEET_shoes_brown_up_slash_01", "FEET_shoes_brown_up_slash_02", "FEET_shoes_brown_up_slash_03", "FEET_shoes_brown_up_slash_04", "FEET_shoes_brown_up_slash_05", "FEET_shoes_brown_up_slash_06",
             "FEET_shoes_brown_down_slash_01", "FEET_shoes_brown_down_slash_02", "FEET_shoes_brown_down_slash_03", "FEET_shoes_brown_down_slash_04", "FEET_shoes_brown_down_slash_05", "FEET_shoes_brown_down_slash_06",
+            "FEET_shoes_brown_hurt_01", "FEET_shoes_brown_hurt_02", "FEET_shoes_brown_hurt_03", "FEET_shoes_brown_hurt_04", "FEET_shoes_brown_hurt_05", "FEET_shoes_brown_hurt_06",
+
+            "player_hurt_01", "player_hurt_02", "player_hurt_03", "player_hurt_04", "player_hurt_05", "player_hurt_06"
     };
     static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
