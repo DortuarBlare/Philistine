@@ -30,7 +30,7 @@ public class Window {
     boolean isBootsLie = true;
     boolean isChestOpen = false;
     Player player;
-    String player_animation, weapon, torso, legs, feet;
+    String player_animation, weapon, head, torso, legs, feet;
     private final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
@@ -155,17 +155,17 @@ public class Window {
         player = (Player) mobList.get(0);
 
         // Единичная загрузка всех текстур
-        for (int i = 0, id = 0; i < textureString.length; i++) {
-            if (i < 11) id = Texture.loadTexture("healthbar/" + textureString[i]);
-            else id = Texture.loadTexture(textureString[i]);
-            textureMap.put(textureString[i], id);
+        for (int i = 0, id = 0; i < Storage.textureString.length; i++) {
+            if (i < 11) id = Texture.loadTexture("healthbar/" + Storage.textureString[i]);
+            else id = Texture.loadTexture(Storage.textureString[i]);
+            textureMap.put(Storage.textureString[i], id);
         }
         // Единичная загрузка всех хитбоксов
-        for(int i = 0; i < aabbString.length; i++)
-            aabbMap.put(aabbString[i], new AABB());
+        for(int i = 0; i < Storage.aabbString.length; i++)
+            aabbMap.put(Storage.aabbString[i], new AABB());
         // Единичное установление хитбоксов стен первого уровня и переходов м/у уровнями
         for(int i = 0, j = 0; i < 5; i++, j+=4)
-            aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
+            aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
         aabbMap.get("pants_greenish").update(428, 100, 492, 164);
@@ -345,8 +345,8 @@ public class Window {
                         level = "SecondLevel";
                         // Обновление хитбоксов стен для второго уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(secondLevelWalls[j], secondLevelWalls[j + 1],
-                                    secondLevelWalls[j + 2], secondLevelWalls[j + 3]);
+                            aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
+                                    Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
                         }
                         player.setX(2 - 14);
                         player.setY(225);
@@ -375,8 +375,8 @@ public class Window {
                         level = "FirstLevel";
                         // Обновление хитбоксов стен для первого уровня
                         for(int i = 0, j = 0; i < 5; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1],
-                                    firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
+                            aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1],
+                                    Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
                         }
                         player.setX(638 - 64 + 15);
                         player.setY(281);
@@ -387,6 +387,7 @@ public class Window {
 
             //Движение игрока и обновление хитбокса
             player_animation = "player_stand_" + player.getMoveDirection();
+            head = "HEAD_" + player.getHead() + "_" + player.getMoveDirection() + "_move_01";
             torso = "TORSO_" + player.getTorso() + "_" + player.getMoveDirection() + "_move_01";
             legs = "LEGS_" + player.getLegs() + "_" + player.getMoveDirection() + "_move_01";
             feet = "FEET_" + player.getFeet() + "_" + player.getMoveDirection() + "_move_01";
@@ -395,48 +396,56 @@ public class Window {
                 switch (i2) {
                     case 0:
                         player_animation = "player_walk_left_01";
+                        head =  "HEAD_" + player.getHead() + "_left_move_01";
                         torso = "TORSO_" + player.getTorso() + "_left_move_01";
                         legs = "LEGS_" + player.getLegs() + "_left_move_01";
                         feet = "FEET_" + player.getFeet() + "_left_move_01";
                         break;
                     case 1:
                         player_animation = "player_walk_left_02";
+                        head =  "HEAD_" + player.getHead() + "_left_move_02";
                         torso = "TORSO_" + player.getTorso() + "_left_move_02";
                         legs = "LEGS_" + player.getLegs() + "_left_move_02";
                         feet = "FEET_" + player.getFeet() + "_left_move_02";
                         break;
                     case 2:
                         player_animation = "player_walk_left_03";
+                        head =  "HEAD_" + player.getHead() + "_left_move_03";
                         torso = "TORSO_" + player.getTorso() + "_left_move_03";
                         legs = "LEGS_" + player.getLegs() + "_left_move_03";
                         feet = "FEET_" + player.getFeet() + "_left_move_03";
                         break;
                     case 3:
                         player_animation = "player_walk_left_04";
+                        head =  "HEAD_" + player.getHead() + "_left_move_04";
                         torso = "TORSO_" + player.getTorso() + "_left_move_04";
                         legs = "LEGS_" + player.getLegs() + "_left_move_04";
                         feet = "FEET_" + player.getFeet() + "_left_move_04";
                         break;
                     case 4:
                         player_animation = "player_walk_left_05";
+                        head =  "HEAD_" + player.getHead() + "_left_move_05";
                         torso = "TORSO_" + player.getTorso() + "_left_move_05";
                         legs = "LEGS_" + player.getLegs() + "_left_move_05";
                         feet = "FEET_" + player.getFeet() + "_left_move_05";
                         break;
                     case 5:
                         player_animation = "player_walk_left_06";
+                        head =  "HEAD_" + player.getHead() + "_left_move_06";
                         torso = "TORSO_" + player.getTorso() + "_left_move_06";
                         legs = "LEGS_" + player.getLegs() + "_left_move_06";
                         feet = "FEET_" + player.getFeet() + "_left_move_06";
                         break;
                     case 6:
                         player_animation = "player_walk_left_07";
+                        head =  "HEAD_" + player.getHead() + "_left_move_07";
                         torso = "TORSO_" + player.getTorso() + "_left_move_07";
                         legs = "LEGS_" + player.getLegs() + "_left_move_07";
                         feet = "FEET_" + player.getFeet() + "_left_move_07";
                         break;
                     case 7:
                         player_animation = "player_walk_left_08";
+                        head =  "HEAD_" + player.getHead() + "_left_move_08";
                         torso = "TORSO_" + player.getTorso() + "_left_move_08";
                         legs = "LEGS_" + player.getLegs() + "_left_move_08";
                         feet = "FEET_" + player.getFeet() + "_left_move_08";
@@ -444,6 +453,7 @@ public class Window {
                     case 8:
                         i2 = 0;
                         player_animation = "player_walk_left_09";
+                        head =  "HEAD_" + player.getHead() + "_left_move_09";
                         torso = "TORSO_" + player.getTorso() + "_left_move_09";
                         legs = "LEGS_" + player.getLegs() + "_left_move_09";
                         feet = "FEET_" + player.getFeet() + "_left_move_09";
@@ -460,48 +470,56 @@ public class Window {
                 switch (i1) {
                     case 0:
                         player_animation = "player_walk_right_01";
+                        head =  "HEAD_" + player.getHead() + "_right_move_01";
                         torso = "TORSO_" + player.getTorso() + "_right_move_01";
                         legs = "LEGS_" + player.getLegs() + "_right_move_01";
                         feet = "FEET_" + player.getFeet() + "_right_move_01";
                         break;
                     case 1:
                         player_animation = "player_walk_right_02";
+                        head =  "HEAD_" + player.getHead() + "_right_move_02";
                         torso = "TORSO_" + player.getTorso() + "_right_move_02";
                         legs = "LEGS_" + player.getLegs() + "_right_move_02";
                         feet = "FEET_" + player.getFeet() + "_right_move_02";
                         break;
                     case 2:
                         player_animation = "player_walk_right_03";
+                        head =  "HEAD_" + player.getHead() + "_right_move_03";
                         torso = "TORSO_" + player.getTorso() + "_right_move_03";
                         legs = "LEGS_" + player.getLegs() + "_right_move_03";
                         feet = "FEET_" + player.getFeet() + "_right_move_03";
                         break;
                     case 3:
                         player_animation = "player_walk_right_04";
+                        head =  "HEAD_" + player.getHead() + "_right_move_04";
                         torso = "TORSO_" + player.getTorso() + "_right_move_04";
                         legs = "LEGS_" + player.getLegs() + "_right_move_04";
                         feet = "FEET_" + player.getFeet() + "_right_move_04";
                         break;
                     case 4:
                         player_animation = "player_walk_right_05";
+                        head =  "HEAD_" + player.getHead() + "_right_move_05";
                         torso = "TORSO_" + player.getTorso() + "_right_move_05";
                         legs = "LEGS_" + player.getLegs() + "_right_move_05";
                         feet = "FEET_" + player.getFeet() + "_right_move_05";
                         break;
                     case 5:
                         player_animation = "player_walk_right_06";
+                        head =  "HEAD_" + player.getHead() + "_right_move_06";
                         torso = "TORSO_" + player.getTorso() + "_right_move_06";
                         legs = "LEGS_" + player.getLegs() + "_right_move_06";
                         feet = "FEET_" + player.getFeet() + "_right_move_06";
                         break;
                     case 6:
                         player_animation = "player_walk_right_07";
+                        head =  "HEAD_" + player.getHead() + "_right_move_07";
                         torso = "TORSO_" + player.getTorso() + "_right_move_07";
                         legs = "LEGS_" + player.getLegs() + "_right_move_07";
                         feet = "FEET_" + player.getFeet() + "_right_move_07";
                         break;
                     case 7:
                         player_animation = "player_walk_right_08";
+                        head =  "HEAD_" + player.getHead() + "_right_move_08";
                         torso = "TORSO_" + player.getTorso() + "_right_move_08";
                         legs = "LEGS_" + player.getLegs() + "_right_move_08";
                         feet = "FEET_" + player.getFeet() + "_right_move_08";
@@ -509,6 +527,7 @@ public class Window {
                     case 8:
                         i1 = 0;
                         player_animation = "player_walk_right_09";
+                        head =  "HEAD_" + player.getHead() + "_right_move_09";
                         torso = "TORSO_" + player.getTorso() + "_right_move_09";
                         legs = "LEGS_" + player.getLegs() + "_right_move_09";
                         feet = "FEET_" + player.getFeet() + "_right_move_09";
@@ -525,42 +544,49 @@ public class Window {
                 switch (i3) {
                     case 0:
                         player_animation = "player_walk_up_02";
+                        head =  "HEAD_" + player.getHead() + "_up_move_02";
                         torso = "TORSO_" + player.getTorso() + "_up_move_02";
                         legs = "LEGS_" + player.getLegs() + "_up_move_02";
                         feet = "FEET_" + player.getFeet() + "_up_move_02";
                         break;
                     case 1:
                         player_animation = "player_walk_up_03";
+                        head =  "HEAD_" + player.getHead() + "_up_move_03";
                         torso = "TORSO_" + player.getTorso() + "_up_move_03";
                         legs = "LEGS_" + player.getLegs() + "_up_move_03";
                         feet = "FEET_" + player.getFeet() + "_up_move_03";
                         break;
                     case 2:
                         player_animation = "player_walk_up_04";
+                        head =  "HEAD_" + player.getHead() + "_up_move_04";
                         torso = "TORSO_" + player.getTorso() + "_up_move_04";
                         legs = "LEGS_" + player.getLegs() + "_up_move_04";
                         feet = "FEET_" + player.getFeet() + "_up_move_04";
                         break;
                     case 3:
                         player_animation = "player_walk_up_05";
+                        head =  "HEAD_" + player.getHead() + "_up_move_05";
                         torso = "TORSO_" + player.getTorso() + "_up_move_05";
                         legs = "LEGS_" + player.getLegs() + "_up_move_05";
                         feet = "FEET_" + player.getFeet() + "_up_move_05";
                         break;
                     case 4:
                         player_animation = "player_walk_up_06";
+                        head =  "HEAD_" + player.getHead() + "_up_move_06";
                         torso = "TORSO_" + player.getTorso() + "_up_move_06";
                         legs = "LEGS_" + player.getLegs() + "_up_move_06";
                         feet = "FEET_" + player.getFeet() + "_up_move_06";
                         break;
                     case 5:
                         player_animation = "player_walk_up_07";
+                        head =  "HEAD_" + player.getHead() + "_up_move_07";
                         torso = "TORSO_" + player.getTorso() + "_up_move_07";
                         legs = "LEGS_" + player.getLegs() + "_up_move_07";
                         feet = "FEET_" + player.getFeet() + "_up_move_07";
                         break;
                     case 6:
                         player_animation = "player_walk_up_08";
+                        head =  "HEAD_" + player.getHead() + "_up_move_08";
                         torso = "TORSO_" + player.getTorso() + "_up_move_08";
                         legs = "LEGS_" + player.getLegs() + "_up_move_08";
                         feet = "FEET_" + player.getFeet() + "_up_move_08";
@@ -568,6 +594,7 @@ public class Window {
                     case 7:
                         i3 = 0;
                         player_animation = "player_walk_up_09";
+                        head =  "HEAD_" + player.getHead() + "_up_move_09";
                         torso = "TORSO_" + player.getTorso() + "_up_move_09";
                         legs = "LEGS_" + player.getLegs() + "_up_move_09";
                         feet = "FEET_" + player.getFeet() + "_up_move_09";
@@ -584,42 +611,49 @@ public class Window {
                 switch (i4) {
                     case 0:
                         player_animation = "player_walk_down_01";
+                        head =  "HEAD_" + player.getHead() + "_down_move_02";
                         torso = "TORSO_" + player.getTorso() + "_down_move_02";
                         legs = "LEGS_" + player.getLegs() + "_down_move_02";
                         feet = "FEET_" + player.getFeet() + "_down_move_02";
                         break;
                     case 1:
                         player_animation = "player_walk_down_02";
+                        head =  "HEAD_" + player.getHead() + "_down_move_03";
                         torso = "TORSO_" + player.getTorso() + "_down_move_03";
                         legs = "LEGS_" + player.getLegs() + "_down_move_03";
                         feet = "FEET_" + player.getFeet() + "_down_move_03";
                         break;
                     case 2:
                         player_animation = "player_walk_down_03";
+                        head =  "HEAD_" + player.getHead() + "_down_move_04";
                         torso = "TORSO_" + player.getTorso() + "_down_move_04";
                         legs = "LEGS_" + player.getLegs() + "_down_move_04";
                         feet = "FEET_" + player.getFeet() + "_down_move_04";
                         break;
                     case 3:
                         player_animation = "player_walk_down_04";
+                        head =  "HEAD_" + player.getHead() + "_down_move_05";
                         torso = "TORSO_" + player.getTorso() + "_down_move_05";
                         legs = "LEGS_" + player.getLegs() + "_down_move_05";
                         feet = "FEET_" + player.getFeet() + "_down_move_05";
                         break;
                     case 4:
                         player_animation = "player_walk_down_05";
+                        head =  "HEAD_" + player.getHead() + "_down_move_06";
                         torso = "TORSO_" + player.getTorso() + "_down_move_06";
                         legs = "LEGS_" + player.getLegs() + "_down_move_06";
                         feet = "FEET_" + player.getFeet() + "_down_move_06";
                         break;
                     case 5:
                         player_animation = "player_walk_down_06";
+                        head =  "HEAD_" + player.getHead() + "_down_move_07";
                         torso = "TORSO_" + player.getTorso() + "_down_move_07";
                         legs = "LEGS_" + player.getLegs() + "_down_move_07";
                         feet = "FEET_" + player.getFeet() + "_down_move_07";
                         break;
                     case 6:
                         player_animation = "player_walk_down_07";
+                        head =  "HEAD_" + player.getHead() + "_down_move_08";
                         torso = "TORSO_" + player.getTorso() + "_down_move_08";
                         legs = "LEGS_" + player.getLegs() + "_down_move_08";
                         feet = "FEET_" + player.getFeet() + "_down_move_08";
@@ -627,6 +661,7 @@ public class Window {
                     case 7:
                         i4 = 0;
                         player_animation = "player_walk_down_08";
+                        head =  "HEAD_" + player.getHead() + "_down_move_09";
                         torso = "TORSO_" + player.getTorso() + "_down_move_09";
                         legs = "LEGS_" + player.getLegs() + "_down_move_09";
                         feet = "FEET_" + player.getFeet() + "_down_move_09";
@@ -643,6 +678,7 @@ public class Window {
                 switch (j3) {
                     case 0:
                         player_animation = "player_slash_left_01";
+                        head =  "HEAD_" + player.getHead() + "_left_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_01";
                         feet = "FEET_" + player.getFeet() + "_left_slash_01";
@@ -650,6 +686,7 @@ public class Window {
                         break;
                     case 1:
                         player_animation = "player_slash_left_02";
+                        head =  "HEAD_" + player.getHead() + "_left_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_02";
                         feet = "FEET_" + player.getFeet() + "_left_slash_02";
@@ -657,6 +694,7 @@ public class Window {
                         break;
                     case 2:
                         player_animation = "player_slash_left_03";
+                        head =  "HEAD_" + player.getHead() + "_left_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_03";
                         feet = "FEET_" + player.getFeet() + "_left_slash_03";
@@ -664,6 +702,7 @@ public class Window {
                         break;
                     case 3:
                         player_animation = "player_slash_left_04";
+                        head =  "HEAD_" + player.getHead() + "_left_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_04";
                         feet = "FEET_" + player.getFeet() + "_left_slash_04";
@@ -671,6 +710,7 @@ public class Window {
                         break;
                     case 4:
                         player_animation = "player_slash_left_05";
+                        head =  "HEAD_" + player.getHead() + "_left_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_05";
                         feet = "FEET_" + player.getFeet() + "_left_slash_05";
@@ -679,6 +719,7 @@ public class Window {
                         break;
                     case 5:
                         player_animation = "player_slash_left_06";
+                        head =  "HEAD_" + player.getHead() + "_left_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_06";
                         feet = "FEET_" + player.getFeet() + "_left_slash_06";
@@ -697,6 +738,7 @@ public class Window {
                 switch (j1) {
                     case 0:
                         player_animation = "player_slash_right_01";
+                        head =  "HEAD_" + player.getHead() + "_right_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_01";
                         feet = "FEET_" + player.getFeet() + "_right_slash_01";
@@ -704,6 +746,7 @@ public class Window {
                         break;
                     case 1:
                         player_animation = "player_slash_right_02";
+                        head =  "HEAD_" + player.getHead() + "_right_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_02";
                         feet = "FEET_" + player.getFeet() + "_right_slash_02";
@@ -711,6 +754,7 @@ public class Window {
                         break;
                     case 2:
                         player_animation = "player_slash_right_03";
+                        head =  "HEAD_" + player.getHead() + "_right_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_03";
                         feet = "FEET_" + player.getFeet() + "_right_slash_03";
@@ -718,6 +762,7 @@ public class Window {
                         break;
                     case 3:
                         player_animation = "player_slash_right_04";
+                        head =  "HEAD_" + player.getHead() + "_right_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_04";
                         feet = "FEET_" + player.getFeet() + "_right_slash_04";
@@ -725,6 +770,7 @@ public class Window {
                         break;
                     case 4:
                         player_animation = "player_slash_right_05";
+                        head =  "HEAD_" + player.getHead() + "_right_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_05";
                         feet = "FEET_" + player.getFeet() + "_right_slash_05";
@@ -733,6 +779,7 @@ public class Window {
                         break;
                     case 5:
                         player_animation = "player_slash_right_06";
+                        head =  "HEAD_" + player.getHead() + "_right_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_06";
                         feet = "FEET_" + player.getFeet() + "_right_slash_06";
@@ -751,6 +798,7 @@ public class Window {
                 switch (j4) {
                     case 0:
                         player_animation = "player_slash_up_01";
+                        head =  "HEAD_" + player.getHead() + "_up_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_01";
                         feet = "FEET_" + player.getFeet() + "_up_slash_01";
@@ -758,6 +806,7 @@ public class Window {
                         break;
                     case 1:
                         player_animation = "player_slash_up_02";
+                        head =  "HEAD_" + player.getHead() + "_up_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_02";
                         feet = "FEET_" + player.getFeet() + "_up_slash_02";
@@ -765,6 +814,7 @@ public class Window {
                         break;
                     case 2:
                         player_animation = "player_slash_up_03";
+                        head =  "HEAD_" + player.getHead() + "_up_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_03";
                         feet = "FEET_" + player.getFeet() + "_up_slash_03";
@@ -772,6 +822,7 @@ public class Window {
                         break;
                     case 3:
                         player_animation = "player_slash_up_04";
+                        head =  "HEAD_" + player.getHead() + "_up_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_04";
                         feet = "FEET_" + player.getFeet() + "_up_slash_04";
@@ -779,6 +830,7 @@ public class Window {
                         break;
                     case 4:
                         player_animation = "player_slash_up_05";
+                        head =  "HEAD_" + player.getHead() + "_up_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_05";
                         feet = "FEET_" + player.getFeet() + "_up_slash_05";
@@ -787,6 +839,7 @@ public class Window {
                         break;
                     case 5:
                         player_animation = "player_slash_up_06";
+                        head =  "HEAD_" + player.getHead() + "_up_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_06";
                         feet = "FEET_" + player.getFeet() + "_up_slash_06";
@@ -805,6 +858,7 @@ public class Window {
                 switch (j2) {
                     case 0:
                         player_animation = "player_slash_down_01";
+                        head =  "HEAD_" + player.getHead() + "_down_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_01";
                         feet = "FEET_" + player.getFeet() + "_down_slash_01";
@@ -812,6 +866,7 @@ public class Window {
                         break;
                     case 1:
                         player_animation = "player_slash_down_02";
+                        head =  "HEAD_" + player.getHead() + "_down_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_02";
                         feet = "FEET_" + player.getFeet() + "_down_slash_02";
@@ -819,6 +874,7 @@ public class Window {
                         break;
                     case 2:
                         player_animation = "player_slash_down_03";
+                        head =  "HEAD_" + player.getHead() + "_down_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_03";
                         feet = "FEET_" + player.getFeet() + "_down_slash_03";
@@ -826,6 +882,7 @@ public class Window {
                         break;
                     case 3:
                         player_animation = "player_slash_down_04";
+                        head =  "HEAD_" + player.getHead() + "_down_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_04";
                         feet = "FEET_" + player.getFeet() + "_down_slash_04";
@@ -833,6 +890,7 @@ public class Window {
                         break;
                     case 4:
                         player_animation = "player_slash_down_05";
+                        head =  "HEAD_" + player.getHead() + "_down_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_05";
                         feet = "FEET_" + player.getFeet() + "_down_slash_05";
@@ -841,6 +899,7 @@ public class Window {
                         break;
                     case 5:
                         player_animation = "player_slash_down_06";
+                        head =  "HEAD_" + player.getHead() + "_down_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_06";
                         feet = "FEET_" + player.getFeet() + "_down_slash_06";
@@ -859,6 +918,10 @@ public class Window {
             // Отрисовка экипировки и анимации
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            if (!player.getHead().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(head));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
             if (!player.getTorso().equals("nothing")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(torso));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
