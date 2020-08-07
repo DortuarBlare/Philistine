@@ -27,7 +27,8 @@ public class Player extends Mob {
         attackBox = new AABB();
         setMoveDirection("down");
         torso = "shirt_white";
-        head = hands = feet = belt = legs = "nothing";
+        feet = "shoes_brown";
+        head = hands = belt = legs = "nothing";
     }
 
     public void stopTimerPlayer() {
