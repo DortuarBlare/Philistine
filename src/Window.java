@@ -25,7 +25,9 @@ public class Window {
     private boolean forScale = true;
     boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     boolean isCheck = false;
-    boolean bfe = true;
+    boolean isShirtLie = true;
+    boolean isPantsLie = true;
+    boolean isBootsLie = true;
     boolean isChestOpen = false;
     Player player;
     String player_animation, weapon, torso, legs, feet;
@@ -58,6 +60,7 @@ public class Window {
             "torch0", "torch1", "torch2", "torch3",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
             "chestClosed", "chestOpened",
+            "armor0", "armor1", "armor2", "armor3", "armor4", "armor5",
 
             "player_slash_right_01", "player_slash_right_02", "player_slash_right_03", "player_slash_right_04", "player_slash_right_05", "player_slash_right_06",
             "player_slash_up_01", "player_slash_up_02", "player_slash_up_03", "player_slash_up_04", "player_slash_up_05", "player_slash_up_06",
@@ -101,7 +104,7 @@ public class Window {
     };
     private final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "chestClosed"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "chestClosed", "shirt_white", "shoes_brown"
     };
 
     public void run() {
@@ -165,8 +168,10 @@ public class Window {
             aabbMap.get("wall" + i).update(firstLevelWalls[j], firstLevelWalls[j + 1], firstLevelWalls[j + 2], firstLevelWalls[j + 3]);
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
-        aabbMap.get("pants_greenish").update(300, 100, 364, 164);
+        aabbMap.get("pants_greenish").update(428, 100, 492, 164);
         aabbMap.get("chestClosed").update(250, 100, 314, 164);
+        aabbMap.get("shoes_brown").update(364, 100, 428, 164);
+        aabbMap.get("shirt_white").update(300, 100, 364, 164);
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -222,14 +227,37 @@ public class Window {
                         isChestOpen = !isChestOpen;
                     }
 
-                    // Штаны, которые можно надеть)
-                    if (bfe) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("LEGS_pants_greenish_down_move_01"));
+                    // башмаки
+                    if (isBootsLie) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("FEET_shoes_brown_down_move_01"));
+                        createQuadTexture(364, 100, 428, 164);
+                    }
+                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("shoes_brown"))) {
+                        player.setFeet("shoes_brown");
+                        player.setArmor(player.getArmor() + 1);
+                        isBootsLie = false;
+                    }
+
+                    // футболка
+                    if (isShirtLie) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("TORSO_shirt_white_down_move_01"));
                         createQuadTexture(300, 100, 364, 164);
+                    }
+                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("shirt_white"))) {
+                        player.setTorso("shirt_white");
+                        player.setArmor(player.getArmor() + 1);
+                        isShirtLie = false;
+                    }
+
+                    // Штаны, которые можно надеть)
+                    if (isPantsLie) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("LEGS_pants_greenish_down_move_01"));
+                        createQuadTexture(428, 100, 492, 164);
                     }
                     if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("pants_greenish"))) {
                         player.setLegs("pants_greenish");
-                        bfe = false;
+                        player.setArmor(player.getArmor() + 1);
+                        isPantsLie = false;
                     }
                     isCheck = false;
 
@@ -859,6 +887,10 @@ public class Window {
                 player.setDead(true);
             }
             createQuadTexture(0, 0, 103, 18);
+            // броня
+            glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + String.valueOf(player.getArmor())));
+            createQuadTexture(0, 19, 34, 53);
+
 
             glfwPollEvents();
             glfwSwapBuffers(window);
