@@ -30,7 +30,7 @@ public class Window {
     boolean isBootsLie = true;
     boolean isChestOpen = false;
     Player player;
-    String player_animation, weapon, head, torso, legs, feet;
+    String player_animation, weapon, head, torso, belt, legs, feet;
     private final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
@@ -331,6 +331,7 @@ public class Window {
             player_animation = "player_stand_" + player.getMoveDirection();
             head = "HEAD_" + player.getHead() + "_" + player.getMoveDirection() + "_move_01";
             torso = "TORSO_" + player.getTorso() + "_" + player.getMoveDirection() + "_move_01";
+            belt = "BELT_" + player.getBelt() + "_" + player.getMoveDirection() + "_move_01";
             legs = "LEGS_" + player.getLegs() + "_" + player.getMoveDirection() + "_move_01";
             feet = "FEET_" + player.getFeet() + "_" + player.getMoveDirection() + "_move_01";
 
@@ -340,6 +341,7 @@ public class Window {
                         player_animation = "player_walk_left_01";
                         head =  "HEAD_" + player.getHead() + "_left_move_01";
                         torso = "TORSO_" + player.getTorso() + "_left_move_01";
+                        belt = "BELT_" + player.getBelt() + "_left_move_01";
                         legs = "LEGS_" + player.getLegs() + "_left_move_01";
                         feet = "FEET_" + player.getFeet() + "_left_move_01";
                         break;
@@ -347,6 +349,7 @@ public class Window {
                         player_animation = "player_walk_left_02";
                         head =  "HEAD_" + player.getHead() + "_left_move_02";
                         torso = "TORSO_" + player.getTorso() + "_left_move_02";
+                        belt = "BELT_" + player.getBelt() + "_left_move_02";
                         legs = "LEGS_" + player.getLegs() + "_left_move_02";
                         feet = "FEET_" + player.getFeet() + "_left_move_02";
                         break;
@@ -354,6 +357,7 @@ public class Window {
                         player_animation = "player_walk_left_03";
                         head =  "HEAD_" + player.getHead() + "_left_move_03";
                         torso = "TORSO_" + player.getTorso() + "_left_move_03";
+                        belt = "BELT_" + player.getBelt() + "_left_move_03";
                         legs = "LEGS_" + player.getLegs() + "_left_move_03";
                         feet = "FEET_" + player.getFeet() + "_left_move_03";
                         break;
@@ -361,6 +365,7 @@ public class Window {
                         player_animation = "player_walk_left_04";
                         head =  "HEAD_" + player.getHead() + "_left_move_04";
                         torso = "TORSO_" + player.getTorso() + "_left_move_04";
+                        belt = "BELT_" + player.getBelt() + "_left_move_04";
                         legs = "LEGS_" + player.getLegs() + "_left_move_04";
                         feet = "FEET_" + player.getFeet() + "_left_move_04";
                         break;
@@ -368,6 +373,7 @@ public class Window {
                         player_animation = "player_walk_left_05";
                         head =  "HEAD_" + player.getHead() + "_left_move_05";
                         torso = "TORSO_" + player.getTorso() + "_left_move_05";
+                        belt = "BELT_" + player.getBelt() + "_left_move_05";
                         legs = "LEGS_" + player.getLegs() + "_left_move_05";
                         feet = "FEET_" + player.getFeet() + "_left_move_05";
                         break;
@@ -375,6 +381,7 @@ public class Window {
                         player_animation = "player_walk_left_06";
                         head =  "HEAD_" + player.getHead() + "_left_move_06";
                         torso = "TORSO_" + player.getTorso() + "_left_move_06";
+                        belt = "BELT_" + player.getBelt() + "_left_move_06";
                         legs = "LEGS_" + player.getLegs() + "_left_move_06";
                         feet = "FEET_" + player.getFeet() + "_left_move_06";
                         break;
@@ -382,6 +389,7 @@ public class Window {
                         player_animation = "player_walk_left_07";
                         head =  "HEAD_" + player.getHead() + "_left_move_07";
                         torso = "TORSO_" + player.getTorso() + "_left_move_07";
+                        belt = "BELT_" + player.getBelt() + "_left_move_07";
                         legs = "LEGS_" + player.getLegs() + "_left_move_07";
                         feet = "FEET_" + player.getFeet() + "_left_move_07";
                         break;
@@ -389,6 +397,7 @@ public class Window {
                         player_animation = "player_walk_left_08";
                         head =  "HEAD_" + player.getHead() + "_left_move_08";
                         torso = "TORSO_" + player.getTorso() + "_left_move_08";
+                        belt = "BELT_" + player.getBelt() + "_left_move_08";
                         legs = "LEGS_" + player.getLegs() + "_left_move_08";
                         feet = "FEET_" + player.getFeet() + "_left_move_08";
                         break;
@@ -397,6 +406,7 @@ public class Window {
                         player_animation = "player_walk_left_09";
                         head =  "HEAD_" + player.getHead() + "_left_move_09";
                         torso = "TORSO_" + player.getTorso() + "_left_move_09";
+                        belt = "BELT_" + player.getBelt() + "_left_move_09";
                         legs = "LEGS_" + player.getLegs() + "_left_move_09";
                         feet = "FEET_" + player.getFeet() + "_left_move_09";
                         break;
@@ -414,6 +424,7 @@ public class Window {
                         player_animation = "player_walk_right_01";
                         head =  "HEAD_" + player.getHead() + "_right_move_01";
                         torso = "TORSO_" + player.getTorso() + "_right_move_01";
+                        belt = "BELT_" + player.getBelt() + "_right_move_01";
                         legs = "LEGS_" + player.getLegs() + "_right_move_01";
                         feet = "FEET_" + player.getFeet() + "_right_move_01";
                         break;
@@ -421,6 +432,7 @@ public class Window {
                         player_animation = "player_walk_right_02";
                         head =  "HEAD_" + player.getHead() + "_right_move_02";
                         torso = "TORSO_" + player.getTorso() + "_right_move_02";
+                        belt = "BELT_" + player.getBelt() + "_right_move_02";
                         legs = "LEGS_" + player.getLegs() + "_right_move_02";
                         feet = "FEET_" + player.getFeet() + "_right_move_02";
                         break;
@@ -428,6 +440,7 @@ public class Window {
                         player_animation = "player_walk_right_03";
                         head =  "HEAD_" + player.getHead() + "_right_move_03";
                         torso = "TORSO_" + player.getTorso() + "_right_move_03";
+                        belt = "BELT_" + player.getBelt() + "_right_move_03";
                         legs = "LEGS_" + player.getLegs() + "_right_move_03";
                         feet = "FEET_" + player.getFeet() + "_right_move_03";
                         break;
@@ -435,6 +448,7 @@ public class Window {
                         player_animation = "player_walk_right_04";
                         head =  "HEAD_" + player.getHead() + "_right_move_04";
                         torso = "TORSO_" + player.getTorso() + "_right_move_04";
+                        belt = "BELT_" + player.getBelt() + "_right_move_04";
                         legs = "LEGS_" + player.getLegs() + "_right_move_04";
                         feet = "FEET_" + player.getFeet() + "_right_move_04";
                         break;
@@ -442,6 +456,7 @@ public class Window {
                         player_animation = "player_walk_right_05";
                         head =  "HEAD_" + player.getHead() + "_right_move_05";
                         torso = "TORSO_" + player.getTorso() + "_right_move_05";
+                        belt = "BELT_" + player.getBelt() + "_right_move_05";
                         legs = "LEGS_" + player.getLegs() + "_right_move_05";
                         feet = "FEET_" + player.getFeet() + "_right_move_05";
                         break;
@@ -449,6 +464,7 @@ public class Window {
                         player_animation = "player_walk_right_06";
                         head =  "HEAD_" + player.getHead() + "_right_move_06";
                         torso = "TORSO_" + player.getTorso() + "_right_move_06";
+                        belt = "BELT_" + player.getBelt() + "_right_move_06";
                         legs = "LEGS_" + player.getLegs() + "_right_move_06";
                         feet = "FEET_" + player.getFeet() + "_right_move_06";
                         break;
@@ -456,6 +472,7 @@ public class Window {
                         player_animation = "player_walk_right_07";
                         head =  "HEAD_" + player.getHead() + "_right_move_07";
                         torso = "TORSO_" + player.getTorso() + "_right_move_07";
+                        belt = "BELT_" + player.getBelt() + "_right_move_07";
                         legs = "LEGS_" + player.getLegs() + "_right_move_07";
                         feet = "FEET_" + player.getFeet() + "_right_move_07";
                         break;
@@ -463,6 +480,7 @@ public class Window {
                         player_animation = "player_walk_right_08";
                         head =  "HEAD_" + player.getHead() + "_right_move_08";
                         torso = "TORSO_" + player.getTorso() + "_right_move_08";
+                        belt = "BELT_" + player.getBelt() + "_right_move_08";
                         legs = "LEGS_" + player.getLegs() + "_right_move_08";
                         feet = "FEET_" + player.getFeet() + "_right_move_08";
                         break;
@@ -471,6 +489,7 @@ public class Window {
                         player_animation = "player_walk_right_09";
                         head =  "HEAD_" + player.getHead() + "_right_move_09";
                         torso = "TORSO_" + player.getTorso() + "_right_move_09";
+                        belt = "BELT_" + player.getBelt() + "_right_move_09";
                         legs = "LEGS_" + player.getLegs() + "_right_move_09";
                         feet = "FEET_" + player.getFeet() + "_right_move_09";
                         break;
@@ -488,6 +507,7 @@ public class Window {
                         player_animation = "player_walk_up_02";
                         head =  "HEAD_" + player.getHead() + "_up_move_02";
                         torso = "TORSO_" + player.getTorso() + "_up_move_02";
+                        belt = "BELT_" + player.getBelt() + "_up_move_02";
                         legs = "LEGS_" + player.getLegs() + "_up_move_02";
                         feet = "FEET_" + player.getFeet() + "_up_move_02";
                         break;
@@ -495,6 +515,7 @@ public class Window {
                         player_animation = "player_walk_up_03";
                         head =  "HEAD_" + player.getHead() + "_up_move_03";
                         torso = "TORSO_" + player.getTorso() + "_up_move_03";
+                        belt = "BELT_" + player.getBelt() + "_up_move_03";
                         legs = "LEGS_" + player.getLegs() + "_up_move_03";
                         feet = "FEET_" + player.getFeet() + "_up_move_03";
                         break;
@@ -502,6 +523,7 @@ public class Window {
                         player_animation = "player_walk_up_04";
                         head =  "HEAD_" + player.getHead() + "_up_move_04";
                         torso = "TORSO_" + player.getTorso() + "_up_move_04";
+                        belt = "BELT_" + player.getBelt() + "_up_move_04";
                         legs = "LEGS_" + player.getLegs() + "_up_move_04";
                         feet = "FEET_" + player.getFeet() + "_up_move_04";
                         break;
@@ -509,6 +531,7 @@ public class Window {
                         player_animation = "player_walk_up_05";
                         head =  "HEAD_" + player.getHead() + "_up_move_05";
                         torso = "TORSO_" + player.getTorso() + "_up_move_05";
+                        belt = "BELT_" + player.getBelt() + "_up_move_05";
                         legs = "LEGS_" + player.getLegs() + "_up_move_05";
                         feet = "FEET_" + player.getFeet() + "_up_move_05";
                         break;
@@ -516,6 +539,7 @@ public class Window {
                         player_animation = "player_walk_up_06";
                         head =  "HEAD_" + player.getHead() + "_up_move_06";
                         torso = "TORSO_" + player.getTorso() + "_up_move_06";
+                        belt = "BELT_" + player.getBelt() + "_up_move_06";
                         legs = "LEGS_" + player.getLegs() + "_up_move_06";
                         feet = "FEET_" + player.getFeet() + "_up_move_06";
                         break;
@@ -523,6 +547,7 @@ public class Window {
                         player_animation = "player_walk_up_07";
                         head =  "HEAD_" + player.getHead() + "_up_move_07";
                         torso = "TORSO_" + player.getTorso() + "_up_move_07";
+                        belt = "BELT_" + player.getBelt() + "_up_move_07";
                         legs = "LEGS_" + player.getLegs() + "_up_move_07";
                         feet = "FEET_" + player.getFeet() + "_up_move_07";
                         break;
@@ -530,6 +555,7 @@ public class Window {
                         player_animation = "player_walk_up_08";
                         head =  "HEAD_" + player.getHead() + "_up_move_08";
                         torso = "TORSO_" + player.getTorso() + "_up_move_08";
+                        belt = "BELT_" + player.getBelt() + "_up_move_08";
                         legs = "LEGS_" + player.getLegs() + "_up_move_08";
                         feet = "FEET_" + player.getFeet() + "_up_move_08";
                         break;
@@ -538,6 +564,7 @@ public class Window {
                         player_animation = "player_walk_up_09";
                         head =  "HEAD_" + player.getHead() + "_up_move_09";
                         torso = "TORSO_" + player.getTorso() + "_up_move_09";
+                        belt = "BELT_" + player.getBelt() + "_up_move_09";
                         legs = "LEGS_" + player.getLegs() + "_up_move_09";
                         feet = "FEET_" + player.getFeet() + "_up_move_09";
                         break;
@@ -555,6 +582,7 @@ public class Window {
                         player_animation = "player_walk_down_01";
                         head =  "HEAD_" + player.getHead() + "_down_move_02";
                         torso = "TORSO_" + player.getTorso() + "_down_move_02";
+                        belt = "BELT_" + player.getBelt() + "_down_move_02";
                         legs = "LEGS_" + player.getLegs() + "_down_move_02";
                         feet = "FEET_" + player.getFeet() + "_down_move_02";
                         break;
@@ -562,6 +590,7 @@ public class Window {
                         player_animation = "player_walk_down_02";
                         head =  "HEAD_" + player.getHead() + "_down_move_03";
                         torso = "TORSO_" + player.getTorso() + "_down_move_03";
+                        belt = "BELT_" + player.getBelt() + "_down_move_03";
                         legs = "LEGS_" + player.getLegs() + "_down_move_03";
                         feet = "FEET_" + player.getFeet() + "_down_move_03";
                         break;
@@ -569,6 +598,7 @@ public class Window {
                         player_animation = "player_walk_down_03";
                         head =  "HEAD_" + player.getHead() + "_down_move_04";
                         torso = "TORSO_" + player.getTorso() + "_down_move_04";
+                        belt = "BELT_" + player.getBelt() + "_down_move_04";
                         legs = "LEGS_" + player.getLegs() + "_down_move_04";
                         feet = "FEET_" + player.getFeet() + "_down_move_04";
                         break;
@@ -576,6 +606,7 @@ public class Window {
                         player_animation = "player_walk_down_04";
                         head =  "HEAD_" + player.getHead() + "_down_move_05";
                         torso = "TORSO_" + player.getTorso() + "_down_move_05";
+                        belt = "BELT_" + player.getBelt() + "_down_move_05";
                         legs = "LEGS_" + player.getLegs() + "_down_move_05";
                         feet = "FEET_" + player.getFeet() + "_down_move_05";
                         break;
@@ -583,6 +614,7 @@ public class Window {
                         player_animation = "player_walk_down_05";
                         head =  "HEAD_" + player.getHead() + "_down_move_06";
                         torso = "TORSO_" + player.getTorso() + "_down_move_06";
+                        belt = "BELT_" + player.getBelt() + "_down_move_06";
                         legs = "LEGS_" + player.getLegs() + "_down_move_06";
                         feet = "FEET_" + player.getFeet() + "_down_move_06";
                         break;
@@ -590,6 +622,7 @@ public class Window {
                         player_animation = "player_walk_down_06";
                         head =  "HEAD_" + player.getHead() + "_down_move_07";
                         torso = "TORSO_" + player.getTorso() + "_down_move_07";
+                        belt = "BELT_" + player.getBelt() + "_down_move_07";
                         legs = "LEGS_" + player.getLegs() + "_down_move_07";
                         feet = "FEET_" + player.getFeet() + "_down_move_07";
                         break;
@@ -597,6 +630,7 @@ public class Window {
                         player_animation = "player_walk_down_07";
                         head =  "HEAD_" + player.getHead() + "_down_move_08";
                         torso = "TORSO_" + player.getTorso() + "_down_move_08";
+                        belt = "BELT_" + player.getBelt() + "_down_move_08";
                         legs = "LEGS_" + player.getLegs() + "_down_move_08";
                         feet = "FEET_" + player.getFeet() + "_down_move_08";
                         break;
@@ -605,6 +639,7 @@ public class Window {
                         player_animation = "player_walk_down_08";
                         head =  "HEAD_" + player.getHead() + "_down_move_09";
                         torso = "TORSO_" + player.getTorso() + "_down_move_09";
+                        belt = "BELT_" + player.getBelt() + "_down_move_09";
                         legs = "LEGS_" + player.getLegs() + "_down_move_09";
                         feet = "FEET_" + player.getFeet() + "_down_move_09";
                         break;
@@ -622,6 +657,7 @@ public class Window {
                         player_animation = "player_slash_left_01";
                         head =  "HEAD_" + player.getHead() + "_left_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_01";
+                        belt = "BELT_" + player.getBelt() + "_left_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_01";
                         feet = "FEET_" + player.getFeet() + "_left_slash_01";
                         weapon = "weapon_rapier_left_01";
@@ -630,6 +666,7 @@ public class Window {
                         player_animation = "player_slash_left_02";
                         head =  "HEAD_" + player.getHead() + "_left_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_02";
+                        belt = "BELT_" + player.getBelt() + "_left_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_02";
                         feet = "FEET_" + player.getFeet() + "_left_slash_02";
                         weapon = "weapon_rapier_left_02";
@@ -638,6 +675,7 @@ public class Window {
                         player_animation = "player_slash_left_03";
                         head =  "HEAD_" + player.getHead() + "_left_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_03";
+                        belt = "BELT_" + player.getBelt() + "_left_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_03";
                         feet = "FEET_" + player.getFeet() + "_left_slash_03";
                         weapon = "weapon_rapier_left_03";
@@ -646,6 +684,7 @@ public class Window {
                         player_animation = "player_slash_left_04";
                         head =  "HEAD_" + player.getHead() + "_left_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_04";
+                        belt = "BELT_" + player.getBelt() + "_left_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_04";
                         feet = "FEET_" + player.getFeet() + "_left_slash_04";
                         weapon = "weapon_rapier_left_04";
@@ -654,6 +693,7 @@ public class Window {
                         player_animation = "player_slash_left_05";
                         head =  "HEAD_" + player.getHead() + "_left_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_05";
+                        belt = "BELT_" + player.getBelt() + "_left_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_05";
                         feet = "FEET_" + player.getFeet() + "_left_slash_05";
                         weapon = "weapon_rapier_left_05";
@@ -663,6 +703,7 @@ public class Window {
                         player_animation = "player_slash_left_06";
                         head =  "HEAD_" + player.getHead() + "_left_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_left_slash_06";
+                        belt = "BELT_" + player.getBelt() + "_left_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_left_slash_06";
                         feet = "FEET_" + player.getFeet() + "_left_slash_06";
                         weapon = "weapon_rapier_left_06";
@@ -682,6 +723,7 @@ public class Window {
                         player_animation = "player_slash_right_01";
                         head =  "HEAD_" + player.getHead() + "_right_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_01";
+                        belt = "BELT_" + player.getBelt() + "_right_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_01";
                         feet = "FEET_" + player.getFeet() + "_right_slash_01";
                         weapon = "weapon_rapier_right_01";
@@ -690,6 +732,7 @@ public class Window {
                         player_animation = "player_slash_right_02";
                         head =  "HEAD_" + player.getHead() + "_right_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_02";
+                        belt = "BELT_" + player.getBelt() + "_right_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_02";
                         feet = "FEET_" + player.getFeet() + "_right_slash_02";
                         weapon = "weapon_rapier_right_02";
@@ -698,6 +741,7 @@ public class Window {
                         player_animation = "player_slash_right_03";
                         head =  "HEAD_" + player.getHead() + "_right_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_03";
+                        belt = "BELT_" + player.getBelt() + "_right_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_03";
                         feet = "FEET_" + player.getFeet() + "_right_slash_03";
                         weapon = "weapon_rapier_right_03";
@@ -706,6 +750,7 @@ public class Window {
                         player_animation = "player_slash_right_04";
                         head =  "HEAD_" + player.getHead() + "_right_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_04";
+                        belt = "BELT_" + player.getBelt() + "_right_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_04";
                         feet = "FEET_" + player.getFeet() + "_right_slash_04";
                         weapon = "weapon_rapier_right_04";
@@ -714,6 +759,7 @@ public class Window {
                         player_animation = "player_slash_right_05";
                         head =  "HEAD_" + player.getHead() + "_right_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_05";
+                        belt = "BELT_" + player.getBelt() + "_right_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_05";
                         feet = "FEET_" + player.getFeet() + "_right_slash_05";
                         weapon = "weapon_rapier_right_05";
@@ -723,6 +769,7 @@ public class Window {
                         player_animation = "player_slash_right_06";
                         head =  "HEAD_" + player.getHead() + "_right_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_right_slash_06";
+                        belt = "BELT_" + player.getBelt() + "_right_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_right_slash_06";
                         feet = "FEET_" + player.getFeet() + "_right_slash_06";
                         weapon = "weapon_rapier_right_06";
@@ -742,6 +789,7 @@ public class Window {
                         player_animation = "player_slash_up_01";
                         head =  "HEAD_" + player.getHead() + "_up_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_01";
+                        belt = "BELT_" + player.getBelt() + "_up_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_01";
                         feet = "FEET_" + player.getFeet() + "_up_slash_01";
                         weapon = "weapon_rapier_up_01";
@@ -750,6 +798,7 @@ public class Window {
                         player_animation = "player_slash_up_02";
                         head =  "HEAD_" + player.getHead() + "_up_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_02";
+                        belt = "BELT_" + player.getBelt() + "_up_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_02";
                         feet = "FEET_" + player.getFeet() + "_up_slash_02";
                         weapon = "weapon_rapier_up_02";
@@ -758,6 +807,7 @@ public class Window {
                         player_animation = "player_slash_up_03";
                         head =  "HEAD_" + player.getHead() + "_up_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_03";
+                        belt = "BELT_" + player.getBelt() + "_up_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_03";
                         feet = "FEET_" + player.getFeet() + "_up_slash_03";
                         weapon = "weapon_rapier_up_03";
@@ -766,6 +816,7 @@ public class Window {
                         player_animation = "player_slash_up_04";
                         head =  "HEAD_" + player.getHead() + "_up_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_04";
+                        belt = "BELT_" + player.getBelt() + "_up_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_04";
                         feet = "FEET_" + player.getFeet() + "_up_slash_04";
                         weapon = "weapon_rapier_up_04";
@@ -774,6 +825,7 @@ public class Window {
                         player_animation = "player_slash_up_05";
                         head =  "HEAD_" + player.getHead() + "_up_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_05";
+                        belt = "BELT_" + player.getBelt() + "_up_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_05";
                         feet = "FEET_" + player.getFeet() + "_up_slash_05";
                         weapon = "weapon_rapier_up_05";
@@ -783,6 +835,7 @@ public class Window {
                         player_animation = "player_slash_up_06";
                         head =  "HEAD_" + player.getHead() + "_up_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_up_slash_06";
+                        belt = "BELT_" + player.getBelt() + "_up_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_up_slash_06";
                         feet = "FEET_" + player.getFeet() + "_up_slash_06";
                         weapon = "weapon_rapier_up_06";
@@ -802,6 +855,7 @@ public class Window {
                         player_animation = "player_slash_down_01";
                         head =  "HEAD_" + player.getHead() + "_down_slash_01";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_01";
+                        belt = "BELT_" + player.getBelt() + "_down_slash_01";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_01";
                         feet = "FEET_" + player.getFeet() + "_down_slash_01";
                         weapon = "weapon_rapier_down_01";
@@ -810,6 +864,7 @@ public class Window {
                         player_animation = "player_slash_down_02";
                         head =  "HEAD_" + player.getHead() + "_down_slash_02";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_02";
+                        belt = "BELT_" + player.getBelt() + "_down_slash_02";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_02";
                         feet = "FEET_" + player.getFeet() + "_down_slash_02";
                         weapon = "weapon_rapier_down_02";
@@ -818,6 +873,7 @@ public class Window {
                         player_animation = "player_slash_down_03";
                         head =  "HEAD_" + player.getHead() + "_down_slash_03";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_03";
+                        belt = "BELT_" + player.getBelt() + "_down_slash_03";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_03";
                         feet = "FEET_" + player.getFeet() + "_down_slash_03";
                         weapon = "weapon_rapier_down_03";
@@ -826,6 +882,7 @@ public class Window {
                         player_animation = "player_slash_down_04";
                         head =  "HEAD_" + player.getHead() + "_down_slash_04";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_04";
+                        belt = "BELT_" + player.getBelt() + "_down_slash_04";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_04";
                         feet = "FEET_" + player.getFeet() + "_down_slash_04";
                         weapon = "weapon_rapier_down_04";
@@ -834,6 +891,7 @@ public class Window {
                         player_animation = "player_slash_down_05";
                         head =  "HEAD_" + player.getHead() + "_down_slash_05";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_05";
+                        belt = "BELT_" + player.getBelt() + "_down_slash_05";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_05";
                         feet = "FEET_" + player.getFeet() + "_down_slash_05";
                         weapon = "weapon_rapier_down_05";
@@ -843,6 +901,7 @@ public class Window {
                         player_animation = "player_slash_down_06";
                         head =  "HEAD_" + player.getHead() + "_down_slash_06";
                         torso = "TORSO_" + player.getTorso() + "_down_slash_06";
+                        belt = "BELT_" + player.getBelt() + "_down_slash_06";
                         legs = "LEGS_" + player.getLegs() + "_down_slash_06";
                         feet = "FEET_" + player.getFeet() + "_down_slash_06";
                         weapon = "weapon_rapier_down_06";
@@ -870,6 +929,10 @@ public class Window {
             }
             if (!player.getLegs().equals("nothing")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(legs));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
+            if (!player.getBelt().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(belt));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
             if (!player.getFeet().equals("nothing")) {
