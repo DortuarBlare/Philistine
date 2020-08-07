@@ -313,7 +313,7 @@ public class Window {
             }
 
             //Движение игрока и обновление хитбокса
-            if (player.getHealth() > 0){
+            if (player.getHealth() > 0) {
                 player_animation = "player_stand_" + player.getMoveDirection();
                 head = "HEAD_" + player.getHead() + "_" + player.getMoveDirection() + "_move_01";
                 torso = "TORSO_" + player.getTorso() + "_" + player.getMoveDirection() + "_move_01";
@@ -901,8 +901,9 @@ public class Window {
                     }
                     g3++;
                 }
-            } else {
-                switch (b){
+            }
+            else {
+                switch (b) {
                     case 0:
                         player_animation = "player_hurt_01";
                         head = "HEAD_" + player.getHead() + "_hurt_01";
@@ -952,7 +953,7 @@ public class Window {
                         feet = "FEET_" + player.getFeet() + "_hurt_06";
                         break;
                 }
-                if (g4 == 8){
+                if (g4 == 8) {
                     b++;
                     g4 = 0;
                 }
@@ -962,31 +963,30 @@ public class Window {
             // Отрисовка экипировки и анимации
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player_animation));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            if (!player.getHead().equals("nothing")) {
-                glBindTexture(GL_TEXTURE_2D, textureMap.get(head));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            }
             if (!player.getTorso().equals("nothing")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(torso));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            }
-            if (!player.getLegs().equals("nothing")) {
-                glBindTexture(GL_TEXTURE_2D, textureMap.get(legs));
-                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
-            }
-            if (!player.getBelt().equals("nothing")) {
-                glBindTexture(GL_TEXTURE_2D, textureMap.get(belt));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
             if (!player.getFeet().equals("nothing")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(feet));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
+            if (!player.getLegs().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(legs));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
+            if (!player.getHead().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(head));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
+            if (!player.getBelt().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(belt));
+                createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
+            }
             if (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
-
 
             player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
