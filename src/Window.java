@@ -313,7 +313,7 @@ public class Window {
             }
 
             //Движение игрока и обновление хитбокса
-            if (player.getHealth() > 0) {
+            if (!player.getDead()) {
                 player_animation = "player_stand_" + player.getMoveDirection();
                 head = "HEAD_" + player.getHead() + "_" + player.getMoveDirection() + "_move_01";
                 torso = "TORSO_" + player.getTorso() + "_" + player.getMoveDirection() + "_move_01";
@@ -901,6 +901,19 @@ public class Window {
                     }
                     g3++;
                 }
+
+                // Полоска здоровья
+                int tempHealth = player.getHealth() % 10 == 0 ? player.getHealth() : player.getHealth() + 10 - (player.getHealth() % 10);
+                if (tempHealth >= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
+                if (player.getHealth() <= 0) {
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
+                    player.setDead(true);
+                }
+                createQuadTexture(0, 0, 103, 18);
+
+                // Броня
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor()));
+                createQuadTexture(0, 19, 34, 53);
             }
             else {
                 switch (b) {
@@ -983,25 +996,13 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(belt));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) {
+            if ( (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) && !player.getDead()) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
 
             player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
             player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
-
-            // Полоска здоровья
-            int tempHealth = player.getHealth() % 10 == 0 ? player.getHealth() : player.getHealth() + 10 - (player.getHealth() % 10);
-            glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
-            if (player.getHealth() == 0) {
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
-                player.setDead(true);
-            }
-            createQuadTexture(0, 0, 103, 18);
-            // Броня
-            glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor()));
-            createQuadTexture(0, 19, 34, 53);
 
             glfwPollEvents();
             glfwSwapBuffers(window);
