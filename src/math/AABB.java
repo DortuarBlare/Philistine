@@ -1,5 +1,7 @@
 package math;
 
+import org.lwjgl.assimp.AIVector2D;
+
 public class AABB {
     int[] min;
     int[] max;

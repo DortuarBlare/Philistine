@@ -96,6 +96,17 @@ public class Storage {
             "BELT_leather_down_slash_01", "BELT_leather_down_slash_02", "BELT_leather_down_slash_03", "BELT_leather_down_slash_04", "BELT_leather_down_slash_05", "BELT_leather_down_slash_06",
             "BELT_leather_hurt_01", "BELT_leather_hurt_02", "BELT_leather_hurt_03", "BELT_leather_hurt_04", "BELT_leather_hurt_05", "BELT_leather_hurt_06",
 
+            "BELT_rope_left_move_01", "BELT_rope_left_move_02", "BELT_rope_left_move_03", "BELT_rope_left_move_04", "BELT_rope_left_move_05", "BELT_rope_left_move_06", "BELT_rope_left_move_07", "BELT_rope_left_move_08", "BELT_rope_left_move_09",
+            "BELT_rope_right_move_01", "BELT_rope_right_move_02", "BELT_rope_right_move_03", "BELT_rope_right_move_04", "BELT_rope_right_move_05", "BELT_rope_right_move_06", "BELT_rope_right_move_07", "BELT_rope_right_move_08", "BELT_rope_right_move_09",
+            "BELT_rope_up_move_01", "BELT_rope_up_move_02", "BELT_rope_up_move_03", "BELT_rope_up_move_04", "BELT_rope_up_move_05", "BELT_rope_up_move_06", "BELT_rope_up_move_07", "BELT_rope_up_move_08", "BELT_rope_up_move_09",
+            "BELT_rope_down_move_01", "BELT_rope_down_move_02", "BELT_rope_down_move_03", "BELT_rope_down_move_04", "BELT_rope_down_move_05", "BELT_rope_down_move_06", "BELT_rope_down_move_07", "BELT_rope_down_move_08", "BELT_rope_down_move_09",
+
+            "BELT_rope_left_slash_01", "BELT_rope_left_slash_02", "BELT_rope_left_slash_03", "BELT_rope_left_slash_04", "BELT_rope_left_slash_05", "BELT_rope_left_slash_06",
+            "BELT_rope_right_slash_01", "BELT_rope_right_slash_02", "BELT_rope_right_slash_03", "BELT_rope_right_slash_04", "BELT_rope_right_slash_05", "BELT_rope_right_slash_06",
+            "BELT_rope_up_slash_01", "BELT_rope_up_slash_02", "BELT_rope_up_slash_03", "BELT_rope_up_slash_04", "BELT_rope_up_slash_05", "BELT_rope_up_slash_06",
+            "BELT_rope_down_slash_01", "BELT_rope_down_slash_02", "BELT_rope_down_slash_03", "BELT_rope_down_slash_04", "BELT_rope_down_slash_05", "BELT_rope_down_slash_06",
+            "BELT_rope_hurt_01", "BELT_rope_hurt_02", "BELT_rope_hurt_03", "BELT_rope_hurt_04", "BELT_rope_hurt_05", "BELT_rope_hurt_06",
+
             "LEGS_pants_greenish_left_move_01", "LEGS_pants_greenish_left_move_02", "LEGS_pants_greenish_left_move_03", "LEGS_pants_greenish_left_move_04", "LEGS_pants_greenish_left_move_05", "LEGS_pants_greenish_left_move_06", "LEGS_pants_greenish_left_move_07", "LEGS_pants_greenish_left_move_08", "LEGS_pants_greenish_left_move_09",
             "LEGS_pants_greenish_right_move_01", "LEGS_pants_greenish_right_move_02", "LEGS_pants_greenish_right_move_03", "LEGS_pants_greenish_right_move_04", "LEGS_pants_greenish_right_move_05", "LEGS_pants_greenish_right_move_06", "LEGS_pants_greenish_right_move_07", "LEGS_pants_greenish_right_move_08", "LEGS_pants_greenish_right_move_09",
             "LEGS_pants_greenish_up_move_01", "LEGS_pants_greenish_up_move_02", "LEGS_pants_greenish_up_move_03", "LEGS_pants_greenish_up_move_04", "LEGS_pants_greenish_up_move_05", "LEGS_pants_greenish_up_move_06", "LEGS_pants_greenish_up_move_07", "LEGS_pants_greenish_up_move_08", "LEGS_pants_greenish_up_move_09",

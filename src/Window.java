@@ -1,8 +1,10 @@
 import math.AABB;
+import math.CollisionMessage;
 import mobs.Mob;
 import mobs.Player;
 import mobs.PlayerTask;
 import mobs.Slime;
+import org.lwjgl.assimp.AIVector2D;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -30,7 +32,6 @@ public class Window {
     boolean isPantsLie = true;
     boolean isBootsLie = true;
     boolean isChestOpen = false;
-    boolean forAnimationTask = true;
     Player player;
     String player_animation, weapon, head, torso, belt, legs, feet;
 
@@ -96,7 +97,7 @@ public class Window {
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
         aabbMap.get("pants_greenish").update(428, 100, 492, 164);
-        aabbMap.get("chestClosed").update(250, 100, 314, 164);
+        aabbMap.get("chestClosed").update(250, 100, 282, 164);
         aabbMap.get("shoes_brown").update(364, 100, 428, 164);
         aabbMap.get("shirt_white").update(300, 100, 364, 164);
 
@@ -145,14 +146,10 @@ public class Window {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
 
-                    //сундук
-                    if (!isChestOpen) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("chestClosed"));
-                        createQuadTexture(250, 132, 282, 164);
-                    } else {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("chestOpened"));
-                        createQuadTexture(250, 132, 282, 164);
-                    }
+                    // Сундук
+                    if (!isChestOpen) glBindTexture(GL_TEXTURE_2D, textureMap.get("chestClosed"));
+                    else glBindTexture(GL_TEXTURE_2D, textureMap.get("chestOpened"));
+                    createQuadTexture(250, 132, 282, 164);
                     if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("chestClosed"))) {
                         isChestOpen = !isChestOpen;
                     }

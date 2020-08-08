@@ -29,7 +29,7 @@ public class Player extends Mob {
         setMoveDirection("down");
         head = "robe_hood";
         torso = "robe_shirt_brown";
-        belt = "leather";
+        belt = "rope";
         legs = "robe_skirt";
         hands = feet = "nothing";
     }
