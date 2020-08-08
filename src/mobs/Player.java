@@ -10,6 +10,7 @@ public class Player extends Mob {
     private String knockbackDirection;
     private String head, torso, belt, hands, legs, feet;
     private AABB attackBox;
+    public Timer animationTimer = new Timer();
     private Timer timerPlayer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
         @Override
@@ -46,6 +47,20 @@ public class Player extends Mob {
                 else if (knockbackDirection.equals("Up")) moveUp();
                 else if (knockbackDirection.equals("Down")) moveDown();
                 time++;
+            }
+        };
+    }
+
+    public void stopAnimationTimer() {
+        PlayerTask.animationTime = 1;
+        animationTimer.cancel();
+        animationTimer.purge();
+        animationTimer = new Timer();
+        PlayerTask.animationTask = new TimerTask() {
+            @Override
+            public void run() {
+                PlayerTask.animationTime++;
+                if (PlayerTask.animationTime == 10) PlayerTask.animationTime = 1;
             }
         };
     }
