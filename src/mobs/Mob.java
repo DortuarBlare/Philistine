@@ -40,9 +40,33 @@ public abstract class Mob {
         moveDirection = "up";
     }
 
+    public void moveUpRight() {
+        y -= speed;
+        x += speed;
+        moveDirection = "right";
+    }
+
+    public void moveUpLeft() {
+        y -= speed;
+        x -= speed;
+        moveDirection = "left";
+    }
+
     public void moveDown() {
         y += speed;
         moveDirection = "down";
+    }
+
+    public void moveDownRight() {
+        y += speed;
+        x += speed;
+        moveDirection = "right";
+    }
+
+    public void moveDownLeft() {
+        y += speed;
+        x -= speed;
+        moveDirection = "left";
     }
 
     public void stopLeft() { x += speed; }
