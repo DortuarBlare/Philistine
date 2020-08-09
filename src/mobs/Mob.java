@@ -1,6 +1,7 @@
 package mobs;
 
 import math.AABB;
+import math.CollisionMessage;
 
 public abstract class Mob {
     private int x, y;
@@ -67,6 +68,13 @@ public abstract class Mob {
         y += speed;
         x -= speed;
         moveDirection = "left";
+    }
+
+    public void stop(String direction) {
+        if (direction.equals("left")) stopLeft();
+        else if (direction.equals("right")) stopRight();
+        else if (direction.equals("up")) stopUp();
+        else if (direction.equals("down")) stopDown();
     }
 
     public void stopLeft() { x += speed; }

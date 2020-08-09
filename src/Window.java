@@ -165,14 +165,8 @@ public class Window {
                     if (!isChestOpen) glBindTexture(GL_TEXTURE_2D, textureMap.get("chestClosed"));
                     else glBindTexture(GL_TEXTURE_2D, textureMap.get("chestOpened"));
                     createQuadTexture(250, 200, 282, 232);
-                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("chestClosed"))) isChestOpen = !isChestOpen;
-                    if (AABB.AABBvsAABB2(player.getCollisionBox(), aabbMap.get("chestClosed"))) {
-                        if (CollisionMessage.getMessage().equals("left")) player.stopLeft();
-                        else if (CollisionMessage.getMessage().equals("right")) player.stopRight();
-                        else if (CollisionMessage.getMessage().equals("up")) player.stopUp();
-                        else if (CollisionMessage.getMessage().equals("down")) player.stopDown();
-                    }
-
+                    if (isCheck && AABB.AABBvsAABB2(player.getCollisionBox(), aabbMap.get("chestClosed"))) isChestOpen = !isChestOpen;
+                    if (AABB.AABBvsAABB2(player.getCollisionBox(), aabbMap.get("chestClosed"))) player.stop(CollisionMessage.getMessage());
 
                     // башмаки
                     if (isBootsLie) {
@@ -238,6 +232,8 @@ public class Window {
                         slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
+
+                        if (AABB.AABBvsAABB2(slime.getCollisionBox(), aabbMap.get("chestClosed"))) slime.stop(CollisionMessage.getMessage());
 
                         // Отрисовка хелсбара
                         if (slime.getHealth() <= 0) slime.setDead(true);
