@@ -2,40 +2,58 @@ package math;
 
 import org.lwjgl.assimp.AIVector2D;
 
+import java.awt.*;
+
 public class AABB {
-    int[] min;
-    int[] max;
+    Point min;
+    Point max;
 
     public AABB() {
-        min = new int[2];
-        max = new int[2];
+        min = new Point();
+        max = new Point();
     }
 
-    public AABB (int xmin, int ymin, int xmax, int ymax){
-        min = new int[2];
-        max = new int[2];
-        min[0] = xmin;
-        min[1] = ymin;
-        max[0] = xmax;
-        max[1] = ymax;
+    public AABB (int xmin, int ymin, int xmax, int ymax) {
+        min = new Point();
+        max = new Point();
+        min.x = xmin;
+        min.y = ymin;
+        max.x = xmax;
+        max.y = ymax;
     }
 
     public static boolean AABBvsAABB(AABB first, AABB second) {
         // Выходим без пересечения, потому что найдена разделяющая ось
-        if (first.max[0] < second.min[0] || first.min[0] > second.max[0]) return false;
-        if (first.max[1] < second.min[1] || first.min[1] > second.max[1]) return false;
+        if (first.max.x < second.min.x || first.min.x > second.max.x) return false;
+        if (first.max.y < second.min.y || first.min.y > second.max.y) return false;
         // Разделяющая ось не найдена, поэтому существует по крайней мере одна пересекающая ось
         return true;
     }
 
-    public void update(int xmin, int ymin, int xmax, int ymax){
-        min[0] = xmin;
-        min[1] = ymin;
-        max[0] = xmax;
-        max[1] = ymax;
+    public static boolean AABBvsAABB2(AABB first, AABB second) {
+        if (first.min.x == second.max.x &&
+                ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
+                ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ) ) {
+            CollisionMessage.setMessage("left");
+            return true;
+        }
+        if (first.max.x == second.min.x &&
+                ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
+                ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ) ) {
+            CollisionMessage.setMessage("right");
+            return true;
+        }
+        return false;
     }
 
-    public int[] getMin() { return min; }
+    public void update(int xmin, int ymin, int xmax, int ymax) {
+        min.x = xmin;
+        min.y = ymin;
+        max.x = xmax;
+        max.y = ymax;
+    }
 
-    public int[] getMax() { return max; }
+    public Point getMin() { return min; }
+
+    public Point getMax() { return max; }
 }

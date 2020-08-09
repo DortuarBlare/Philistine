@@ -97,7 +97,7 @@ public class Window {
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
         aabbMap.get("pants_greenish").update(428, 100, 492, 164);
-        aabbMap.get("chestClosed").update(250, 100, 282, 164);
+        aabbMap.get("chestClosed").update(250, 200, 282, 232);
         aabbMap.get("shoes_brown").update(364, 100, 428, 164);
         aabbMap.get("shirt_white").update(300, 100, 364, 164);
 
@@ -149,9 +149,11 @@ public class Window {
                     // Сундук
                     if (!isChestOpen) glBindTexture(GL_TEXTURE_2D, textureMap.get("chestClosed"));
                     else glBindTexture(GL_TEXTURE_2D, textureMap.get("chestOpened"));
-                    createQuadTexture(250, 132, 282, 164);
-                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("chestClosed"))) {
-                        isChestOpen = !isChestOpen;
+                    createQuadTexture(250, 200, 282, 232);
+                    if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("chestClosed"))) isChestOpen = !isChestOpen;
+                    if (AABB.AABBvsAABB2(player.getCollisionBox(), aabbMap.get("chestClosed"))) {
+                        if (CollisionMessage.getMessage().equals("left")) player.stopLeft();
+                        if (CollisionMessage.getMessage().equals("right")) player.stopRight();
                     }
 
                     // башмаки
@@ -210,9 +212,9 @@ public class Window {
                         g2++;
                         // Преследование игрока слаймом, обновление хитбокса и перерисовка текстуры
                         if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
-                            if (slime.getHitbox().getMin()[0] > player.getHitbox().getMin()[0]) slime.moveLeft();
+                            if (slime.getHitbox().getMin().x > player.getHitbox().getMin().x) slime.moveLeft();
                             else slime.moveRight();
-                            if (slime.getHitbox().getMin()[1] > player.getHitbox().getMin()[1]) slime.moveUp();
+                            if (slime.getHitbox().getMin().y > player.getHitbox().getMin().y) slime.moveUp();
                             else slime.moveDown();
                         }
                         slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
