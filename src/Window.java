@@ -6,6 +6,8 @@ import mobs.PlayerTask;
 import mobs.Slime;
 import org.lwjgl.assimp.AIVector2D;
 import org.lwjgl.glfw.*;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
@@ -88,6 +90,13 @@ public class Window {
             else id = Texture.loadTexture(Storage.textureString[i]);
             textureMap.put(Storage.textureString[i], id);
         }
+        //
+        AudioMaster.init();
+        AudioMaster.setListenerData();
+        int idgta = AudioMaster.loadSound("GTA_San_Andreas_-_Main_Theme");
+        Source source = new Source();
+
+
         // Единичная загрузка всех хитбоксов
         for(int i = 0; i < Storage.aabbString.length; i++)
             aabbMap.put(Storage.aabbString[i], new AABB());
@@ -104,6 +113,8 @@ public class Window {
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+                source.delete();
+                AL10.alDeleteBuffers(idgta);
                 glfwSetWindowShouldClose(window, true);
                 Player player = (Player) mobList.get(0);
                 player.getTimerPlayer().cancel();
@@ -119,6 +130,10 @@ public class Window {
             if (key == GLFW_KEY_UP && action == GLFW_PRESS) isAttackUp = true;
             if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) isAttackDown = true;
             if (key == GLFW_KEY_E && action == GLFW_PRESS) isCheck = true;
+            if (key == GLFW_KEY_U && action == GLFW_PRESS){
+                source.play(idgta);
+                System.out.println("gta");
+            }
         });
     }
 
