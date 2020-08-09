@@ -8,7 +8,7 @@ import java.util.TimerTask;
 public class Player extends Mob {
     private int time = 0;
     private String knockbackDirection;
-    private String head, torso, belt, hands, legs, feet;
+    private String head, shoulders, torso, belt, hands, legs, feet;
     private AABB attackBox;
     public Timer animationTimer = new Timer();
     private Timer timerPlayer = new Timer();
@@ -27,11 +27,13 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
         setMoveDirection("down");
-        head = "robe_hood";
-        torso = "robe_shirt_brown";
-        belt = "rope";
-        legs = "robe_skirt";
-        hands = feet = "nothing";
+        head = "plate_helmet";
+        shoulders = "plate_armor";
+        torso = "plate_armor";
+        belt = "leather";
+        hands = "leather_bracers";
+        legs = "plate_pants";
+        feet = "plate_shoes";
     }
 
     public void stopTimerPlayer() {
@@ -79,6 +81,10 @@ public class Player extends Mob {
 
     public void setHead(String head) { this.head = head; }
 
+    public String getShoulders() { return shoulders; }
+
+    public void setShoulders(String shoulders) { this.shoulders = shoulders; }
+
     public String getTorso() { return torso; }
 
     public void setTorso(String torso) { this.torso = torso; }
@@ -86,6 +92,10 @@ public class Player extends Mob {
     public String getBelt() { return belt; }
 
     public void setBelt(String belt) { this.belt = belt; }
+
+    public String getHands() { return hands; }
+
+    public void setHands(String hands) { this.hands = hands; }
 
     public String getLegs() { return legs; }
 
