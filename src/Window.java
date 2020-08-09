@@ -130,7 +130,7 @@ public class Window {
             if (key == GLFW_KEY_UP && action == GLFW_PRESS) isAttackUp = true;
             if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) isAttackDown = true;
             if (key == GLFW_KEY_E && action == GLFW_PRESS) isCheck = true;
-            if (key == GLFW_KEY_U && action == GLFW_PRESS){
+            if (key == GLFW_KEY_U && action == GLFW_PRESS) {
                 source.play(idgta);
                 System.out.println("gta");
             }
@@ -168,8 +168,11 @@ public class Window {
                     if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("chestClosed"))) isChestOpen = !isChestOpen;
                     if (AABB.AABBvsAABB2(player.getCollisionBox(), aabbMap.get("chestClosed"))) {
                         if (CollisionMessage.getMessage().equals("left")) player.stopLeft();
-                        if (CollisionMessage.getMessage().equals("right")) player.stopRight();
+                        else if (CollisionMessage.getMessage().equals("right")) player.stopRight();
+                        else if (CollisionMessage.getMessage().equals("up")) player.stopUp();
+                        else if (CollisionMessage.getMessage().equals("down")) player.stopDown();
                     }
+
 
                     // башмаки
                     if (isBootsLie) {
