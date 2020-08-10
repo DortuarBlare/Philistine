@@ -6,6 +6,7 @@ public class Storage {
             111, 339, 639, 341, // wall3
             103, 139, 111, 332 // wall4
     };
+
     static final int[] secondLevelWalls = {
             0, 182, 94, 188, // wall0
             92, 140, 96, 184, // wall1
@@ -15,6 +16,12 @@ public class Storage {
             92, 290, 96, 334, // wall5
             0, 287, 92, 291 // wall6
     };
+
+    static final String[] aabbString = {
+            "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "shirt_white", "shoes_brown"
+    };
+
     static final String[] textureString = {
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
             "slime_left_01", "slime_left_02", "slime_left_03",
@@ -293,9 +300,5 @@ public class Storage {
             "FEET_plate_shoes_up_slash_01", "FEET_plate_shoes_up_slash_02", "FEET_plate_shoes_up_slash_03", "FEET_plate_shoes_up_slash_04", "FEET_plate_shoes_up_slash_05", "FEET_plate_shoes_up_slash_06",
             "FEET_plate_shoes_down_slash_01", "FEET_plate_shoes_down_slash_02", "FEET_plate_shoes_down_slash_03", "FEET_plate_shoes_down_slash_04", "FEET_plate_shoes_down_slash_05", "FEET_plate_shoes_down_slash_06",
             "FEET_plate_shoes_hurt_01", "FEET_plate_shoes_hurt_02", "FEET_plate_shoes_hurt_03", "FEET_plate_shoes_hurt_04", "FEET_plate_shoes_hurt_05", "FEET_plate_shoes_hurt_06",
-    };
-    static final String[] aabbString = {
-            "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "chestClosed",  "shirt_white", "shoes_brown"
     };
 }

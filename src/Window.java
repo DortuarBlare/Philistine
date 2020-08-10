@@ -35,6 +35,7 @@ public class Window {
     boolean isBootsLie = true;
     boolean isChestOpen = false;
     Player player;
+    mobs.Object chest;
     String player_animation, weapon, head, shoulders, torso, belt, hands, legs, feet;
 
     public void run() {
@@ -106,9 +107,9 @@ public class Window {
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
         aabbMap.get("pants_greenish").update(428, 100, 492, 164);
-        aabbMap.get("chestClosed").update(250, 200, 282, 232);
         aabbMap.get("shoes_brown").update(364, 100, 428, 164);
         aabbMap.get("shirt_white").update(300, 100, 364, 164);
+        chest = new mobs.Object(250, 200, new AABB(250, 206, 282, 232), "chestClosed");
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -162,11 +163,13 @@ public class Window {
                     createQuadTexture(0, 0, 640, 360);
 
                     // Сундук
-                    if (!isChestOpen) glBindTexture(GL_TEXTURE_2D, textureMap.get("chestClosed"));
-                    else glBindTexture(GL_TEXTURE_2D, textureMap.get("chestOpened"));
-                    createQuadTexture(250, 200, 282, 232);
-                    if (isCheck && AABB.AABBvsAABB2(player.getCollisionBox(), aabbMap.get("chestClosed"))) isChestOpen = !isChestOpen;
-                    if (AABB.AABBvsAABB2(player.getCollisionBox(), aabbMap.get("chestClosed"))) player.stop(CollisionMessage.getMessage());
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get(chest.getTexture()));
+                    createQuadTexture(chest.getX(), chest.getY(), chest.getX() + 32, chest.getY() + 32);
+                    if (isCheck && AABB.AABBvsAABB2(player.getCollisionBox(), chest.getCollisionBox())) {
+                        chest.setTexture("chestOpened");
+                        chest.getCollisionBox().update(250, 200, 282, 232);
+                    }
+                    if (AABB.AABBvsAABB2(player.getCollisionBox(), chest.getCollisionBox())) player.stop(CollisionMessage.getMessage());
 
                     // башмаки
                     if (isBootsLie) {
@@ -233,7 +236,7 @@ public class Window {
                         slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
                         createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
 
-                        if (AABB.AABBvsAABB2(slime.getCollisionBox(), aabbMap.get("chestClosed"))) slime.stop(CollisionMessage.getMessage());
+                        if (AABB.AABBvsAABB2(slime.getCollisionBox(), chest.getCollisionBox())) slime.stop(CollisionMessage.getMessage());
 
                         // Отрисовка хелсбара
                         if (slime.getHealth() <= 0) slime.setDead(true);
@@ -908,8 +911,11 @@ public class Window {
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
 
-            player.getHitbox().update(player.getX() + 15, player.getY() + 14, player.getX() + 15 + 30, player.getY() + 14 + 48);
-            player.getCollisionBox().update(player.getX() + 15, player.getY() + 14 + 32, player.getX() + 15 + 30, player.getY() + 14 + 32 + 16);
+            if (player.getMoveDirection().equals("left")) player.getHitbox().update(player.getX() + 23, player.getY() + 15, player.getX() + 42, player.getY() + 59);
+            else if (player.getMoveDirection().equals("right")) player.getHitbox().update(player.getX() + 21, player.getY() + 15, player.getX() + 40, player.getY() + 59);
+            else if (player.getMoveDirection().equals("up")) player.getHitbox().update(player.getX() + 20, player.getY() + 15, player.getX() + 43, player.getY() + 60);
+            else if (player.getMoveDirection().equals("down")) player.getHitbox().update(player.getX() + 20, player.getY() + 15, player.getX() + 43, player.getY() + 61);
+            player.getCollisionBox().update(player.getX() + 17, player.getY() + 46, player.getX() + 46, player.getY() + 61);
 
             glfwPollEvents();
             glfwSwapBuffers(window);
