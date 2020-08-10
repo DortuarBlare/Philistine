@@ -300,5 +300,10 @@ public class Storage {
             "FEET_plate_shoes_up_slash_01", "FEET_plate_shoes_up_slash_02", "FEET_plate_shoes_up_slash_03", "FEET_plate_shoes_up_slash_04", "FEET_plate_shoes_up_slash_05", "FEET_plate_shoes_up_slash_06",
             "FEET_plate_shoes_down_slash_01", "FEET_plate_shoes_down_slash_02", "FEET_plate_shoes_down_slash_03", "FEET_plate_shoes_down_slash_04", "FEET_plate_shoes_down_slash_05", "FEET_plate_shoes_down_slash_06",
             "FEET_plate_shoes_hurt_01", "FEET_plate_shoes_hurt_02", "FEET_plate_shoes_hurt_03", "FEET_plate_shoes_hurt_04", "FEET_plate_shoes_hurt_05", "FEET_plate_shoes_hurt_06",
+
+            "skeleton_left_move_01", "skeleton_left_move_02", "skeleton_left_move_03", "skeleton_left_move_04", "skeleton_left_move_05", "skeleton_left_move_06", "skeleton_left_move_07", "skeleton_left_move_08", "skeleton_left_move_09",
+            "skeleton_right_move_01", "skeleton_right_move_02", "skeleton_right_move_03", "skeleton_right_move_04", "skeleton_right_move_05", "skeleton_right_move_06", "skeleton_right_move_07", "skeleton_right_move_08", "skeleton_right_move_09",
+            "skeleton_up_move_01", "skeleton_up_move_02", "skeleton_up_move_03", "skeleton_up_move_04", "skeleton_up_move_05", "skeleton_up_move_06", "skeleton_up_move_07", "skeleton_up_move_08", "skeleton_up_move_09",
+            "skeleton_down_move_01", "skeleton_down_move_02", "skeleton_down_move_03", "skeleton_down_move_04", "skeleton_down_move_05", "skeleton_down_move_06", "skeleton_down_move_07", "skeleton_down_move_08", "skeleton_down_move_09",
     };
 }
