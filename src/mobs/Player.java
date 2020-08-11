@@ -8,10 +8,9 @@ import java.util.TimerTask;
 public class Player extends Mob {
     private int time = 0;
     private String knockbackDirection;
-    private String head, shoulders, torso, belt, hands, legs, feet;
+    private String weapon, head, shoulders, torso, belt, hands, legs, feet;
     private AABB attackBox;
-    public Timer animationTimer = new Timer();
-    private Timer timerPlayer = new Timer();
+    private Timer timer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
         @Override
         public void run() {
@@ -27,6 +26,7 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
         setMoveDirection("down");
+        weapon = "longsword";
         head = "plate_helmet";
         shoulders = "plate_armor";
         torso = "plate_armor";
@@ -38,9 +38,9 @@ public class Player extends Mob {
 
     public void stopTimerPlayer() {
         time = 0;
-        timerPlayer.cancel();
-        timerPlayer.purge();
-        timerPlayer = new Timer();
+        timer.cancel();
+        timer.purge();
+        timer = new Timer();
         timerTaskPlayer = new TimerTask() {
             @Override
             public void run() {
@@ -53,21 +53,7 @@ public class Player extends Mob {
         };
     }
 
-    public void stopAnimationTimer() {
-        PlayerTask.animationTime = 1;
-        animationTimer.cancel();
-        animationTimer.purge();
-        animationTimer = new Timer();
-        PlayerTask.animationTask = new TimerTask() {
-            @Override
-            public void run() {
-                PlayerTask.animationTime++;
-                if (PlayerTask.animationTime == 10) PlayerTask.animationTime = 1;
-            }
-        };
-    }
-
-    public Timer getTimerPlayer() { return timerPlayer; }
+    public Timer getTimer() { return timer; }
 
     public TimerTask getTimerTaskPlayer() { return timerTaskPlayer; }
 
@@ -76,6 +62,10 @@ public class Player extends Mob {
     public int getTime() { return time; }
 
     public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
+
+    public String getWeapon() { return weapon; }
+
+    public void setWeapon(String weapon) { this.weapon = weapon; }
 
     public String getHead() { return head; }
 

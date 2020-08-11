@@ -48,6 +48,11 @@ public class Storage {
             "weapon_rapier_down_01", "weapon_rapier_down_02", "weapon_rapier_down_03", "weapon_rapier_down_04", "weapon_rapier_down_05", "weapon_rapier_down_06",
             "weapon_rapier_left_01", "weapon_rapier_left_02", "weapon_rapier_left_03", "weapon_rapier_left_04", "weapon_rapier_left_05", "weapon_rapier_left_06",
 
+            "weapon_longsword_left_01", "weapon_longsword_left_02", "weapon_longsword_left_03", "weapon_longsword_left_04", "weapon_longsword_left_05", "weapon_longsword_left_06",
+            "weapon_longsword_right_01", "weapon_longsword_right_02", "weapon_longsword_right_03", "weapon_longsword_right_04", "weapon_longsword_right_05", "weapon_longsword_right_06",
+            "weapon_longsword_up_01", "weapon_longsword_up_02", "weapon_longsword_up_03", "weapon_longsword_up_04", "weapon_longsword_up_05", "weapon_longsword_up_06",
+            "weapon_longsword_down_01", "weapon_longsword_down_02", "weapon_longsword_down_03", "weapon_longsword_down_04", "weapon_longsword_down_05", "weapon_longsword_down_06",
+
             "HEAD_hair_left_move_01", "HEAD_hair_left_move_02", "HEAD_hair_left_move_03", "HEAD_hair_left_move_04", "HEAD_hair_left_move_05", "HEAD_hair_left_move_06", "HEAD_hair_left_move_07", "HEAD_hair_left_move_08", "HEAD_hair_left_move_09",
             "HEAD_hair_right_move_01", "HEAD_hair_right_move_02", "HEAD_hair_right_move_03", "HEAD_hair_right_move_04", "HEAD_hair_right_move_05", "HEAD_hair_right_move_06", "HEAD_hair_right_move_07", "HEAD_hair_right_move_08", "HEAD_hair_right_move_09",
             "HEAD_hair_up_move_01", "HEAD_hair_up_move_02", "HEAD_hair_up_move_03", "HEAD_hair_up_move_04", "HEAD_hair_up_move_05", "HEAD_hair_up_move_06", "HEAD_hair_up_move_07", "HEAD_hair_up_move_08", "HEAD_hair_up_move_09",

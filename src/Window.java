@@ -114,10 +114,8 @@ public class Window {
                 AL10.alDeleteBuffers(idgta);
                 glfwSetWindowShouldClose(window, true);
                 Player player = (Player) mobList.get(0);
-                player.getTimerPlayer().cancel();
-                player.getTimerPlayer().purge();
-                player.animationTimer.cancel();
-                player.animationTimer.purge();
+                player.getTimer().cancel();
+                player.getTimer().purge();
                 Slime slime = (Slime) mobList.get(1);
                 slime.getTimerSlime().cancel();
                 slime.getTimerSlime().purge();
@@ -140,7 +138,7 @@ public class Window {
     private void loop() {
         int i1 = 2, i2 = 2, i3 = 2, i4 = 2, i5 = 0;
         int g1 = 0, g2 = 0, g3 = 0, g4 = 0;
-        int j1 = 0, j2 = 0, j3 = 0, j4 = 0;
+        int j1 = 1, j2 = 1, j3 = 1, j4 = 1;
         int b = 0;
 
         // Изменение скейла изображения
@@ -246,7 +244,7 @@ public class Window {
                             else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
                             player.takeDamage(slime.getDamage());
                             player.setImmortal(true);
-                            player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
+                            player.getTimer().schedule(player.getTimerTaskPlayer(), 0, 10);
                         }
                         // Слизень получает урон от игрока
                         if (AABB.AABBvsAABB(player.getAttackBox(), slime.getHitbox()) && !slime.getImmortal()) {
@@ -342,7 +340,7 @@ public class Window {
                             else if (player.getY() < skeleton.getY()) player.setKnockbackDirection("Up");
                             player.takeDamage(skeleton.getDamage());
                             player.setImmortal(true);
-                            player.getTimerPlayer().schedule(player.getTimerTaskPlayer(), 0, 10);
+                            player.getTimer().schedule(player.getTimerTaskPlayer(), 0, 10);
                         }
                         // Скелетон получает урон от игрока
                         if (AABB.AABBvsAABB(player.getAttackBox(), skeleton.getHitbox()) && !skeleton.getImmortal()) {
@@ -382,7 +380,7 @@ public class Window {
                     }
 
                     // Проверка перехода на первый уровень
-                    if(AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
                         level = "FirstLevel";
                         // Обновление хитбоксов стен для первого уровня
                         for(int i = 0, j = 0; i < 5; i++, j+=4) {
@@ -544,77 +542,20 @@ public class Window {
                     player.moveDown();
                 }
                 if (isAttackLeft) {
-                    switch (j3) {
-                        case 0:
-                            player_animation = "player_slash_left_01";
-                            head =  "HEAD_" + player.getHead() + "_left_slash_01";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_01";
-                            torso = "TORSO_" + player.getTorso() + "_left_slash_01";
-                            belt = "BELT_" + player.getBelt() + "_left_slash_01";
-                            hands = "HANDS_" + player.getHands() + "_left_slash_01";
-                            legs = "LEGS_" + player.getLegs() + "_left_slash_01";
-                            feet = "FEET_" + player.getFeet() + "_left_slash_01";
-                            weapon = "weapon_rapier_left_01";
-                            break;
-                        case 1:
-                            player_animation = "player_slash_left_02";
-                            head =  "HEAD_" + player.getHead() + "_left_slash_02";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_02";
-                            torso = "TORSO_" + player.getTorso() + "_left_slash_02";
-                            belt = "BELT_" + player.getBelt() + "_left_slash_02";
-                            hands = "HANDS_" + player.getHands() + "_left_slash_02";
-                            legs = "LEGS_" + player.getLegs() + "_left_slash_02";
-                            feet = "FEET_" + player.getFeet() + "_left_slash_02";
-                            weapon = "weapon_rapier_left_02";
-                            break;
-                        case 2:
-                            player_animation = "player_slash_left_03";
-                            head =  "HEAD_" + player.getHead() + "_left_slash_03";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_03";
-                            torso = "TORSO_" + player.getTorso() + "_left_slash_03";
-                            belt = "BELT_" + player.getBelt() + "_left_slash_03";
-                            hands = "HANDS_" + player.getHands() + "_left_slash_03";
-                            legs = "LEGS_" + player.getLegs() + "_left_slash_03";
-                            feet = "FEET_" + player.getFeet() + "_left_slash_03";
-                            weapon = "weapon_rapier_left_03";
-                            break;
-                        case 3:
-                            player_animation = "player_slash_left_04";
-                            head =  "HEAD_" + player.getHead() + "_left_slash_04";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_04";
-                            torso = "TORSO_" + player.getTorso() + "_left_slash_04";
-                            belt = "BELT_" + player.getBelt() + "_left_slash_04";
-                            hands = "HANDS_" + player.getHands() + "_left_slash_04";
-                            legs = "LEGS_" + player.getLegs() + "_left_slash_04";
-                            feet = "FEET_" + player.getFeet() + "_left_slash_04";
-                            weapon = "weapon_rapier_left_04";
-                            break;
-                        case 4:
-                            player_animation = "player_slash_left_05";
-                            head =  "HEAD_" + player.getHead() + "_left_slash_05";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_05";
-                            torso = "TORSO_" + player.getTorso() + "_left_slash_05";
-                            belt = "BELT_" + player.getBelt() + "_left_slash_05";
-                            hands = "HANDS_" + player.getHands() + "_left_slash_05";
-                            legs = "LEGS_" + player.getLegs() + "_left_slash_05";
-                            feet = "FEET_" + player.getFeet() + "_left_slash_05";
-                            weapon = "weapon_rapier_left_05";
-                            player.getAttackBox().update(player.getX() - 50, player.getY() + 20, player.getX() - 50 + 69, player.getY() + 20 + 27);
-                            break;
-                        case 5:
-                            player_animation = "player_slash_left_06";
-                            head =  "HEAD_" + player.getHead() + "_left_slash_06";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_06";
-                            torso = "TORSO_" + player.getTorso() + "_left_slash_06";
-                            belt = "BELT_" + player.getBelt() + "_left_slash_06";
-                            hands = "HANDS_" + player.getHands() + "_left_slash_06";
-                            legs = "LEGS_" + player.getLegs() + "_left_slash_06";
-                            feet = "FEET_" + player.getFeet() + "_left_slash_06";
-                            weapon = "weapon_rapier_left_06";
-                            j3 = 0;
-                            isAttackLeft = false;
-                            break;
+                    if (j3 == 7) {
+                        j3 = 1;
+                        isAttackLeft = false;
                     }
+                    if (j3 == 5) player.getAttackBox().update(player.getX() - 50, player.getY() + 20, player.getX() - 50 + 69, player.getY() + 20 + 27);
+                    player_animation = "player_slash_left_0" + j3;
+                    weapon = "weapon_" + player.getWeapon() + "_left_0" + j3;
+                    head =  "HEAD_" + player.getHead() + "_left_slash_0" + j3;
+                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_0" + j3;
+                    torso = "TORSO_" + player.getTorso() + "_left_slash_0" + j3;
+                    belt = "BELT_" + player.getBelt() + "_left_slash_0" + j3;
+                    hands = "HANDS_" + player.getHands() + "_left_slash_0" + j3;
+                    legs = "LEGS_" + player.getLegs() + "_left_slash_0" + j3;
+                    feet = "FEET_" + player.getFeet() + "_left_slash_0" + j3;
                     if (g3 == 4) {
                         j3++;
                         g3 = 0;
@@ -622,77 +563,20 @@ public class Window {
                     g3++;
                 }
                 else if (isAttackRight) {
-                    switch (j1) {
-                        case 0:
-                            player_animation = "player_slash_right_01";
-                            head =  "HEAD_" + player.getHead() + "_right_slash_01";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_01";
-                            torso = "TORSO_" + player.getTorso() + "_right_slash_01";
-                            belt = "BELT_" + player.getBelt() + "_right_slash_01";
-                            hands = "HANDS_" + player.getHands() + "_right_slash_01";
-                            legs = "LEGS_" + player.getLegs() + "_right_slash_01";
-                            feet = "FEET_" + player.getFeet() + "_right_slash_01";
-                            weapon = "weapon_rapier_right_01";
-                            break;
-                        case 1:
-                            player_animation = "player_slash_right_02";
-                            head =  "HEAD_" + player.getHead() + "_right_slash_02";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_02";
-                            torso = "TORSO_" + player.getTorso() + "_right_slash_02";
-                            belt = "BELT_" + player.getBelt() + "_right_slash_02";
-                            hands = "HANDS_" + player.getHands() + "_right_slash_02";
-                            legs = "LEGS_" + player.getLegs() + "_right_slash_02";
-                            feet = "FEET_" + player.getFeet() + "_right_slash_02";
-                            weapon = "weapon_rapier_right_02";
-                            break;
-                        case 2:
-                            player_animation = "player_slash_right_03";
-                            head =  "HEAD_" + player.getHead() + "_right_slash_03";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_03";
-                            torso = "TORSO_" + player.getTorso() + "_right_slash_03";
-                            belt = "BELT_" + player.getBelt() + "_right_slash_03";
-                            hands = "HANDS_" + player.getHands() + "_right_slash_03";
-                            legs = "LEGS_" + player.getLegs() + "_right_slash_03";
-                            feet = "FEET_" + player.getFeet() + "_right_slash_03";
-                            weapon = "weapon_rapier_right_03";
-                            break;
-                        case 3:
-                            player_animation = "player_slash_right_04";
-                            head =  "HEAD_" + player.getHead() + "_right_slash_04";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_04";
-                            torso = "TORSO_" + player.getTorso() + "_right_slash_04";
-                            belt = "BELT_" + player.getBelt() + "_right_slash_04";
-                            hands = "HANDS_" + player.getHands() + "_right_slash_04";
-                            legs = "LEGS_" + player.getLegs() + "_right_slash_04";
-                            feet = "FEET_" + player.getFeet() + "_right_slash_04";
-                            weapon = "weapon_rapier_right_04";
-                            break;
-                        case 4:
-                            player_animation = "player_slash_right_05";
-                            head =  "HEAD_" + player.getHead() + "_right_slash_05";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_05";
-                            torso = "TORSO_" + player.getTorso() + "_right_slash_05";
-                            belt = "BELT_" + player.getBelt() + "_right_slash_05";
-                            hands = "HANDS_" + player.getHands() + "_right_slash_05";
-                            legs = "LEGS_" + player.getLegs() + "_right_slash_05";
-                            feet = "FEET_" + player.getFeet() + "_right_slash_05";
-                            weapon = "weapon_rapier_right_05";
-                            player.getAttackBox().update(player.getX() + 55, player.getY() + 20, player.getX() + 55 + 60, player.getY() + 20 + 28);
-                            break;
-                        case 5:
-                            player_animation = "player_slash_right_06";
-                            head =  "HEAD_" + player.getHead() + "_right_slash_06";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_06";
-                            torso = "TORSO_" + player.getTorso() + "_right_slash_06";
-                            belt = "BELT_" + player.getBelt() + "_right_slash_06";
-                            hands = "HANDS_" + player.getHands() + "_right_slash_06";
-                            legs = "LEGS_" + player.getLegs() + "_right_slash_06";
-                            feet = "FEET_" + player.getFeet() + "_right_slash_06";
-                            weapon = "weapon_rapier_right_06";
-                            j1 = 0;
-                            isAttackRight = false;
-                            break;
+                    if (j1 == 7) {
+                        j1 = 1;
+                        isAttackRight = false;
                     }
+                    if (j1 == 5) player.getAttackBox().update(player.getX() + 55, player.getY() + 20, player.getX() + 55 + 60, player.getY() + 20 + 28);
+                    player_animation = "player_slash_right_0" + j1;
+                    weapon = "weapon_" + player.getWeapon() + "_right_0" + j1;
+                    head =  "HEAD_" + player.getHead() + "_right_slash_0" + j1;
+                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_0" + j1;
+                    torso = "TORSO_" + player.getTorso() + "_right_slash_0" + j1;
+                    belt = "BELT_" + player.getBelt() + "_right_slash_0" + j1;
+                    hands = "HANDS_" + player.getHands() + "_right_slash_0" + j1;
+                    legs = "LEGS_" + player.getLegs() + "_right_slash_0" + j1;
+                    feet = "FEET_" + player.getFeet() + "_right_slash_0" + j1;
                     if (g3 == 4) {
                         g3 = 0;
                         j1++;
@@ -700,77 +584,20 @@ public class Window {
                     g3++;
                 }
                 else if (isAttackUp) {
-                    switch (j4) {
-                        case 0:
-                            player_animation = "player_slash_up_01";
-                            head =  "HEAD_" + player.getHead() + "_up_slash_01";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_01";
-                            torso = "TORSO_" + player.getTorso() + "_up_slash_01";
-                            belt = "BELT_" + player.getBelt() + "_up_slash_01";
-                            hands = "HANDS_" + player.getHands() + "_up_slash_01";
-                            legs = "LEGS_" + player.getLegs() + "_up_slash_01";
-                            feet = "FEET_" + player.getFeet() + "_up_slash_01";
-                            weapon = "weapon_rapier_up_01";
-                            break;
-                        case 1:
-                            player_animation = "player_slash_up_02";
-                            head =  "HEAD_" + player.getHead() + "_up_slash_02";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_02";
-                            torso = "TORSO_" + player.getTorso() + "_up_slash_02";
-                            belt = "BELT_" + player.getBelt() + "_up_slash_02";
-                            hands = "HANDS_" + player.getHands() + "_up_slash_02";
-                            legs = "LEGS_" + player.getLegs() + "_up_slash_02";
-                            feet = "FEET_" + player.getFeet() + "_up_slash_02";
-                            weapon = "weapon_rapier_up_02";
-                            break;
-                        case 2:
-                            player_animation = "player_slash_up_03";
-                            head =  "HEAD_" + player.getHead() + "_up_slash_03";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_03";
-                            torso = "TORSO_" + player.getTorso() + "_up_slash_03";
-                            belt = "BELT_" + player.getBelt() + "_up_slash_03";
-                            hands = "HANDS_" + player.getHands() + "_up_slash_03";
-                            legs = "LEGS_" + player.getLegs() + "_up_slash_03";
-                            feet = "FEET_" + player.getFeet() + "_up_slash_03";
-                            weapon = "weapon_rapier_up_03";
-                            break;
-                        case 3:
-                            player_animation = "player_slash_up_04";
-                            head =  "HEAD_" + player.getHead() + "_up_slash_04";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_04";
-                            torso = "TORSO_" + player.getTorso() + "_up_slash_04";
-                            belt = "BELT_" + player.getBelt() + "_up_slash_04";
-                            hands = "HANDS_" + player.getHands() + "_up_slash_04";
-                            legs = "LEGS_" + player.getLegs() + "_up_slash_04";
-                            feet = "FEET_" + player.getFeet() + "_up_slash_04";
-                            weapon = "weapon_rapier_up_04";
-                            break;
-                        case 4:
-                            player_animation = "player_slash_up_05";
-                            head =  "HEAD_" + player.getHead() + "_up_slash_05";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_05";
-                            torso = "TORSO_" + player.getTorso() + "_up_slash_05";
-                            belt = "BELT_" + player.getBelt() + "_up_slash_05";
-                            hands = "HANDS_" + player.getHands() + "_up_slash_05";
-                            legs = "LEGS_" + player.getLegs() + "_up_slash_05";
-                            feet = "FEET_" + player.getFeet() + "_up_slash_05";
-                            weapon = "weapon_rapier_up_05";
-                            player.getAttackBox().update(player.getX() + 18, player.getY() - 10, player.getX() + 18 + 56, player.getY() - 10 + 21);
-                            break;
-                        case 5:
-                            player_animation = "player_slash_up_06";
-                            head =  "HEAD_" + player.getHead() + "_up_slash_06";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_06";
-                            torso = "TORSO_" + player.getTorso() + "_up_slash_06";
-                            belt = "BELT_" + player.getBelt() + "_up_slash_06";
-                            hands = "HANDS_" + player.getHands() + "_up_slash_06";
-                            legs = "LEGS_" + player.getLegs() + "_up_slash_06";
-                            feet = "FEET_" + player.getFeet() + "_up_slash_06";
-                            weapon = "weapon_rapier_up_06";
-                            j4 = 0;
-                            isAttackUp = false;
-                            break;
+                    if (j4 == 7) {
+                        j4 = 1;
+                        isAttackUp = false;
                     }
+                    if (j4 == 5) player.getAttackBox().update(player.getX() + 18, player.getY() - 10, player.getX() + 18 + 56, player.getY() - 10 + 21);
+                    player_animation = "player_slash_up_0" + j4;
+                    weapon = "weapon_" + player.getWeapon() + "_up_0" + j4;
+                    head =  "HEAD_" + player.getHead() + "_up_slash_0" + j4;
+                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_0" + j4;
+                    torso = "TORSO_" + player.getTorso() + "_up_slash_0" + j4;
+                    belt = "BELT_" + player.getBelt() + "_up_slash_0" + j4;
+                    hands = "HANDS_" + player.getHands() + "_up_slash_0" + j4;
+                    legs = "LEGS_" + player.getLegs() + "_up_slash_0" + j4;
+                    feet = "FEET_" + player.getFeet() + "_up_slash_0" + j4;
                     if (g3 == 4) {
                         g3 = 0;
                         j4++;
@@ -778,77 +605,20 @@ public class Window {
                     g3++;
                 }
                 else if (isAttackDown) {
-                    switch (j2) {
-                        case 0:
-                            player_animation = "player_slash_down_01";
-                            head =  "HEAD_" + player.getHead() + "_down_slash_01";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_01";
-                            torso = "TORSO_" + player.getTorso() + "_down_slash_01";
-                            belt = "BELT_" + player.getBelt() + "_down_slash_01";
-                            hands = "HANDS_" + player.getHands() + "_down_slash_01";
-                            legs = "LEGS_" + player.getLegs() + "_down_slash_01";
-                            feet = "FEET_" + player.getFeet() + "_down_slash_01";
-                            weapon = "weapon_rapier_down_01";
-                            break;
-                        case 1:
-                            player_animation = "player_slash_down_02";
-                            head =  "HEAD_" + player.getHead() + "_down_slash_02";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_02";
-                            torso = "TORSO_" + player.getTorso() + "_down_slash_02";
-                            belt = "BELT_" + player.getBelt() + "_down_slash_02";
-                            hands = "HANDS_" + player.getHands() + "_down_slash_02";
-                            legs = "LEGS_" + player.getLegs() + "_down_slash_02";
-                            feet = "FEET_" + player.getFeet() + "_down_slash_02";
-                            weapon = "weapon_rapier_down_02";
-                            break;
-                        case 2:
-                            player_animation = "player_slash_down_03";
-                            head =  "HEAD_" + player.getHead() + "_down_slash_03";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_03";
-                            torso = "TORSO_" + player.getTorso() + "_down_slash_03";
-                            belt = "BELT_" + player.getBelt() + "_down_slash_03";
-                            hands = "HANDS_" + player.getHands() + "_down_slash_03";
-                            legs = "LEGS_" + player.getLegs() + "_down_slash_03";
-                            feet = "FEET_" + player.getFeet() + "_down_slash_03";
-                            weapon = "weapon_rapier_down_03";
-                            break;
-                        case 3:
-                            player_animation = "player_slash_down_04";
-                            head =  "HEAD_" + player.getHead() + "_down_slash_04";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_04";
-                            torso = "TORSO_" + player.getTorso() + "_down_slash_04";
-                            belt = "BELT_" + player.getBelt() + "_down_slash_04";
-                            hands = "HANDS_" + player.getHands() + "_down_slash_04";
-                            legs = "LEGS_" + player.getLegs() + "_down_slash_04";
-                            feet = "FEET_" + player.getFeet() + "_down_slash_04";
-                            weapon = "weapon_rapier_down_04";
-                            break;
-                        case 4:
-                            player_animation = "player_slash_down_05";
-                            head =  "HEAD_" + player.getHead() + "_down_slash_05";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_05";
-                            torso = "TORSO_" + player.getTorso() + "_down_slash_05";
-                            belt = "BELT_" + player.getBelt() + "_down_slash_05";
-                            hands = "HANDS_" + player.getHands() + "_down_slash_05";
-                            legs = "LEGS_" + player.getLegs() + "_down_slash_05";
-                            feet = "FEET_" + player.getFeet() + "_down_slash_05";
-                            weapon = "weapon_rapier_down_05";
-                            player.getAttackBox().update(player.getX() + 10, player.getY() + 20, player.getX() + 10 + 55, player.getY() + 45 + 39);
-                            break;
-                        case 5:
-                            player_animation = "player_slash_down_06";
-                            head =  "HEAD_" + player.getHead() + "_down_slash_06";
-                            shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_06";
-                            torso = "TORSO_" + player.getTorso() + "_down_slash_06";
-                            belt = "BELT_" + player.getBelt() + "_down_slash_06";
-                            hands = "HANDS_" + player.getHands() + "_down_slash_06";
-                            legs = "LEGS_" + player.getLegs() + "_down_slash_06";
-                            feet = "FEET_" + player.getFeet() + "_down_slash_06";
-                            weapon = "weapon_rapier_down_06";
-                            j2 = 0;
-                            isAttackDown = false;
-                            break;
+                    if (j2 == 7) {
+                        j2 = 1;
+                        isAttackDown = false;
                     }
+                    if (j2 == 5) player.getAttackBox().update(player.getX() + 10, player.getY() + 20, player.getX() + 10 + 55, player.getY() + 45 + 39);
+                    player_animation = "player_slash_down_0" + j2;
+                    weapon = "weapon_" + player.getWeapon() + "_down_0" + j2;
+                    head =  "HEAD_" + player.getHead() + "_down_slash_0" + j2;
+                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_0" + j2;
+                    torso = "TORSO_" + player.getTorso() + "_down_slash_0" + j2;
+                    belt = "BELT_" + player.getBelt() + "_down_slash_0" + j2;
+                    hands = "HANDS_" + player.getHands() + "_down_slash_0" + j2;
+                    legs = "LEGS_" + player.getLegs() + "_down_slash_0" + j2;
+                    feet = "FEET_" + player.getFeet() + "_down_slash_0" + j2;
                     if (g3 == 4) {
                         g3 = 0;
                         j2++;
