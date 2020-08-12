@@ -30,13 +30,13 @@ public class Player extends Mob {
         setMoveDirection("down");
         weapon = "longsword";
         attackType = "slash";
-        head = new Armor("head", 5, false, false, 0,0,0,0, new AABB(),"plate_helmet");
-        shoulders = new Armor("shoulders", 5, false, false, 0,0,0,0, new AABB(),"plate_armor");
-        torso = new Armor("torso", 5, false, false, 0,0,0,0, new AABB(),"plate_armor");
-        belt = new Armor("belt", 2, false, false, 0,0,0,0, new AABB(),"leather");
-        hands = new Armor("hands", 2, false, false, 0,0,0,0, new AABB(),"leather_bracers");
-        legs = new Armor("legs", 5, false, false, 0,0,0,0, new AABB(),"plate_pants");
-        feet = new Armor("feet", 5, false, false, 0,0,0,0, new AABB(),"plate_shoes");
+        head = new Armor("head", 5, true, false, 0,0,0,0, new AABB(),"plate_helmet");
+        shoulders = new Armor("shoulders", 5, true, false, 0,0,0,0, new AABB(),"plate_armor");
+        torso = new Armor("torso", 5, true, false, 0,0,0,0, new AABB(),"plate_armor");
+        belt = new Armor("belt", 2, true, false, 0,0,0,0, new AABB(),"leather");
+        hands = new Armor("hands", 2, true, false, 0,0,0,0, new AABB(),"leather_bracers");
+        legs = new Armor("legs", 5, true, false, 0,0,0,0, new AABB(),"plate_pants");
+        feet = new Armor("feet", 5, true, false, 0,0,0,0, new AABB(),"plate_shoes");
     }
 
     public void stopTimerPlayer() {

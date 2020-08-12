@@ -225,14 +225,15 @@ public class Window {
                             if (object instanceof Armor) {
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), object.getCollisionBox())) {
                                     Armor armor = player.getArmorType((Armor) object);
-                                    player.setArmor((Armor) object);
                                     object.setIsLying(false);
+                                    player.setArmor((Armor) object);
                                     object = armor;
-                                    object.setMinX(player.getX());
-                                    object.setMinY(player.getY());
-                                    object.setMaxX(player.getX() + 64);
-                                    object.setMaxY(player.getY() + 64);
+                                    object.setMinX(player.getCollisionBox().getMin().x - 20);
+                                    object.setMinY(player.getCollisionBox().getMin().y - 30);
+                                    object.setMaxX(player.getCollisionBox().getMin().x + 44);
+                                    object.setMaxY(player.getCollisionBox().getMin().y + 34);
                                     object.setIsLying(true);
+                                    object.getCollisionBox().update(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                                     objectMap.put(i, object);
                                 }
                             }
@@ -270,8 +271,6 @@ public class Window {
                             if (slime.getHitbox().getMin().y > player.getHitbox().getMin().y) slime.moveUp();
                             else slime.moveDown();
                         }
-
-//                        if (AABB.AABBvsAABB2(slime.getCollisionBox(), chest.getCollisionBox())) slime.stop(CollisionMessage.getMessage());
 
                         // Получение урона от слизня
                         if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead() && !player.getImmortal()) {
