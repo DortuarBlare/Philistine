@@ -111,6 +111,7 @@ public class Window {
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+                AudioMaster.destroy();
                 source.delete();
                 AL10.alDeleteBuffers(mainMenuTheme);
                 glfwSetWindowShouldClose(window, true);

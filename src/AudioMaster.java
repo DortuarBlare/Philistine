@@ -1,22 +1,20 @@
 import org.lwjgl.openal.*;
-import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static org.lwjgl.openal.AL10.*;
 
 public class AudioMaster {
+    static long device;
     private static HashMap<String, Integer> idMap = new HashMap<String, Integer>();
 
     public static void init(){
-        long device = ALC10.alcOpenDevice((ByteBuffer) null);
+        device = ALC10.alcOpenDevice((ByteBuffer) null);
         ALCCapabilities deviceCaps = ALC.createCapabilities(device);
         long context = ALC10.alcCreateContext(device, (IntBuffer) null);
         ALC10.alcMakeContextCurrent(context);
@@ -49,6 +47,11 @@ public class AudioMaster {
             idMap.put(fileName, id);
             return id;
         }
+    }
+
+    public static void destroy(){
+        ALC10.alcCloseDevice(device);
+        ALC.destroy();
     }
 
 }
