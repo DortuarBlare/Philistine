@@ -232,6 +232,8 @@ public class Window {
                                     object.setMinY(player.getY());
                                     object.setMaxX(player.getX() + 64);
                                     object.setMaxY(player.getY() + 64);
+                                    object.setIsLying(true);
+                                    objectMap.put(i, object);
                                 }
                             }
                         }
