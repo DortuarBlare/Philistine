@@ -140,4 +140,8 @@ public class Player extends Mob {
                 break;
         }
     }
+
+    public void reArmor(){
+        this.setArmor(head.getDefense() + shoulders.getDefense() + torso.getDefense() + belt.getDefense() + hands.getDefense() + legs.getDefense() + feet.getDefense());
+    }
 }

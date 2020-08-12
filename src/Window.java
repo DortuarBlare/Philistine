@@ -241,6 +241,8 @@ public class Window {
                     }
                     isCheck = false;
 
+                    player.reArmor();
+
                     // Все операции со слизнем
                     if (!slime.getDead()) {
                         switch (i5) { // Анимация слайма
@@ -681,7 +683,12 @@ public class Window {
                     createQuadTexture(0, 0, 103, 18);
 
                     // Броня
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor()));
+                    if (player.getArmor() < 30){
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor() / 5));
+                    } else {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
+                    }
+
                     createQuadTexture(0, 19, 34, 53);
                 }
                 else {
