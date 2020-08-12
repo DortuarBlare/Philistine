@@ -34,7 +34,10 @@ public class Window {
     boolean forMainTheme = true;
     int mainMenuTheme;
     int dungeonAmbient1;
-    Source source;
+    int footstep06;
+    int footstepstone;
+    Source theme;
+    Source sounds;
     int forCamera = 0;
     Player player;
     String player_animation, weapon, head, shoulders, torso, belt, hands, legs, feet;
@@ -103,7 +106,10 @@ public class Window {
         AudioMaster.setListenerData();
         mainMenuTheme = AudioMaster.loadSound("MainMenu");
         dungeonAmbient1 = AudioMaster.loadSound("dungeon_ambient_1");
-        source = new Source();
+        footstep06 = AudioMaster.loadSound("footstep06");
+        footstepstone = AudioMaster.loadSound("stepstone_2");
+        theme = new Source(1);
+        sounds = new Source(0);
 
         // Единичная загрузка всех хитбоксов
         for(int i = 0; i < Storage.aabbString.length; i++)
@@ -118,7 +124,8 @@ public class Window {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 AudioMaster.destroy();
-                source.delete();
+                theme.delete();
+                sounds.delete();
                 AL10.alDeleteBuffers(mainMenuTheme);
                 AL10.alDeleteBuffers(dungeonAmbient1);
                 glfwSetWindowShouldClose(window, true);
@@ -159,7 +166,7 @@ public class Window {
             switch (level) {
                 case "MainMenu": {
                     if (forMainTheme) {
-                        source.play(mainMenuTheme);
+                        theme.play(mainMenuTheme);
                         forMainTheme = false;
                     }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
@@ -210,9 +217,9 @@ public class Window {
                 }
                 case "FirstLevel": {
                     if (!forMainTheme) {
-                        source.stop(mainMenuTheme);
-                        source.changeVolume(0.5f);
-                        source.play(dungeonAmbient1);
+                        theme.stop(mainMenuTheme);
+                        theme.changeVolume(0.1f);
+                        theme.play(dungeonAmbient1);
                         forMainTheme = true;
                     }
                     Slime slime = (Slime) mobList.get(1);
@@ -537,6 +544,8 @@ public class Window {
                         legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
                         feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
                         if (g1 == 8) {
+                            if (i2 == 3 || i2 == 6)
+                                sounds.play(footstepstone);
                             i2++;
                             g1 = 0;
                         }
@@ -554,6 +563,8 @@ public class Window {
                         legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
                         feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
                         if (g1 == 8) {
+                            if (i1 == 3 || i1 == 6)
+                                sounds.play(footstep06);
                             i1++;
                             g1 = 0;
                         }
