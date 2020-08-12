@@ -206,6 +206,10 @@ public class Window {
                     break;
                 }
                 case "FirstLevel": {
+                    if (!forMainTheme) {
+                        source.stop(mainMenuTheme);
+                        forMainTheme = true;
+                    }
                     Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
