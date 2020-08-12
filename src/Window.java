@@ -21,7 +21,7 @@ public class Window {
     private ArrayList<Mob> mobList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, AABB> aabbMap;
-    private String level = "FirstLevel";
+    private String level = "MainMenu";
     private boolean forScale = true;
     boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     boolean isCheck = false;
@@ -29,6 +29,8 @@ public class Window {
     boolean isPantsLie = true;
     boolean isBootsLie = true;
     boolean forSkeletonAnimation = true;
+    boolean forMainMenu = true;
+    int forCamera = 0;
     Player player;
     mobs.Object chest;
     String player_animation, weapon, head, shoulders, torso, belt, hands, legs, feet;
@@ -76,7 +78,7 @@ public class Window {
         mobList = new ArrayList<>();
         textureMap = new HashMap<String, Integer>();
         aabbMap = new HashMap<String, AABB>();
-        mobList.add(new Player(150, 250, 2, 100, 0, 10));
+        mobList.add(new Player(290, 192, 1, 100, 0, 10));
         mobList.add(new Slime(300, 300, 1, 5, 0, 5));
         mobList.add(new Skeleton(300, 200, 1, 50, 0, 10));
         player = (Player) mobList.get(0);
@@ -87,12 +89,11 @@ public class Window {
             else id = Texture.loadTexture(Storage.textureString[i]);
             textureMap.put(Storage.textureString[i], id);
         }
-        //
+
         AudioMaster.init();
         AudioMaster.setListenerData();
-        int idgta = AudioMaster.loadSound("GTA_San_Andreas_-_Main_Theme");
+        int mainMenuTheme = AudioMaster.loadSound("MainMenu");
         Source source = new Source();
-
 
         // Единичная загрузка всех хитбоксов
         for(int i = 0; i < Storage.aabbString.length; i++)
@@ -111,7 +112,7 @@ public class Window {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 source.delete();
-                AL10.alDeleteBuffers(idgta);
+                AL10.alDeleteBuffers(mainMenuTheme);
                 glfwSetWindowShouldClose(window, true);
                 Player player = (Player) mobList.get(0);
                 player.getTimer().cancel();
@@ -123,15 +124,19 @@ public class Window {
                 skeleton.getTimer().cancel();
                 skeleton.getTimer().purge();
             }
+            if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+                level = "FirstLevel";
+                glTranslated(forCamera, 0, 0);
+                player.setX(200);
+                player.setY(150);
+                player.setSpeed(2);
+            }
             if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) isAttackRight = true;
             if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) isAttackLeft = true;
             if (key == GLFW_KEY_UP && action == GLFW_PRESS) isAttackUp = true;
             if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) isAttackDown = true;
             if (key == GLFW_KEY_E && action == GLFW_PRESS) isCheck = true;
-            if (key == GLFW_KEY_U && action == GLFW_PRESS) {
-                source.play(idgta);
-                System.out.println("gta");
-            }
+            if (key == GLFW_KEY_U && action == GLFW_PRESS) source.play(mainMenuTheme);
         });
     }
 
@@ -142,18 +147,64 @@ public class Window {
         int b = 0;
 
         // Изменение скейла изображения
-        try (MemoryStack stack = stackPush()) {
+        /*try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
             IntBuffer pHeight = stack.mallocInt(1);
             glfwGetWindowSize(window, pWidth, pHeight);
             reshape(pWidth.get(0), pHeight.get(0));
-        }
+        }*/
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
             // Переключение уровня
             switch (level) {
+                case "MainMenu": {
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
+                    createQuadTexture(0, 0, 1536, 360);
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("Press_enter"));
+                    createQuadTexture(player.getX() - 13, player.getY() - 100, player.getX() + 77, player.getY() - 82);
+                    if (player.getX() == 1186) forMainMenu = false;
+                    else if (player.getX() == 290) forMainMenu = true;
+                    if (forMainMenu) {
+                        glTranslated(-1, 0, 0);
+                        forCamera++;
+                        if (i1 == 10) i1 = 2;
+                        player_animation = "player_walk_right_0" + i1;
+                        head = "HEAD_" + player.getHead() + "_right_move_0" + i1;
+                        shoulders = "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
+                        torso = "TORSO_" + player.getTorso() + "_right_move_0" + i1;
+                        belt = "BELT_" + player.getBelt() + "_right_move_0" + i1;
+                        hands = "HANDS_" + player.getHands() + "_right_move_0" + i1;
+                        legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
+                        feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
+                        if (g1 == 8) {
+                            i1++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveRight();
+                    }
+                    else {
+                        glTranslated(1, 0, 0);
+                        forCamera--;
+                        if (i2 == 10) i2 = 2;
+                        player_animation = "player_walk_left_0" + i2;
+                        head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
+                        torso = "TORSO_" + player.getTorso() + "_left_move_0" + i2;
+                        belt = "BELT_" + player.getBelt() + "_left_move_0" + i2;
+                        hands = "HANDS_" + player.getHands() + "_left_move_0" + i2;
+                        legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
+                        feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
+                        if (g1 == 8) {
+                            i2++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveLeft();
+                    }
+                    break;
+                }
                 case "FirstLevel": {
                     Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
@@ -395,318 +446,320 @@ public class Window {
             }
 
             //Движение игрока и обновление одежды
-            if (!player.getDead()) {
-                player_animation = "player_stand_" + player.getMoveDirection();
-                head = "HEAD_" + player.getHead() + "_" + player.getMoveDirection() + "_move_01";
-                shoulders = "SHOULDERS_" + player.getShoulders() + "_" + player.getMoveDirection() + "_move_01";
-                torso = "TORSO_" + player.getTorso() + "_" + player.getMoveDirection() + "_move_01";
-                belt = "BELT_" + player.getBelt() + "_" + player.getMoveDirection() + "_move_01";
-                hands = "HANDS_" + player.getHands() + "_" + player.getMoveDirection() + "_move_01";
-                legs = "LEGS_" + player.getLegs() + "_" + player.getMoveDirection() + "_move_01";
-                feet = "FEET_" + player.getFeet() + "_" + player.getMoveDirection() + "_move_01";
+            if (!level.equals("MainMenu")) {
+                if (!player.getDead()) {
+                    player_animation = "player_stand_" + player.getMoveDirection();
+                    head = "HEAD_" + player.getHead() + "_" + player.getMoveDirection() + "_move_01";
+                    shoulders = "SHOULDERS_" + player.getShoulders() + "_" + player.getMoveDirection() + "_move_01";
+                    torso = "TORSO_" + player.getTorso() + "_" + player.getMoveDirection() + "_move_01";
+                    belt = "BELT_" + player.getBelt() + "_" + player.getMoveDirection() + "_move_01";
+                    hands = "HANDS_" + player.getHands() + "_" + player.getMoveDirection() + "_move_01";
+                    legs = "LEGS_" + player.getLegs() + "_" + player.getMoveDirection() + "_move_01";
+                    feet = "FEET_" + player.getFeet() + "_" + player.getMoveDirection() + "_move_01";
 
-                if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
-                    if (i2 == 10) i2 = 2;
-                    player_animation = "player_walk_left_0" + i2;
-                    head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
-                    torso = "TORSO_" + player.getTorso() + "_left_move_0" + i2;
-                    belt = "BELT_" + player.getBelt() + "_left_move_0" + i2;
-                    hands = "HANDS_" + player.getHands() + "_left_move_0" + i2;
-                    legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
-                    feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
-                    if (g1 == 8) {
-                        i2++;
-                        g1 = 0;
+                    if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
+                        if (i2 == 10) i2 = 2;
+                        player_animation = "player_walk_left_0" + i2;
+                        head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
+                        torso = "TORSO_" + player.getTorso() + "_left_move_0" + i2;
+                        belt = "BELT_" + player.getBelt() + "_left_move_0" + i2;
+                        hands = "HANDS_" + player.getHands() + "_left_move_0" + i2;
+                        legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
+                        feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
+                        if (g1 == 8) {
+                            i2++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveUpLeft();
                     }
-                    g1++;
-                    player.moveUpLeft();
-                }
-                else if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
-                    if (i1 == 10) i1 = 2;
-                    player_animation = "player_walk_right_0" + i1;
-                    head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
-                    torso = "TORSO_" + player.getTorso() + "_right_move_0" + i1;
-                    belt = "BELT_" + player.getBelt() + "_right_move_0" + i1;
-                    hands = "HANDS_" + player.getHands() + "_right_move_0" + i1;
-                    legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
-                    feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
-                    if (g1 == 8) {
-                        i1++;
-                        g1 = 0;
+                    else if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
+                        if (i1 == 10) i1 = 2;
+                        player_animation = "player_walk_right_0" + i1;
+                        head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
+                        torso = "TORSO_" + player.getTorso() + "_right_move_0" + i1;
+                        belt = "BELT_" + player.getBelt() + "_right_move_0" + i1;
+                        hands = "HANDS_" + player.getHands() + "_right_move_0" + i1;
+                        legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
+                        feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
+                        if (g1 == 8) {
+                            i1++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveUpRight();
                     }
-                    g1++;
-                    player.moveUpRight();
-                }
-                else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
-                    if (i2 == 10) i2 = 2;
-                    player_animation = "player_walk_left_0" + i2;
-                    head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
-                    torso = "TORSO_" + player.getTorso() + "_left_move_0" + i2;
-                    belt = "BELT_" + player.getBelt() + "_left_move_0" + i2;
-                    hands = "HANDS_" + player.getHands() + "_left_move_0" + i2;
-                    legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
-                    feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
-                    if (g1 == 8) {
-                        i2++;
-                        g1 = 0;
+                    else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
+                        if (i2 == 10) i2 = 2;
+                        player_animation = "player_walk_left_0" + i2;
+                        head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
+                        torso = "TORSO_" + player.getTorso() + "_left_move_0" + i2;
+                        belt = "BELT_" + player.getBelt() + "_left_move_0" + i2;
+                        hands = "HANDS_" + player.getHands() + "_left_move_0" + i2;
+                        legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
+                        feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
+                        if (g1 == 8) {
+                            i2++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveDownLeft();
                     }
-                    g1++;
-                    player.moveDownLeft();
-                }
-                else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
-                    if (i1 == 10) i1 = 2;
-                    player_animation = "player_walk_right_0" + i1;
-                    head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
-                    torso = "TORSO_" + player.getTorso() + "_right_move_0" + i1;
-                    belt = "BELT_" + player.getBelt() + "_right_move_0" + i1;
-                    hands = "HANDS_" + player.getHands() + "_right_move_0" + i1;
-                    legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
-                    feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
-                    if (g1 == 8) {
-                        i1++;
-                        g1 = 0;
+                    else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
+                        if (i1 == 10) i1 = 2;
+                        player_animation = "player_walk_right_0" + i1;
+                        head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
+                        torso = "TORSO_" + player.getTorso() + "_right_move_0" + i1;
+                        belt = "BELT_" + player.getBelt() + "_right_move_0" + i1;
+                        hands = "HANDS_" + player.getHands() + "_right_move_0" + i1;
+                        legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
+                        feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
+                        if (g1 == 8) {
+                            i1++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveDownRight();
                     }
-                    g1++;
-                    player.moveDownRight();
-                }
-                else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-                    if (i2 == 10) i2 = 2;
-                    player_animation = "player_walk_left_0" + i2;
-                    head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
-                    torso = "TORSO_" + player.getTorso() + "_left_move_0" + i2;
-                    belt = "BELT_" + player.getBelt() + "_left_move_0" + i2;
-                    hands = "HANDS_" + player.getHands() + "_left_move_0" + i2;
-                    legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
-                    feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
-                    if (g1 == 8) {
-                        i2++;
-                        g1 = 0;
+                    else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+                        if (i2 == 10) i2 = 2;
+                        player_animation = "player_walk_left_0" + i2;
+                        head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
+                        torso = "TORSO_" + player.getTorso() + "_left_move_0" + i2;
+                        belt = "BELT_" + player.getBelt() + "_left_move_0" + i2;
+                        hands = "HANDS_" + player.getHands() + "_left_move_0" + i2;
+                        legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
+                        feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
+                        if (g1 == 8) {
+                            i2++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveLeft();
                     }
-                    g1++;
-                    player.moveLeft();
-                }
-                else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-                    if (i1 == 10) i1 = 2;
-                    player_animation = "player_walk_right_0" + i1;
-                    head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
-                    torso = "TORSO_" + player.getTorso() + "_right_move_0" + i1;
-                    belt = "BELT_" + player.getBelt() + "_right_move_0" + i1;
-                    hands = "HANDS_" + player.getHands() + "_right_move_0" + i1;
-                    legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
-                    feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
-                    if (g1 == 8) {
-                        i1++;
-                        g1 = 0;
+                    else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+                        if (i1 == 10) i1 = 2;
+                        player_animation = "player_walk_right_0" + i1;
+                        head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
+                        torso = "TORSO_" + player.getTorso() + "_right_move_0" + i1;
+                        belt = "BELT_" + player.getBelt() + "_right_move_0" + i1;
+                        hands = "HANDS_" + player.getHands() + "_right_move_0" + i1;
+                        legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
+                        feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
+                        if (g1 == 8) {
+                            i1++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveRight();
                     }
-                    g1++;
-                    player.moveRight();
-                }
-                else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-                    if (i3 == 10) i3 = 2;
-                    player_animation = "player_walk_up_0" + i3;
-                    head =  "HEAD_" + player.getHead() + "_up_move_0" + i3;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_move_0" + i3;
-                    torso = "TORSO_" + player.getTorso() + "_up_move_0" + i3;
-                    belt = "BELT_" + player.getBelt() + "_up_move_0" + i3;
-                    hands = "HANDS_" + player.getHands() + "_up_move_0" + i3;
-                    legs = "LEGS_" + player.getLegs() + "_up_move_0" + i3;
-                    feet = "FEET_" + player.getFeet() + "_up_move_0" + i3;
-                    if (g1 == 8) {
-                        i3++;
-                        g1 = 0;
+                    else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+                        if (i3 == 10) i3 = 2;
+                        player_animation = "player_walk_up_0" + i3;
+                        head =  "HEAD_" + player.getHead() + "_up_move_0" + i3;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_move_0" + i3;
+                        torso = "TORSO_" + player.getTorso() + "_up_move_0" + i3;
+                        belt = "BELT_" + player.getBelt() + "_up_move_0" + i3;
+                        hands = "HANDS_" + player.getHands() + "_up_move_0" + i3;
+                        legs = "LEGS_" + player.getLegs() + "_up_move_0" + i3;
+                        feet = "FEET_" + player.getFeet() + "_up_move_0" + i3;
+                        if (g1 == 8) {
+                            i3++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveUp();
                     }
-                    g1++;
-                    player.moveUp();
-                }
-                else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-                    if (i4 == 10) i4 = 2;
-                    player_animation = "player_walk_down_0" + i4;
-                    head =  "HEAD_" + player.getHead() + "_down_move_0" + i4;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_move_0" + i4;
-                    torso = "TORSO_" + player.getTorso() + "_down_move_0" + i4;
-                    belt = "BELT_" + player.getBelt() + "_down_move_0" + i4;
-                    hands = "HANDS_" + player.getHands() + "_down_move_0" + i4;
-                    legs = "LEGS_" + player.getLegs() + "_down_move_0" + i4;
-                    feet = "FEET_" + player.getFeet() + "_down_move_0" + i4;
-                    if (g1 == 8) {
-                        i4++;
-                        g1 = 0;
+                    else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+                        if (i4 == 10) i4 = 2;
+                        player_animation = "player_walk_down_0" + i4;
+                        head =  "HEAD_" + player.getHead() + "_down_move_0" + i4;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_move_0" + i4;
+                        torso = "TORSO_" + player.getTorso() + "_down_move_0" + i4;
+                        belt = "BELT_" + player.getBelt() + "_down_move_0" + i4;
+                        hands = "HANDS_" + player.getHands() + "_down_move_0" + i4;
+                        legs = "LEGS_" + player.getLegs() + "_down_move_0" + i4;
+                        feet = "FEET_" + player.getFeet() + "_down_move_0" + i4;
+                        if (g1 == 8) {
+                            i4++;
+                            g1 = 0;
+                        }
+                        g1++;
+                        player.moveDown();
                     }
-                    g1++;
-                    player.moveDown();
-                }
-                if (isAttackLeft) {
-                    if (j3 == 7) {
-                        j3 = 1;
-                        isAttackLeft = false;
+                    if (isAttackLeft) {
+                        if (j3 == 7) {
+                            j3 = 1;
+                            isAttackLeft = false;
+                        }
+                        if (j3 == 5) player.getAttackBox().update(player.getX() - 50, player.getY() + 20, player.getX() - 50 + 69, player.getY() + 20 + 27);
+                        player_animation = "player_" + player.getAttackType() + "_left_0" + j3;
+                        weapon = "weapon_" + player.getWeapon() + "_left_" + player.getAttackType() + "_0" + j3;
+                        head =  "HEAD_" + player.getHead() + "_left_" + player.getAttackType() + "_0" + j3;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_" + player.getAttackType() + "_0" + j3;
+                        torso = "TORSO_" + player.getTorso() + "_left_" + player.getAttackType() + "_0" + j3;
+                        belt = "BELT_" + player.getBelt() + "_left_" + player.getAttackType() + "_0" + j3;
+                        hands = "HANDS_" + player.getHands() + "_left_" + player.getAttackType() + "_0" + j3;
+                        legs = "LEGS_" + player.getLegs() + "_left_" + player.getAttackType() + "_0" + j3;
+                        feet = "FEET_" + player.getFeet() + "_left_" + player.getAttackType() + "_0" + j3;
+                        if (g3 == 4) {
+                            j3++;
+                            g3 = 0;
+                        }
+                        g3++;
                     }
-                    if (j3 == 5) player.getAttackBox().update(player.getX() - 50, player.getY() + 20, player.getX() - 50 + 69, player.getY() + 20 + 27);
-                    player_animation = "player_slash_left_0" + j3;
-                    weapon = "weapon_" + player.getWeapon() + "_left_0" + j3;
-                    head =  "HEAD_" + player.getHead() + "_left_slash_0" + j3;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_slash_0" + j3;
-                    torso = "TORSO_" + player.getTorso() + "_left_slash_0" + j3;
-                    belt = "BELT_" + player.getBelt() + "_left_slash_0" + j3;
-                    hands = "HANDS_" + player.getHands() + "_left_slash_0" + j3;
-                    legs = "LEGS_" + player.getLegs() + "_left_slash_0" + j3;
-                    feet = "FEET_" + player.getFeet() + "_left_slash_0" + j3;
-                    if (g3 == 4) {
-                        j3++;
-                        g3 = 0;
+                    else if (isAttackRight) {
+                        if (j1 == 7) {
+                            j1 = 1;
+                            isAttackRight = false;
+                        }
+                        if (j1 == 5) player.getAttackBox().update(player.getX() + 55, player.getY() + 20, player.getX() + 55 + 60, player.getY() + 20 + 28);
+                        player_animation = "player_" + player.getAttackType() + "_right_0" + j1;
+                        weapon = "weapon_" + player.getWeapon() + "_right_" + player.getAttackType() + "_0" + j1;
+                        head =  "HEAD_" + player.getHead() + "_right_" + player.getAttackType() + "_0" + j1;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_" + player.getAttackType() + "_0" + j1;
+                        torso = "TORSO_" + player.getTorso() + "_right_" + player.getAttackType() + "_0" + j1;
+                        belt = "BELT_" + player.getBelt() + "_right_" + player.getAttackType() + "_0" + j1;
+                        hands = "HANDS_" + player.getHands() + "_right_" + player.getAttackType() + "_0" + j1;
+                        legs = "LEGS_" + player.getLegs() + "_right_" + player.getAttackType() + "_0" + j1;
+                        feet = "FEET_" + player.getFeet() + "_right_" + player.getAttackType() + "_0" + j1;
+                        if (g3 == 4) {
+                            g3 = 0;
+                            j1++;
+                        }
+                        g3++;
                     }
-                    g3++;
-                }
-                else if (isAttackRight) {
-                    if (j1 == 7) {
-                        j1 = 1;
-                        isAttackRight = false;
+                    else if (isAttackUp) {
+                        if (j4 == 7) {
+                            j4 = 1;
+                            isAttackUp = false;
+                        }
+                        if (j4 == 5) player.getAttackBox().update(player.getX() + 18, player.getY() - 10, player.getX() + 18 + 56, player.getY() - 10 + 21);
+                        player_animation = "player_" + player.getAttackType() + "_up_0" + j4;
+                        weapon = "weapon_" + player.getWeapon() + "_up_" + player.getAttackType() + "_0" + j4;
+                        head =  "HEAD_" + player.getHead() + "_up_" + player.getAttackType() + "_0" + j4;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_" + player.getAttackType() + "_0" + j4;
+                        torso = "TORSO_" + player.getTorso() + "_up_" + player.getAttackType() + "_0" + j4;
+                        belt = "BELT_" + player.getBelt() + "_up_" + player.getAttackType() + "_0" + j4;
+                        hands = "HANDS_" + player.getHands() + "_up_" + player.getAttackType() + "_0" + j4;
+                        legs = "LEGS_" + player.getLegs() + "_up_" + player.getAttackType() + "_0" + j4;
+                        feet = "FEET_" + player.getFeet() + "_up_" + player.getAttackType() + "_0" + j4;
+                        if (g3 == 4) {
+                            g3 = 0;
+                            j4++;
+                        }
+                        g3++;
                     }
-                    if (j1 == 5) player.getAttackBox().update(player.getX() + 55, player.getY() + 20, player.getX() + 55 + 60, player.getY() + 20 + 28);
-                    player_animation = "player_slash_right_0" + j1;
-                    weapon = "weapon_" + player.getWeapon() + "_right_0" + j1;
-                    head =  "HEAD_" + player.getHead() + "_right_slash_0" + j1;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_slash_0" + j1;
-                    torso = "TORSO_" + player.getTorso() + "_right_slash_0" + j1;
-                    belt = "BELT_" + player.getBelt() + "_right_slash_0" + j1;
-                    hands = "HANDS_" + player.getHands() + "_right_slash_0" + j1;
-                    legs = "LEGS_" + player.getLegs() + "_right_slash_0" + j1;
-                    feet = "FEET_" + player.getFeet() + "_right_slash_0" + j1;
-                    if (g3 == 4) {
-                        g3 = 0;
-                        j1++;
+                    else if (isAttackDown) {
+                        if (j2 == 7) {
+                            j2 = 1;
+                            isAttackDown = false;
+                        }
+                        if (j2 == 5) player.getAttackBox().update(player.getX() + 10, player.getY() + 20, player.getX() + 10 + 55, player.getY() + 45 + 39);
+                        player_animation = "player_" + player.getAttackType() + "_down_0" + j2;
+                        weapon = "weapon_" + player.getWeapon() + "_down_" + player.getAttackType() + "_0" + j2;
+                        head =  "HEAD_" + player.getHead() + "_down_" + player.getAttackType() + "_0" + j2;
+                        shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_" + player.getAttackType() + "_0" + j2;
+                        torso = "TORSO_" + player.getTorso() + "_down_" + player.getAttackType() + "_0" + j2;
+                        belt = "BELT_" + player.getBelt() + "_down_" + player.getAttackType() + "_0" + j2;
+                        hands = "HANDS_" + player.getHands() + "_down_" + player.getAttackType() + "_0" + j2;
+                        legs = "LEGS_" + player.getLegs() + "_down_" + player.getAttackType() + "_0" + j2;
+                        feet = "FEET_" + player.getFeet() + "_down_" + player.getAttackType() + "_0" + j2;
+                        if (g3 == 4) {
+                            g3 = 0;
+                            j2++;
+                        }
+                        g3++;
                     }
-                    g3++;
-                }
-                else if (isAttackUp) {
-                    if (j4 == 7) {
-                        j4 = 1;
-                        isAttackUp = false;
-                    }
-                    if (j4 == 5) player.getAttackBox().update(player.getX() + 18, player.getY() - 10, player.getX() + 18 + 56, player.getY() - 10 + 21);
-                    player_animation = "player_slash_up_0" + j4;
-                    weapon = "weapon_" + player.getWeapon() + "_up_0" + j4;
-                    head =  "HEAD_" + player.getHead() + "_up_slash_0" + j4;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_slash_0" + j4;
-                    torso = "TORSO_" + player.getTorso() + "_up_slash_0" + j4;
-                    belt = "BELT_" + player.getBelt() + "_up_slash_0" + j4;
-                    hands = "HANDS_" + player.getHands() + "_up_slash_0" + j4;
-                    legs = "LEGS_" + player.getLegs() + "_up_slash_0" + j4;
-                    feet = "FEET_" + player.getFeet() + "_up_slash_0" + j4;
-                    if (g3 == 4) {
-                        g3 = 0;
-                        j4++;
-                    }
-                    g3++;
-                }
-                else if (isAttackDown) {
-                    if (j2 == 7) {
-                        j2 = 1;
-                        isAttackDown = false;
-                    }
-                    if (j2 == 5) player.getAttackBox().update(player.getX() + 10, player.getY() + 20, player.getX() + 10 + 55, player.getY() + 45 + 39);
-                    player_animation = "player_slash_down_0" + j2;
-                    weapon = "weapon_" + player.getWeapon() + "_down_0" + j2;
-                    head =  "HEAD_" + player.getHead() + "_down_slash_0" + j2;
-                    shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_slash_0" + j2;
-                    torso = "TORSO_" + player.getTorso() + "_down_slash_0" + j2;
-                    belt = "BELT_" + player.getBelt() + "_down_slash_0" + j2;
-                    hands = "HANDS_" + player.getHands() + "_down_slash_0" + j2;
-                    legs = "LEGS_" + player.getLegs() + "_down_slash_0" + j2;
-                    feet = "FEET_" + player.getFeet() + "_down_slash_0" + j2;
-                    if (g3 == 4) {
-                        g3 = 0;
-                        j2++;
-                    }
-                    g3++;
-                }
 
-                // Полоска здоровья
-                int tempHealth = player.getHealth() % 10 == 0 ? player.getHealth() : player.getHealth() - (player.getHealth() % 10) + 10;
-                if (tempHealth >= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
-                if (player.getHealth() <= 0) {
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
-                    player.setDead(true);
-                }
-                createQuadTexture(0, 0, 103, 18);
+                    // Полоска здоровья
+                    int tempHealth = player.getHealth() % 10 == 0 ? player.getHealth() : player.getHealth() - (player.getHealth() % 10) + 10;
+                    if (tempHealth >= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
+                    if (player.getHealth() <= 0) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
+                        player.setDead(true);
+                    }
+                    createQuadTexture(0, 0, 103, 18);
 
-                // Броня
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor()));
-                createQuadTexture(0, 19, 34, 53);
-            }
-            else {
-                switch (b) {
-                    case 0:
-                        player_animation = "player_hurt_01";
-                        head = "HEAD_" + player.getHead() + "_hurt_01";
-                        shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_01";
-                        torso = "TORSO_" + player.getTorso() + "_hurt_01";
-                        belt = "BELT_" + player.getBelt() + "_hurt_01";
-                        hands = "HANDS_" + player.getHands() + "_hurt_01";
-                        legs = "LEGS_" + player.getLegs() + "_hurt_01";
-                        feet = "FEET_" + player.getFeet() + "_hurt_01";
-                        break;
-                    case 1:
-                        player_animation = "player_hurt_02";
-                        head = "HEAD_" + player.getHead() + "_hurt_02";
-                        shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_02";
-                        torso = "TORSO_" + player.getTorso() + "_hurt_02";
-                        belt = "BELT_" + player.getBelt() + "_hurt_02";
-                        hands = "HANDS_" + player.getHands() + "_hurt_02";
-                        legs = "LEGS_" + player.getLegs() + "_hurt_02";
-                        feet = "FEET_" + player.getFeet() + "_hurt_02";
-                        break;
-                    case 2:
-                        player_animation = "player_hurt_03";
-                        head = "HEAD_" + player.getHead() + "_hurt_03";
-                        shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_03";
-                        torso = "TORSO_" + player.getTorso() + "_hurt_03";
-                        belt = "BELT_" + player.getBelt() + "_hurt_03";
-                        hands = "HANDS_" + player.getHands() + "_hurt_03";
-                        legs = "LEGS_" + player.getLegs() + "_hurt_03";
-                        feet = "FEET_" + player.getFeet() + "_hurt_03";
-                        break;
-                    case 3:
-                        player_animation = "player_hurt_04";
-                        head = "HEAD_" + player.getHead() + "_hurt_04";
-                        shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_04";
-                        torso = "TORSO_" + player.getTorso() + "_hurt_04";
-                        belt = "BELT_" + player.getBelt() + "_hurt_04";
-                        hands = "HANDS_" + player.getHands() + "_hurt_04";
-                        legs = "LEGS_" + player.getLegs() + "_hurt_04";
-                        feet = "FEET_" + player.getFeet() + "_hurt_04";
-                        break;
-                    case 4:
-                        player_animation = "player_hurt_05";
-                        head = "HEAD_" + player.getHead() + "_hurt_05";
-                        shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_05";
-                        torso = "TORSO_" + player.getTorso() + "_hurt_05";
-                        belt = "BELT_" + player.getBelt() + "_hurt_05";
-                        hands = "HANDS_" + player.getHands() + "_hurt_05";
-                        legs = "LEGS_" + player.getLegs() + "_hurt_05";
-                        feet = "FEET_" + player.getFeet() + "_hurt_05";
-                        break;
-                    case 5:
-                        player_animation = "player_hurt_06";
-                        head = "HEAD_" + player.getHead() + "_hurt_06";
-                        shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_06";
-                        torso = "TORSO_" + player.getTorso() + "_hurt_06";
-                        belt = "BELT_" + player.getBelt() + "_hurt_06";
-                        hands = "HANDS_" + player.getHands() + "_hurt_06";
-                        legs = "LEGS_" + player.getLegs() + "_hurt_06";
-                        feet = "FEET_" + player.getFeet() + "_hurt_06";
-                        break;
+                    // Броня
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor()));
+                    createQuadTexture(0, 19, 34, 53);
                 }
-                if (g4 == 8) {
-                    b++;
-                    g4 = 0;
+                else {
+                    switch (b) {
+                        case 0:
+                            player_animation = "player_hurt_01";
+                            head = "HEAD_" + player.getHead() + "_hurt_01";
+                            shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_01";
+                            torso = "TORSO_" + player.getTorso() + "_hurt_01";
+                            belt = "BELT_" + player.getBelt() + "_hurt_01";
+                            hands = "HANDS_" + player.getHands() + "_hurt_01";
+                            legs = "LEGS_" + player.getLegs() + "_hurt_01";
+                            feet = "FEET_" + player.getFeet() + "_hurt_01";
+                            break;
+                        case 1:
+                            player_animation = "player_hurt_02";
+                            head = "HEAD_" + player.getHead() + "_hurt_02";
+                            shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_02";
+                            torso = "TORSO_" + player.getTorso() + "_hurt_02";
+                            belt = "BELT_" + player.getBelt() + "_hurt_02";
+                            hands = "HANDS_" + player.getHands() + "_hurt_02";
+                            legs = "LEGS_" + player.getLegs() + "_hurt_02";
+                            feet = "FEET_" + player.getFeet() + "_hurt_02";
+                            break;
+                        case 2:
+                            player_animation = "player_hurt_03";
+                            head = "HEAD_" + player.getHead() + "_hurt_03";
+                            shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_03";
+                            torso = "TORSO_" + player.getTorso() + "_hurt_03";
+                            belt = "BELT_" + player.getBelt() + "_hurt_03";
+                            hands = "HANDS_" + player.getHands() + "_hurt_03";
+                            legs = "LEGS_" + player.getLegs() + "_hurt_03";
+                            feet = "FEET_" + player.getFeet() + "_hurt_03";
+                            break;
+                        case 3:
+                            player_animation = "player_hurt_04";
+                            head = "HEAD_" + player.getHead() + "_hurt_04";
+                            shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_04";
+                            torso = "TORSO_" + player.getTorso() + "_hurt_04";
+                            belt = "BELT_" + player.getBelt() + "_hurt_04";
+                            hands = "HANDS_" + player.getHands() + "_hurt_04";
+                            legs = "LEGS_" + player.getLegs() + "_hurt_04";
+                            feet = "FEET_" + player.getFeet() + "_hurt_04";
+                            break;
+                        case 4:
+                            player_animation = "player_hurt_05";
+                            head = "HEAD_" + player.getHead() + "_hurt_05";
+                            shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_05";
+                            torso = "TORSO_" + player.getTorso() + "_hurt_05";
+                            belt = "BELT_" + player.getBelt() + "_hurt_05";
+                            hands = "HANDS_" + player.getHands() + "_hurt_05";
+                            legs = "LEGS_" + player.getLegs() + "_hurt_05";
+                            feet = "FEET_" + player.getFeet() + "_hurt_05";
+                            break;
+                        case 5:
+                            player_animation = "player_hurt_06";
+                            head = "HEAD_" + player.getHead() + "_hurt_06";
+                            shoulders = "SHOULDERS_" + player.getShoulders() + "_hurt_06";
+                            torso = "TORSO_" + player.getTorso() + "_hurt_06";
+                            belt = "BELT_" + player.getBelt() + "_hurt_06";
+                            hands = "HANDS_" + player.getHands() + "_hurt_06";
+                            legs = "LEGS_" + player.getLegs() + "_hurt_06";
+                            feet = "FEET_" + player.getFeet() + "_hurt_06";
+                            break;
+                    }
+                    if (g4 == 8) {
+                        b++;
+                        g4 = 0;
+                    }
+                    g4++;
                 }
-                g4++;
             }
 
             // Отрисовка экипировки и анимации
@@ -775,7 +828,7 @@ public class Window {
         glLoadIdentity();
         glOrtho(0, w, h, 0, 1, -1);
         glMatrixMode(GL_MODELVIEW);
-        if(forScale) {
+        if (forScale) {
             glScaled(3, 3, 1);
             forScale = false;
         }

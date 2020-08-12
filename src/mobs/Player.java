@@ -8,7 +8,7 @@ import java.util.TimerTask;
 public class Player extends Mob {
     private int time = 0;
     private String knockbackDirection;
-    private String weapon, head, shoulders, torso, belt, hands, legs, feet;
+    private String weapon, attackType, head, shoulders, torso, belt, hands, legs, feet;
     private AABB attackBox;
     private Timer timer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
@@ -27,6 +27,7 @@ public class Player extends Mob {
         attackBox = new AABB();
         setMoveDirection("down");
         weapon = "longsword";
+        attackType = "slash";
         head = "plate_helmet";
         shoulders = "plate_armor";
         torso = "plate_armor";
@@ -66,6 +67,10 @@ public class Player extends Mob {
     public String getWeapon() { return weapon; }
 
     public void setWeapon(String weapon) { this.weapon = weapon; }
+
+    public String getAttackType() { return attackType; }
+
+    public void setAttackType(String attackType) { this.attackType = attackType; }
 
     public String getHead() { return head; }
 

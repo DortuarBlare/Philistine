@@ -1,7 +1,6 @@
 package mobs;
 
 import math.AABB;
-import math.CollisionMessage;
 
 public abstract class Mob {
     private int x, y;
