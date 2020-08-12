@@ -139,11 +139,11 @@ public class Window {
                 player.setY(150);
                 player.setSpeed(2);
             }
-            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) isAttackRight = true;
-            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) isAttackLeft = true;
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS) isAttackUp = true;
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) isAttackDown = true;
-            if (key == GLFW_KEY_E && action == GLFW_PRESS) isCheck = true;
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu")) isAttackRight = true;
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu")) isAttackLeft = true;
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu")) isAttackUp = true;
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu")) isAttackDown = true;
+            if (key == GLFW_KEY_E && action == GLFW_PRESS && !level.equals("MainMenu")) isCheck = true;
         });
     }
 
@@ -796,7 +796,7 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(belt));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if ( (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) && !player.getDead()) {
+            if ( (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) && !player.getDead() && !level.equals("MainMenu")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
