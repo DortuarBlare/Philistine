@@ -29,7 +29,7 @@ public class Storage {
             "level0", "level1", "level2", "level3", "MainMenu", "Press_enter", "box",
             "chestClosed", "chestOpened",
             "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
-            "armor0", "armor1", "armor2", "armor3", "armor4", "armor5",
+            "armor0", "armor1", "armor2", "armor3", "armor4", "armor5", "shirt_white", "shoes_brown", "pants_greenish",
 
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",
             "player_walk_left_01", "player_walk_left_02", "player_walk_left_03", "player_walk_left_04", "player_walk_left_05", "player_walk_left_06", "player_walk_left_07", "player_walk_left_08", "player_walk_left_09",

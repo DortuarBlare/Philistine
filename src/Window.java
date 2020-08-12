@@ -1,6 +1,9 @@
 import math.AABB;
 import math.CollisionMessage;
 import mobs.*;
+import objects.Armor;
+import objects.Furniture;
+import objects.Object;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.*;
@@ -21,18 +24,15 @@ public class Window {
     private ArrayList<Mob> mobList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, AABB> aabbMap;
+    private HashMap<Integer, Object> objectMap;
     private String level = "MainMenu";
     private boolean forScale = true;
     boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     boolean isCheck = false;
-    boolean isShirtLie = true;
-    boolean isPantsLie = true;
-    boolean isBootsLie = true;
     boolean forSkeletonAnimation = true;
     boolean forMainMenu = true;
     int forCamera = 0;
     Player player;
-    mobs.Object chest;
     String player_animation, weapon, head, shoulders, torso, belt, hands, legs, feet;
 
     public void run() {
@@ -78,6 +78,11 @@ public class Window {
         mobList = new ArrayList<>();
         textureMap = new HashMap<String, Integer>();
         aabbMap = new HashMap<String, AABB>();
+        objectMap = new HashMap<Integer, Object>();
+        objectMap.put(0, new Furniture(false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232), "chestClosed"));
+        objectMap.put(1, new Armor("torso", 1, true, true, 300, 100, 364, 164, new AABB(300, 100, 364, 164), "shirt_white"));
+        objectMap.put(2, new Armor("legs", 1, true, true, 428, 100, 492, 164, new AABB(428, 100, 492, 164), "pants_greenish"));
+        objectMap.put(3, new Armor("feet", 1, true, true, 364, 100, 428, 164, new AABB(364, 100, 428, 164), "shoes_brown"));
         mobList.add(new Player(290, 192, 1, 100, 0, 10));
         mobList.add(new Slime(300, 300, 1, 5, 0, 5));
         mobList.add(new Skeleton(300, 200, 1, 50, 0, 10));
@@ -103,10 +108,6 @@ public class Window {
             aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
-        aabbMap.get("pants_greenish").update(428, 100, 492, 164);
-        aabbMap.get("shoes_brown").update(364, 100, 428, 164);
-        aabbMap.get("shirt_white").update(300, 100, 364, 164);
-        chest = new mobs.Object(250, 200, new AABB(250, 206, 282, 232), "chestClosed");
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -211,48 +212,30 @@ public class Window {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
 
-                    // Сундук
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get(chest.getTexture()));
-                    createQuadTexture(chest.getX(), chest.getY(), chest.getX() + 32, chest.getY() + 32);
-                    if (isCheck && AABB.AABBvsAABB2(player.getCollisionBox(), chest.getCollisionBox())) {
-                        chest.setTexture("chestOpened");
-                        chest.getCollisionBox().update(250, 200, 282, 232);
+                    // Отрисовка всех объектов
+                    for (int i = 0; i < objectMap.size(); i++) {
+                        Object object = objectMap.get(i);
+                        if (!object.getIsLying()) continue;
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
-                    if (AABB.AABBvsAABB2(player.getCollisionBox(), chest.getCollisionBox())) player.stop(CollisionMessage.getMessage());
-
-                    // башмаки
-                    if (isBootsLie) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("FEET_shoes_brown_down_move_01"));
-                        createQuadTexture(364, 100, 428, 164);
-                        if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("shoes_brown"))) {
-                            player.setFeet("shoes_brown");
-                            player.setArmor(player.getArmor() + 1);
-                            isBootsLie = false;
+                    if (isCheck) {
+                        for (int i = 0; i < objectMap.size(); i++) {
+                            Object object = objectMap.get(i);
+                            if (object instanceof Armor) {
+                                if (AABB.AABBvsAABB(player.getCollisionBox(), object.getCollisionBox())) {
+                                    Armor armor = player.getArmorType((Armor) object);
+                                    player.setArmor((Armor) object);
+                                    object.setIsLying(false);
+                                    object = armor;
+                                    object.setMinX(player.getX());
+                                    object.setMinY(player.getY());
+                                    object.setMaxX(player.getX() + 64);
+                                    object.setMaxY(player.getY() + 64);
+                                }
+                            }
                         }
                     }
-
-                    // футболка
-                    if (isShirtLie) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("TORSO_shirt_white_down_move_01"));
-                        createQuadTexture(300, 100, 364, 164);
-                        if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("shirt_white"))) {
-                            player.setTorso("shirt_white");
-                            player.setArmor(player.getArmor() + 1);
-                            isShirtLie = false;
-                        }
-                    }
-
-                    // Штаны, которые можно надеть)
-                    if (isPantsLie) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("LEGS_pants_greenish_down_move_01"));
-                        createQuadTexture(428, 100, 492, 164);
-                        if (isCheck && AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("pants_greenish"))) {
-                            player.setLegs("pants_greenish");
-                            player.setArmor(player.getArmor() + 1);
-                            isPantsLie = false;
-                        }
-                    }
-
                     isCheck = false;
 
                     // Все операции со слизнем
@@ -286,7 +269,7 @@ public class Window {
                             else slime.moveDown();
                         }
 
-                        if (AABB.AABBvsAABB2(slime.getCollisionBox(), chest.getCollisionBox())) slime.stop(CollisionMessage.getMessage());
+//                        if (AABB.AABBvsAABB2(slime.getCollisionBox(), chest.getCollisionBox())) slime.stop(CollisionMessage.getMessage());
 
                         // Получение урона от слизня
                         if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead() && !player.getImmortal()) {
@@ -337,6 +320,14 @@ public class Window {
                             mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
                             mob.stopDown();
+                    }
+                    // Проверка всех мобов на столкновение с объектами
+                    for (Mob mob : mobList) {
+                        for (int i = 0; i < objectMap.size(); i++) {
+                            Object object = objectMap.get(i);
+                            if (object.getIsNoclip()) continue;
+                            if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox())) mob.stop(CollisionMessage.getMessage());
+                        }
                     }
 
                     // Проверка перехода на второй уровень

@@ -1,6 +1,7 @@
 package mobs;
 
 import math.AABB;
+import objects.Armor;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,7 +9,8 @@ import java.util.TimerTask;
 public class Player extends Mob {
     private int time = 0;
     private String knockbackDirection;
-    private String weapon, attackType, head, shoulders, torso, belt, hands, legs, feet;
+    private Armor head, shoulders, torso, belt, hands, legs, feet;
+    private String weapon, attackType;
     private AABB attackBox;
     private Timer timer = new Timer();
     private TimerTask timerTaskPlayer = new TimerTask() {
@@ -28,13 +30,13 @@ public class Player extends Mob {
         setMoveDirection("down");
         weapon = "longsword";
         attackType = "slash";
-        head = "plate_helmet";
-        shoulders = "plate_armor";
-        torso = "plate_armor";
-        belt = "leather";
-        hands = "leather_bracers";
-        legs = "plate_pants";
-        feet = "plate_shoes";
+        head = new Armor("head", 5, false, false, 0,0,0,0, new AABB(),"plate_helmet");
+        shoulders = new Armor("shoulders", 5, false, false, 0,0,0,0, new AABB(),"plate_armor");
+        torso = new Armor("torso", 5, false, false, 0,0,0,0, new AABB(),"plate_armor");
+        belt = new Armor("belt", 2, false, false, 0,0,0,0, new AABB(),"leather");
+        hands = new Armor("hands", 2, false, false, 0,0,0,0, new AABB(),"leather_bracers");
+        legs = new Armor("legs", 5, false, false, 0,0,0,0, new AABB(),"plate_pants");
+        feet = new Armor("feet", 5, false, false, 0,0,0,0, new AABB(),"plate_shoes");
     }
 
     public void stopTimerPlayer() {
@@ -72,31 +74,70 @@ public class Player extends Mob {
 
     public void setAttackType(String attackType) { this.attackType = attackType; }
 
-    public String getHead() { return head; }
+    public String getHead() { return head.getTexture(); }
 
-    public void setHead(String head) { this.head = head; }
+    public void setHead(String head) { this.head.setTexture(head); }
 
-    public String getShoulders() { return shoulders; }
+    public String getShoulders() { return shoulders.getTexture(); }
 
-    public void setShoulders(String shoulders) { this.shoulders = shoulders; }
+    public void setShoulders(String shoulders) { this.shoulders.setTexture(shoulders); }
 
-    public String getTorso() { return torso; }
+    public String getTorso() { return torso.getTexture(); }
 
-    public void setTorso(String torso) { this.torso = torso; }
+    public void setTorso(String torso) { this.torso.setTexture(torso); }
 
-    public String getBelt() { return belt; }
+    public String getBelt() { return belt.getTexture(); }
 
-    public void setBelt(String belt) { this.belt = belt; }
+    public void setBelt(String belt) { this.belt.setTexture(belt); }
 
-    public String getHands() { return hands; }
+    public String getHands() { return hands.getTexture(); }
 
-    public void setHands(String hands) { this.hands = hands; }
+    public void setHands(String hands) { this.hands.setTexture(hands); }
 
-    public String getLegs() { return legs; }
+    public String getLegs() { return legs.getTexture(); }
 
-    public void setLegs(String legs) { this.legs = legs; }
+    public void setLegs(String legs) { this.legs.setTexture(legs); }
 
-    public String getFeet() { return feet; }
+    public String getFeet() { return feet.getTexture(); }
 
-    public void setFeet(String feet) { this.feet = feet; }
+    public void setFeet(String feet) { this.feet.setTexture(feet); }
+
+    public Armor getArmorType(Armor armor) {
+        switch (armor.getType()) {
+            case "head": return head;
+            case "shoulders": return shoulders;
+            case "torso": return torso;
+            case "belt": return belt;
+            case "hands": return hands;
+            case "legs": return legs;
+            case "feet": return feet;
+        }
+        return null;
+    }
+
+    public void setArmor(Armor armor) {
+        switch (armor.getType()) {
+            case "head":
+                head = armor;
+                break;
+            case "shoulders":
+                shoulders = armor;
+                break;
+            case "torso":
+                torso = armor;
+                break;
+            case "belt":
+                belt = armor;
+                break;
+            case "hands":
+                hands = armor;
+                break;
+            case "legs":
+                legs = armor;
+                break;
+            case "feet":
+                feet = armor;
+                break;
+        }
+    }
 }
