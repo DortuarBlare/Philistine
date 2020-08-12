@@ -33,6 +33,7 @@ public class Window {
     boolean forMainMenu = true;
     boolean forMainTheme = true;
     int mainMenuTheme;
+    int dungeonAmbient1;
     Source source;
     int forCamera = 0;
     Player player;
@@ -101,6 +102,7 @@ public class Window {
         AudioMaster.init();
         AudioMaster.setListenerData();
         mainMenuTheme = AudioMaster.loadSound("MainMenu");
+        dungeonAmbient1 = AudioMaster.loadSound("dungeon_ambient_1");
         source = new Source();
 
         // Единичная загрузка всех хитбоксов
@@ -118,6 +120,7 @@ public class Window {
                 AudioMaster.destroy();
                 source.delete();
                 AL10.alDeleteBuffers(mainMenuTheme);
+                AL10.alDeleteBuffers(dungeonAmbient1);
                 glfwSetWindowShouldClose(window, true);
                 Player player = (Player) mobList.get(0);
                 player.getTimer().cancel();
@@ -208,6 +211,7 @@ public class Window {
                 case "FirstLevel": {
                     if (!forMainTheme) {
                         source.stop(mainMenuTheme);
+                        source.play(dungeonAmbient1);
                         forMainTheme = true;
                     }
                     Slime slime = (Slime) mobList.get(1);

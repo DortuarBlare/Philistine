@@ -7,6 +7,7 @@ public class Source {
         AL10.alSourcef(sourceId, AL10.AL_GAIN, 0.01f);
         AL10.alSourcef(sourceId, AL10.AL_PITCH, 1);
         AL10.alSource3f(sourceId, AL10.AL_POSITION, 0, 0, 0);
+        AL10.alSourcei(sourceId, AL10.AL_LOOPING, 1);
     }
 
     public void play(int buffer){
