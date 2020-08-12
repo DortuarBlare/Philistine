@@ -31,6 +31,9 @@ public class Window {
     boolean isCheck = false;
     boolean forSkeletonAnimation = true;
     boolean forMainMenu = true;
+    boolean forMainTheme = true;
+    int mainMenuTheme;
+    Source source;
     int forCamera = 0;
     Player player;
     String player_animation, weapon, head, shoulders, torso, belt, hands, legs, feet;
@@ -97,8 +100,8 @@ public class Window {
 
         AudioMaster.init();
         AudioMaster.setListenerData();
-        int mainMenuTheme = AudioMaster.loadSound("MainMenu");
-        Source source = new Source();
+        mainMenuTheme = AudioMaster.loadSound("MainMenu");
+        source = new Source();
 
         // Единичная загрузка всех хитбоксов
         for(int i = 0; i < Storage.aabbString.length; i++)
@@ -138,7 +141,6 @@ public class Window {
             if (key == GLFW_KEY_UP && action == GLFW_PRESS) isAttackUp = true;
             if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) isAttackDown = true;
             if (key == GLFW_KEY_E && action == GLFW_PRESS) isCheck = true;
-            if (key == GLFW_KEY_U && action == GLFW_PRESS) source.play(mainMenuTheme);
         });
     }
 
@@ -148,19 +150,15 @@ public class Window {
         int j1 = 1, j2 = 1, j3 = 1, j4 = 1;
         int b = 0;
 
-        // Изменение скейла изображения
-        /*try (MemoryStack stack = stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1);
-            IntBuffer pHeight = stack.mallocInt(1);
-            glfwGetWindowSize(window, pWidth, pHeight);
-            reshape(pWidth.get(0), pHeight.get(0));
-        }*/
-
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             // Переключение уровня
             switch (level) {
                 case "MainMenu": {
+                    if (forMainTheme) {
+                        source.play(mainMenuTheme);
+                        forMainTheme = false;
+                    }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
                     createQuadTexture(0, 0, 1536, 360);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("Press_enter"));
@@ -683,11 +681,8 @@ public class Window {
 
                     player.reArmor();
                     // Броня
-                    if (player.getArmor() < 30){
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor() / 5));
-                    } else {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
-                    }
+                    if (player.getArmor() < 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor() / 5));
+                    else glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
 
                     createQuadTexture(0, 19, 34, 53);
                 }

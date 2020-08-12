@@ -6,6 +6,9 @@ import objects.Armor;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+
 public class Player extends Mob {
     private int time = 0;
     private String knockbackDirection;
@@ -141,7 +144,5 @@ public class Player extends Mob {
         }
     }
 
-    public void reArmor(){
-        this.setArmor(head.getDefense() + shoulders.getDefense() + torso.getDefense() + belt.getDefense() + hands.getDefense() + legs.getDefense() + feet.getDefense());
-    }
+    public void reArmor() { this.setArmor(head.getDefense() + shoulders.getDefense() + torso.getDefense() + belt.getDefense() + hands.getDefense() + legs.getDefense() + feet.getDefense()); }
 }
