@@ -211,6 +211,7 @@ public class Window {
                 case "FirstLevel": {
                     if (!forMainTheme) {
                         source.stop(mainMenuTheme);
+                        source.changeVolume(0.5f);
                         source.play(dungeonAmbient1);
                         forMainTheme = true;
                     }

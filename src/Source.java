@@ -20,6 +20,10 @@ public class Source {
         AL10.alSourceStop(sourceId);
     }
 
+    public void changeVolume(float volume){
+        AL10.alSourcef(sourceId, AL10.AL_GAIN, volume);
+    }
+
     public void delete(){
         AL10.alDeleteSources(sourceId);
     }
