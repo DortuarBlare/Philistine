@@ -22,13 +22,17 @@ public class Storage {
             "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "shirt_white", "shoes_brown"
     };
 
+    static final String[] soundString = {
+            "mainMenuTheme", "dungeonAmbient1", "stepStone", "rapierHit"
+    };
+
     static final String[] textureString = {
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
             "slime_left_01", "slime_left_02", "slime_left_03",
             "slime_right_01", "slime_right_02", "slime_right_03",
             "level0", "level1", "level2", "level3", "MainMenu", "Press_enter", "box",
             "chestClosed", "chestOpened",
-            "enemyHp0", "enemyHp1", "enemyHp2", "enemyHp3", "enemyHp4", "enemyHp5",
+            "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
             "armor0", "armor1", "armor2", "armor3", "armor4", "armor5", "shirt_white", "shoes_brown", "pants_greenish", "plate_shoes", "plate_pants", "plate_armor",
 
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",

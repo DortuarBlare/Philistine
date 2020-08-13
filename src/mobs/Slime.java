@@ -6,17 +6,26 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Slime extends Mob {
-    private int time = 0;
+    private int knockbackTime = 0, animationTime = 1;
     private String direction;
-    private Timer timerSlime = new Timer();
-    private TimerTask timerTaskSlime = new TimerTask() {
+    private boolean animationTaskStarted = false;
+    private Timer timer = new Timer();
+    private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             if (direction.equals("Left")) moveLeft();
             else if (direction.equals("Right")) moveRight();
             else if (direction.equals("Up")) moveUp();
             else if (direction.equals("Down")) moveDown();
-            time++;
+            knockbackTime++;
+        }
+    };
+    private TimerTask animationTask = new TimerTask() {
+        @Override
+        public void run() {
+            animationTaskStarted = true;
+            animationTime++;
+            if (animationTime == 4) animationTime = 1;
         }
     };
 
@@ -25,34 +34,51 @@ public class Slime extends Mob {
         setMoveDirection("left");
     }
 
-    @Override
-    public void moveUp() { setY(getY() - getSpeed()); }
-
-    @Override
-    public void moveDown() { setY(getY() + getSpeed()); }
-
     public void stopTimerSlime() {
-        time = 0;
-        timerSlime.cancel();
-        timerSlime.purge();
-        timerSlime = new Timer();
-        timerTaskSlime = new TimerTask() {
+        knockbackTime = 0;
+        animationTaskStarted = false;
+        timer.cancel();
+        timer.purge();
+        timer = new Timer();
+        knockbackTask = new TimerTask() {
             @Override
             public void run() {
                 if (direction.equals("Left")) moveLeft();
                 else if (direction.equals("Right")) moveRight();
                 else if (direction.equals("Up")) moveUp();
                 else if (direction.equals("Down")) moveDown();
-                time++;
+                knockbackTime++;
+            }
+        };
+        animationTask = new TimerTask() {
+            @Override
+            public void run() {
+                animationTaskStarted = true;
+                animationTime++;
+                if (animationTime == 4) animationTime = 1;
             }
         };
     }
 
-    public Timer getTimerSlime() { return timerSlime; }
+    @Override
+    public void moveUp() { setY(getY() - getSpeed()); }
 
-    public TimerTask getTimerTaskSlime() { return timerTaskSlime; }
+    @Override
+    public void moveDown() { setY(getY() + getSpeed()); }
 
-    public int getTime() { return time; }
+    public Timer getTimer() { return timer; }
+
+    public TimerTask getKnockbackTask() { return knockbackTask; }
+
+    public TimerTask getAnimationTask() { return animationTask; }
+
+    public int getKnockbackTime() { return knockbackTime; }
+
+    public int getAnimationTime() { return animationTime; }
+
+    public boolean isAnimationTaskStarted() { return animationTaskStarted; }
+
+    public void setAnimationTaskStarted(boolean animationTaskStarted) { this.animationTaskStarted = animationTaskStarted; }
 
     public void setDirection(String direction) { this.direction = direction; }
 }

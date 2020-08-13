@@ -118,11 +118,11 @@ public abstract class Mob {
 
     public void setMoveDirection(String moveDirection) { this.moveDirection = moveDirection; }
 
-    public boolean getDead() { return dead; }
+    public boolean isDead() { return dead; }
 
     public void setDead(boolean dead) { this.dead = dead; }
 
-    public boolean getImmortal() { return immortal; }
+    public boolean isImmortal() { return immortal; }
 
     public void setImmortal(boolean immortal) { this.immortal = immortal; }
 

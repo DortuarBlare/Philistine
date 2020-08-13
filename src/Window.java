@@ -23,6 +23,7 @@ public class Window {
     private long window;
     private ArrayList<Mob> mobList;
     private HashMap<String, Integer> textureMap;
+    private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
     private HashMap<Integer, Object> objectMap;
     private String level = "MainMenu";
@@ -32,12 +33,7 @@ public class Window {
     boolean forSkeletonAnimation = true;
     boolean forMainMenu = true;
     boolean forMainTheme = true;
-    int mainMenuTheme;
-    int dungeonAmbient1;
-    int footstep06;
-    int footstepstone;
-    Source theme;
-    Source sounds;
+    Source theme, stepSound, hitSound;
     int forCamera = 0;
     Player player;
     String player_animation, weapon, head, shoulders, torso, belt, hands, legs, feet;
@@ -84,32 +80,40 @@ public class Window {
 
         mobList = new ArrayList<>();
         textureMap = new HashMap<String, Integer>();
+        soundMap = new HashMap<String, Integer>();
         aabbMap = new HashMap<String, AABB>();
         objectMap = new HashMap<Integer, Object>();
+        // 17 32 46 54
         objectMap.put(0, new Furniture(false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232), "chestClosed"));
-        objectMap.put(1, new Armor("torso", 1, true, true, 300, 100, 364, 164, new AABB(300, 100, 364, 164), "shirt_white"));
-        objectMap.put(2, new Armor("legs", 1, true, true, 428, 100, 492, 164, new AABB(428, 100, 492, 164), "pants_greenish"));
-        objectMap.put(3, new Armor("feet", 1, true, true, 364, 100, 428, 164, new AABB(364, 100, 428, 164), "shoes_brown"));
-        mobList.add(new Player(290, 192, 1, 100, 0, 10));
-        mobList.add(new Slime(300, 300, 1, 5, 0, 5));
+        objectMap.put(1, new Armor("torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218), "shirt_white"));
+        objectMap.put(2, new Armor("legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218), "pants_greenish"));
+        objectMap.put(3, new Armor("feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218), "shoes_brown"));
+        player = new Player(290, 192, 1, 100, 0, 10);
+        mobList.add(player);
+        mobList.add(new Slime(350, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(330, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(310, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(290, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(270, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(250, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(230, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(210, 300, 1, 50, 0, 5));
+        mobList.add(new Slime(190, 300, 1, 50, 0, 5));
         mobList.add(new Skeleton(300, 200, 1, 50, 0, 10));
-        player = (Player) mobList.get(0);
 
         // Единичная загрузка всех текстур
-        for (int i = 0, id = 0; i < Storage.textureString.length; i++) {
-            if (i < 11) id = Texture.loadTexture("healthbar/" + Storage.textureString[i]);
-            else id = Texture.loadTexture(Storage.textureString[i]);
-            textureMap.put(Storage.textureString[i], id);
-        }
+        for (int i = 0, id = 0; i < Storage.textureString.length; i++)
+            textureMap.put(Storage.textureString[i], id = Texture.loadTexture("textures/" + Storage.textureString[i]));
 
         AudioMaster.init();
         AudioMaster.setListenerData();
-        mainMenuTheme = AudioMaster.loadSound("MainMenu");
-        dungeonAmbient1 = AudioMaster.loadSound("dungeon_ambient_1");
-        footstep06 = AudioMaster.loadSound("footstep06");
-        footstepstone = AudioMaster.loadSound("stepstone_2");
+
+        // Единичная загрузка всех звуков
+        for (int i = 0, id = 0; i < Storage.soundString.length; i++)
+            soundMap.put(Storage.soundString[i], id = AudioMaster.loadSound("sounds/" + Storage.soundString[i]));
         theme = new Source(1);
-        sounds = new Source(0);
+        stepSound = new Source(0);
+        hitSound = new Source(0);
 
         // Единичная загрузка всех хитбоксов
         for(int i = 0; i < Storage.aabbString.length; i++)
@@ -125,17 +129,13 @@ public class Window {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 AudioMaster.destroy();
                 theme.delete();
-                sounds.delete();
-                AL10.alDeleteBuffers(mainMenuTheme);
-                AL10.alDeleteBuffers(dungeonAmbient1);
+                stepSound.delete();
+                AL10.alDeleteBuffers(soundMap.get("mainMenuTheme"));
+                AL10.alDeleteBuffers(soundMap.get("dungeonAmbient1"));
                 glfwSetWindowShouldClose(window, true);
-                Player player = (Player) mobList.get(0);
                 player.getTimer().cancel();
                 player.getTimer().purge();
-                Slime slime = (Slime) mobList.get(1);
-                slime.getTimerSlime().cancel();
-                slime.getTimerSlime().purge();
-                Skeleton skeleton = (Skeleton) mobList.get(2);
+                Skeleton skeleton = (Skeleton) mobList.get(1);
                 skeleton.getTimer().cancel();
                 skeleton.getTimer().purge();
             }
@@ -166,13 +166,13 @@ public class Window {
             switch (level) {
                 case "MainMenu": {
                     if (forMainTheme) {
-                        theme.play(mainMenuTheme);
+                        theme.play(soundMap.get("mainMenuTheme"));
                         forMainTheme = false;
                     }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
                     createQuadTexture(0, 0, 1536, 360);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("Press_enter"));
-                    createQuadTexture(player.getX() - 13, player.getY() - 100, player.getX() + 77, player.getY() - 82);
+                    createQuadTexture(player.getX() - 18, player.getY() - 100, player.getX() + 82, player.getY() - 72);
                     if (player.getX() == 1186) forMainMenu = false;
                     else if (player.getX() == 290) forMainMenu = true;
                     if (forMainMenu) {
@@ -217,12 +217,11 @@ public class Window {
                 }
                 case "FirstLevel": {
                     if (!forMainTheme) {
-                        theme.stop(mainMenuTheme);
+                        theme.stop(soundMap.get("mainMenuTheme"));
                         theme.changeVolume(0.1f);
-                        theme.play(dungeonAmbient1);
+                        theme.play(soundMap.get("dungeonAmbient1"));
                         forMainTheme = true;
                     }
-                    Slime slime = (Slime) mobList.get(1);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
 
@@ -247,7 +246,8 @@ public class Window {
                                     object.setMaxX(player.getCollisionBox().getMin().x + 44);
                                     object.setMaxY(player.getCollisionBox().getMin().y + 34);
                                     object.setIsLying(true);
-                                    object.getCollisionBox().update(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
+                                    object.getCollisionBox().update(object.getMinX() + 17, object.getMinY() + 32,
+                                            object.getMinX() + 46, object.getMinY() + 54);
                                     objectMap.put(i, object);
                                 }
                             }
@@ -255,78 +255,70 @@ public class Window {
                     }
                     isCheck = false;
 
-                    // Все операции со слизнем
-                    if (!slime.getDead()) {
-                        switch (i5) { // Анимация слайма
-                            case 0:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() +"_01"));
-                                break;
-                            case 1:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() +"_02"));
-                                break;
-                            case 2:
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() +"_03"));
-                                break;
-                        }
-                        if (g2 == 8) {
-                            if (i5 == 0) { i5++; }
-                            else { i5--; }
-                            g2 = 0;
-                        }
-                        g2++;
-                        slime.getHitbox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
-                        slime.getCollisionBox().update(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
-                        createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 16, slime.getY() + 10);
+                    // Все операции с мобами
+                    for (int i = 1; i < mobList.size(); i++) {
+                        if (!mobList.get(i).isDead()) {
+                            if (mobList.get(i) instanceof Slime) {
+                                Slime slime = (Slime) mobList.get(i);
+                                if (!slime.isAnimationTaskStarted()) slime.getTimer().schedule(slime.getAnimationTask(), 0, 120);
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() + "_0" + slime.getAnimationTime()));
+                                createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
+                                slime.getHitbox().update(slime.getX() + 3, slime.getY() + 2, slime.getX() + 14, slime.getY() + 10);
+                                slime.getCollisionBox().update(slime.getX() + 1, slime.getY() + 1, slime.getX() + 16, slime.getY() + 11);
 
-                        // Преследование игрока слаймом, обновление хитбокса и перерисовка текстуры
-                        if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
-                            if (slime.getHitbox().getMin().x > player.getHitbox().getMin().x) slime.moveLeft();
-                            else slime.moveRight();
-                            if (slime.getHitbox().getMin().y > player.getHitbox().getMin().y) slime.moveUp();
-                            else slime.moveDown();
-                        }
+                                // Преследование игрока слаймом, обновление хитбокса и перерисовка текстуры
+                                if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
+                                    if (slime.getHitbox().getMin().x > player.getHitbox().getMin().x) slime.moveLeft();
+                                    else slime.moveRight();
+                                    if (slime.getHitbox().getMin().y > player.getHitbox().getMin().y) slime.moveUp();
+                                    else slime.moveDown();
+                                }
+                                // Получение урона от слизня
+                                if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.isImmortal()) {
+                                    if (player.getX() > slime.getX()) player.setKnockbackDirection("Right");
+                                    else if (player.getX() < slime.getX()) player.setKnockbackDirection("Left");
+                                    else if (player.getY() > slime.getY()) player.setKnockbackDirection("Down");
+                                    else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
+                                    player.takeDamage(slime.getDamage());
+                                    player.setImmortal(true);
+                                    player.getTimer().schedule(player.getTimerTaskPlayer(), 0, 10);
+                                }
+                                // Слизень получает урон от игрока
+                                if (AABB.AABBvsAABB(player.getAttackBox(), slime.getHitbox()) && !slime.isImmortal()) {
+                                    if (player.getX() > slime.getX()) slime.setDirection("Left");
+                                    else if (player.getX() < slime.getX()) slime.setDirection("Right");
+                                    else if (player.getY() > slime.getY()) slime.setDirection("Up");
+                                    else if (player.getY() < slime.getY()) slime.setDirection("Down");
+                                    slime.setHealth(slime.getHealth() - player.getDamage());
+                                    slime.setImmortal(true);
+                                    slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
+                                }
+                                if (player.getTime() >= 15) {
+                                    player.stopTimerPlayer();
+                                    player.setImmortal(false);
+                                }
+                                if (slime.getKnockbackTime() >= 25) {
+                                    slime.stopTimerSlime();
+                                    slime.setImmortal(false);
+                                }
 
-                        // Получение урона от слизня
-                        if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.getDead() && !player.getImmortal()) {
-                            if (player.getX() > slime.getX()) player.setKnockbackDirection("Right");
-                            else if (player.getX() < slime.getX()) player.setKnockbackDirection("Left");
-                            else if (player.getY() > slime.getY()) player.setKnockbackDirection("Down");
-                            else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
-                            player.takeDamage(slime.getDamage());
-                            System.out.println(player.getHealth());
-                            player.setImmortal(true);
-                            player.getTimer().schedule(player.getTimerTaskPlayer(), 0, 10);
-                        }
-                        // Слизень получает урон от игрока
-                        if (AABB.AABBvsAABB(player.getAttackBox(), slime.getHitbox()) && !slime.getImmortal()) {
-                            if (player.getX() > slime.getX()) slime.setDirection("Left");
-                            else if (player.getX() < slime.getX()) slime.setDirection("Right");
-                            else if (player.getY() > slime.getY()) slime.setDirection("Up");
-                            else if (player.getY() < slime.getY()) slime.setDirection("Down");
-                            slime.setHealth(slime.getHealth() - player.getDamage());
-                            slime.setImmortal(true);
-                            slime.getTimerSlime().schedule(slime.getTimerTaskSlime(), 0, 10);
-                        }
-                        player.getAttackBox().update(0, 0, 0, 0);
-                        if (player.getTime() >= 15) {
-                            player.stopTimerPlayer();
-                            player.setImmortal(false);
-                        }
-                        if (slime.getTime() >= 25) {
-                            slime.stopTimerSlime();
-                            slime.setImmortal(false);
-                        }
-
-                        // Отрисовка хелсбара
-                        if (slime.getHealth() <= 0) slime.setDead(true);
-                        else {
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + slime.getHealth()));
-                            createQuadTexture(slime.getX(), slime.getY() - 2, slime.getX() + 16, slime.getY());
+                                // Отрисовка хелсбара
+                                if (slime.getHealth() <= 0) {
+                                    slime.setDead(true);
+                                    slime.getTimer().cancel();
+                                    slime.getTimer().purge();
+                                    mobList.remove(slime);
+                                }
+                                else {
+                                    int tempHealth = slime.getHealth() % 10 == 0 ? slime.getHealth() * 2 : (slime.getHealth() * 2) - ((slime.getHealth() * 2) % 10) + 10;
+                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
+                                    createQuadTexture(slime.getX(), slime.getY() - 2, slime.getX() + 16, slime.getY());
+                                }
+                            }
                         }
                     }
-                    else slime.getHitbox().update(0,0,0,0);
 
-                    // Проверка всех мобов на столкновение со стенами
+                    // Проверка всех мобов на столкновение со стенами, объектами и другими мобами
                     for (Mob mob : mobList) {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                             mob.stopRight();
@@ -336,13 +328,18 @@ public class Window {
                             mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
                             mob.stopDown();
-                    }
-                    // Проверка всех мобов на столкновение с объектами
-                    for (Mob mob : mobList) {
+
                         for (int i = 0; i < objectMap.size(); i++) {
                             Object object = objectMap.get(i);
                             if (object.getIsNoclip()) continue;
                             if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox())) mob.stop(CollisionMessage.getMessage());
+                        }
+
+                        for (Mob mob2 : mobList) {
+                            if (!(mob instanceof Player)) {
+                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
+                                    mob.stop(CollisionMessage.getMessage());
+                            }
                         }
                     }
 
@@ -365,7 +362,7 @@ public class Window {
                     createQuadTexture(0, 0, 640, 360);
 
                     // Все операции со скелетоном
-                    if (!skeleton.getDead()) {
+                    if (!skeleton.isDead()) {
                         if (forSkeletonAnimation) {
                             skeleton.getTimer().schedule(skeleton.getAnimationTask(), 0, 120);
                             forSkeletonAnimation = false;
@@ -392,7 +389,7 @@ public class Window {
                         }
 
                         // Получение урона от скелетона
-                        if (AABB.AABBvsAABB(player.getHitbox(), skeleton.getHitbox()) && !player.getDead() && !player.getImmortal()) {
+                        if (AABB.AABBvsAABB(player.getHitbox(), skeleton.getHitbox()) && !player.isDead() && !player.isImmortal()) {
                             if (player.getX() > skeleton.getX()) player.setKnockbackDirection("Right");
                             else if (player.getX() < skeleton.getX()) player.setKnockbackDirection("Left");
                             else if (player.getY() > skeleton.getY()) player.setKnockbackDirection("Down");
@@ -402,7 +399,7 @@ public class Window {
                             player.getTimer().schedule(player.getTimerTaskPlayer(), 0, 10);
                         }
                         // Скелетон получает урон от игрока
-                        if (AABB.AABBvsAABB(player.getAttackBox(), skeleton.getHitbox()) && !skeleton.getImmortal()) {
+                        if (AABB.AABBvsAABB(player.getAttackBox(), skeleton.getHitbox()) && !skeleton.isImmortal()) {
                             if (player.getX() > skeleton.getX()) skeleton.setDirection("Left");
                             else if (player.getX() < skeleton.getX()) skeleton.setDirection("Right");
                             else if (player.getY() > skeleton.getY()) skeleton.setDirection("Up");
@@ -455,7 +452,7 @@ public class Window {
 
             //Движение игрока и обновление одежды
             if (!level.equals("MainMenu")) {
-                if (!player.getDead()) {
+                if (!player.isDead()) {
                     player_animation = "player_stand_" + player.getMoveDirection();
                     head = "HEAD_" + player.getHead() + "_" + player.getMoveDirection() + "_move_01";
                     shoulders = "SHOULDERS_" + player.getShoulders() + "_" + player.getMoveDirection() + "_move_01";
@@ -467,6 +464,7 @@ public class Window {
 
                     if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
                         if (i2 == 10) i2 = 2;
+                        if (i2 == 3 || i2 == 6) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_left_0" + i2;
                         head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
@@ -484,6 +482,7 @@ public class Window {
                     }
                     else if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
                         if (i1 == 10) i1 = 2;
+                        if (i1 == 3 || i1 == 6) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_right_0" + i1;
                         head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
@@ -501,6 +500,7 @@ public class Window {
                     }
                     else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
                         if (i2 == 10) i2 = 2;
+                        if (i2 == 3 || i2 == 6) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_left_0" + i2;
                         head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
@@ -518,6 +518,7 @@ public class Window {
                     }
                     else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
                         if (i1 == 10) i1 = 2;
+                        if (i1 == 3 || i1 == 6) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_right_0" + i1;
                         head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
@@ -535,6 +536,7 @@ public class Window {
                     }
                     else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
                         if (i2 == 10) i2 = 2;
+                        if (i2 == 3 || i2 == 6) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_left_0" + i2;
                         head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_left_move_0" + i2;
@@ -544,8 +546,6 @@ public class Window {
                         legs = "LEGS_" + player.getLegs() + "_left_move_0" + i2;
                         feet = "FEET_" + player.getFeet() + "_left_move_0" + i2;
                         if (g1 == 8) {
-                            if (i2 == 3 || i2 == 6)
-                                sounds.play(footstepstone);
                             i2++;
                             g1 = 0;
                         }
@@ -554,6 +554,7 @@ public class Window {
                     }
                     else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
                         if (i1 == 10) i1 = 2;
+                        if (i1 == 3 || i1 == 6) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_right_0" + i1;
                         head =  "HEAD_" + player.getHead() + "_right_move_0" + i1;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_right_move_0" + i1;
@@ -563,8 +564,6 @@ public class Window {
                         legs = "LEGS_" + player.getLegs() + "_right_move_0" + i1;
                         feet = "FEET_" + player.getFeet() + "_right_move_0" + i1;
                         if (g1 == 8) {
-                            if (i1 == 3 || i1 == 6)
-                                sounds.play(footstep06);
                             i1++;
                             g1 = 0;
                         }
@@ -573,6 +572,7 @@ public class Window {
                     }
                     else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
                         if (i3 == 10) i3 = 2;
+                        if (i3 == 4 || i3 == 8) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_up_0" + i3;
                         head =  "HEAD_" + player.getHead() + "_up_move_0" + i3;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_up_move_0" + i3;
@@ -590,6 +590,7 @@ public class Window {
                     }
                     else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
                         if (i4 == 10) i4 = 2;
+                        if (i4 == 4 || i4 == 8) stepSound.play(soundMap.get("stepStone"));
                         player_animation = "player_walk_down_0" + i4;
                         head =  "HEAD_" + player.getHead() + "_down_move_0" + i4;
                         shoulders =  "SHOULDERS_" + player.getShoulders() + "_down_move_0" + i4;
@@ -608,9 +609,11 @@ public class Window {
                     if (isAttackLeft) {
                         if (j3 == 7) {
                             j3 = 1;
+                            player.getAttackBox().update(0, 0, 0, 0);
                             isAttackLeft = false;
                         }
                         if (j3 == 5) player.getAttackBox().update(player.getX() - 50, player.getY() + 20, player.getX() - 50 + 69, player.getY() + 20 + 27);
+                        if (j3 == 4) hitSound.play(soundMap.get("rapierHit"));
                         player_animation = "player_" + player.getAttackType() + "_left_0" + j3;
                         weapon = "weapon_" + player.getWeapon() + "_left_" + player.getAttackType() + "_0" + j3;
                         head =  "HEAD_" + player.getHead() + "_left_" + player.getAttackType() + "_0" + j3;
@@ -629,9 +632,11 @@ public class Window {
                     else if (isAttackRight) {
                         if (j1 == 7) {
                             j1 = 1;
+                            player.getAttackBox().update(0, 0, 0, 0);
                             isAttackRight = false;
                         }
                         if (j1 == 5) player.getAttackBox().update(player.getX() + 55, player.getY() + 20, player.getX() + 55 + 60, player.getY() + 20 + 28);
+                        if (j1 == 4) hitSound.play(soundMap.get("rapierHit"));
                         player_animation = "player_" + player.getAttackType() + "_right_0" + j1;
                         weapon = "weapon_" + player.getWeapon() + "_right_" + player.getAttackType() + "_0" + j1;
                         head =  "HEAD_" + player.getHead() + "_right_" + player.getAttackType() + "_0" + j1;
@@ -650,9 +655,11 @@ public class Window {
                     else if (isAttackUp) {
                         if (j4 == 7) {
                             j4 = 1;
+                            player.getAttackBox().update(0, 0, 0, 0);
                             isAttackUp = false;
                         }
                         if (j4 == 5) player.getAttackBox().update(player.getX() + 18, player.getY() - 10, player.getX() + 18 + 56, player.getY() - 10 + 21);
+                        if (j4 == 4) hitSound.play(soundMap.get("rapierHit"));
                         player_animation = "player_" + player.getAttackType() + "_up_0" + j4;
                         weapon = "weapon_" + player.getWeapon() + "_up_" + player.getAttackType() + "_0" + j4;
                         head =  "HEAD_" + player.getHead() + "_up_" + player.getAttackType() + "_0" + j4;
@@ -663,6 +670,7 @@ public class Window {
                         legs = "LEGS_" + player.getLegs() + "_up_" + player.getAttackType() + "_0" + j4;
                         feet = "FEET_" + player.getFeet() + "_up_" + player.getAttackType() + "_0" + j4;
                         if (g3 == 4) {
+
                             g3 = 0;
                             j4++;
                         }
@@ -671,9 +679,11 @@ public class Window {
                     else if (isAttackDown) {
                         if (j2 == 7) {
                             j2 = 1;
+                            player.getAttackBox().update(0, 0, 0, 0);
                             isAttackDown = false;
                         }
                         if (j2 == 5) player.getAttackBox().update(player.getX() + 10, player.getY() + 20, player.getX() + 10 + 55, player.getY() + 45 + 39);
+                        if (j2 == 4) hitSound.play(soundMap.get("rapierHit"));
                         player_animation = "player_" + player.getAttackType() + "_down_0" + j2;
                         weapon = "weapon_" + player.getWeapon() + "_down_" + player.getAttackType() + "_0" + j2;
                         head =  "HEAD_" + player.getHead() + "_down_" + player.getAttackType() + "_0" + j2;
@@ -684,6 +694,7 @@ public class Window {
                         legs = "LEGS_" + player.getLegs() + "_down_" + player.getAttackType() + "_0" + j2;
                         feet = "FEET_" + player.getFeet() + "_down_" + player.getAttackType() + "_0" + j2;
                         if (g3 == 4) {
+
                             g3 = 0;
                             j2++;
                         }
@@ -699,8 +710,8 @@ public class Window {
                     }
                     createQuadTexture(0, 0, 103, 18);
 
-                    player.reArmor();
                     // Броня
+                    player.reArmor();
                     if (player.getArmor() < 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor() / 5));
                     else glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
 
@@ -808,7 +819,7 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(belt));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if ( (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) && !player.getDead() && !level.equals("MainMenu")) {
+            if ( (isAttackRight || isAttackUp || isAttackLeft || isAttackDown) && !player.isDead() && !level.equals("MainMenu")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(weapon));
                 createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
             }
