@@ -23,7 +23,7 @@ public class Storage {
     };
 
     static final String[] soundString = {
-            "mainMenuTheme", "dungeonAmbient1", "stepStone", "rapierHit"
+            "mainMenuTheme", "dungeonAmbient1", "stepStone", "swish", "slimeHurt", "changingArmor"
     };
 
     static final String[] textureString = {
@@ -31,7 +31,7 @@ public class Storage {
             "slime_left_01", "slime_left_02", "slime_left_03",
             "slime_right_01", "slime_right_02", "slime_right_03",
             "level0", "level1", "level2", "level3", "MainMenu", "Press_enter", "box",
-            "chestClosed", "chestOpened",
+            "chestClosed", "chestOpened", "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
             "armor0", "armor1", "armor2", "armor3", "armor4", "armor5", "shirt_white", "shoes_brown", "pants_greenish", "plate_shoes", "plate_pants", "plate_armor",
 

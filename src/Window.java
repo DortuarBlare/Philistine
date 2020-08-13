@@ -33,8 +33,8 @@ public class Window {
     boolean forSkeletonAnimation = true;
     boolean forMainMenu = true;
     boolean forMainTheme = true;
-    Source theme, stepSound, hitSound;
-    int forCamera = 0;
+    int forCameraInMainMenu = 0;
+    Source backgroundMusic, stepSound, hitSound, mobHurtSound, armorChange;
     Player player;
     String player_animation, weapon, head, shoulders, torso, belt, hands, legs, feet;
 
@@ -111,9 +111,11 @@ public class Window {
         // Единичная загрузка всех звуков
         for (int i = 0, id = 0; i < Storage.soundString.length; i++)
             soundMap.put(Storage.soundString[i], id = AudioMaster.loadSound("sounds/" + Storage.soundString[i]));
-        theme = new Source(1);
+        backgroundMusic = new Source(1);
         stepSound = new Source(0);
         hitSound = new Source(0);
+        mobHurtSound = new Source(0);
+        armorChange = new Source(0);
 
         // Единичная загрузка всех хитбоксов
         for(int i = 0; i < Storage.aabbString.length; i++)
@@ -128,7 +130,7 @@ public class Window {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 AudioMaster.destroy();
-                theme.delete();
+                backgroundMusic.delete();
                 stepSound.delete();
                 AL10.alDeleteBuffers(soundMap.get("mainMenuTheme"));
                 AL10.alDeleteBuffers(soundMap.get("dungeonAmbient1"));
@@ -141,7 +143,7 @@ public class Window {
             }
             if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
                 level = "FirstLevel";
-                glTranslated(forCamera, 0, 0);
+                glTranslated(forCameraInMainMenu, 0, 0);
                 player.setX(200);
                 player.setY(150);
                 player.setSpeed(2);
@@ -156,9 +158,9 @@ public class Window {
 
     private void loop() {
         int i1 = 2, i2 = 2, i3 = 2, i4 = 2, i5 = 0;
-        int g1 = 0, g2 = 0, g3 = 0, g4 = 0;
+        int g1 = 0, g3 = 0, g4 = 0;
         int j1 = 1, j2 = 1, j3 = 1, j4 = 1;
-        int b = 0;
+        int b = 0, torch_i = 1, torch_g = 0;
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -166,7 +168,7 @@ public class Window {
             switch (level) {
                 case "MainMenu": {
                     if (forMainTheme) {
-                        theme.play(soundMap.get("mainMenuTheme"));
+                        backgroundMusic.play(soundMap.get("mainMenuTheme"));
                         forMainTheme = false;
                     }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
@@ -177,7 +179,7 @@ public class Window {
                     else if (player.getX() == 290) forMainMenu = true;
                     if (forMainMenu) {
                         glTranslated(-1, 0, 0);
-                        forCamera++;
+                        forCameraInMainMenu++;
                         if (i1 == 10) i1 = 2;
                         player_animation = "player_walk_right_0" + i1;
                         head = "HEAD_" + player.getHead() + "_right_move_0" + i1;
@@ -196,7 +198,7 @@ public class Window {
                     }
                     else {
                         glTranslated(1, 0, 0);
-                        forCamera--;
+                        forCameraInMainMenu--;
                         if (i2 == 10) i2 = 2;
                         player_animation = "player_walk_left_0" + i2;
                         head =  "HEAD_" + player.getHead() + "_left_move_0" + i2;
@@ -217,13 +219,25 @@ public class Window {
                 }
                 case "FirstLevel": {
                     if (!forMainTheme) {
-                        theme.stop(soundMap.get("mainMenuTheme"));
-                        theme.changeVolume(0.1f);
-                        theme.play(soundMap.get("dungeonAmbient1"));
+                        backgroundMusic.stop(soundMap.get("mainMenuTheme"));
+                        backgroundMusic.changeVolume(0.1f);
+                        backgroundMusic.play(soundMap.get("dungeonAmbient1"));
                         forMainTheme = true;
                     }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
+                    if (torch_i == 10) torch_i = 1;
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
+                    createQuadTexture(190, 63, 221, 126);
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
+                    createQuadTexture(384, 63, 415, 126);
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
+                    createQuadTexture(556, 158, 587, 221);
+                    if (torch_g == 8) {
+                        torch_i++;
+                        torch_g = 0;
+                    }
+                    torch_g++;
 
                     // Отрисовка всех объектов
                     for (int i = 0; i < objectMap.size(); i++) {
@@ -240,6 +254,7 @@ public class Window {
                                     Armor armor = player.getArmorType((Armor) object);
                                     object.setIsLying(false);
                                     player.setArmor((Armor) object);
+                                    armorChange.play(soundMap.get("changingArmor"));
                                     object = armor;
                                     object.setMinX(player.getCollisionBox().getMin().x - 20);
                                     object.setMinY(player.getCollisionBox().getMin().y - 30);
@@ -292,6 +307,7 @@ public class Window {
                                     slime.setHealth(slime.getHealth() - player.getDamage());
                                     slime.setImmortal(true);
                                     slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
+                                    mobHurtSound.play(soundMap.get("slimeHurt"));
                                 }
                                 if (player.getTime() >= 15) {
                                     player.stopTimerPlayer();
@@ -613,7 +629,7 @@ public class Window {
                             isAttackLeft = false;
                         }
                         if (j3 == 5) player.getAttackBox().update(player.getX() - 50, player.getY() + 20, player.getX() - 50 + 69, player.getY() + 20 + 27);
-                        if (j3 == 4) hitSound.play(soundMap.get("rapierHit"));
+                        if (j3 == 4) hitSound.play(soundMap.get("swish"));
                         player_animation = "player_" + player.getAttackType() + "_left_0" + j3;
                         weapon = "weapon_" + player.getWeapon() + "_left_" + player.getAttackType() + "_0" + j3;
                         head =  "HEAD_" + player.getHead() + "_left_" + player.getAttackType() + "_0" + j3;
@@ -636,7 +652,7 @@ public class Window {
                             isAttackRight = false;
                         }
                         if (j1 == 5) player.getAttackBox().update(player.getX() + 55, player.getY() + 20, player.getX() + 55 + 60, player.getY() + 20 + 28);
-                        if (j1 == 4) hitSound.play(soundMap.get("rapierHit"));
+                        if (j1 == 4) hitSound.play(soundMap.get("swish"));
                         player_animation = "player_" + player.getAttackType() + "_right_0" + j1;
                         weapon = "weapon_" + player.getWeapon() + "_right_" + player.getAttackType() + "_0" + j1;
                         head =  "HEAD_" + player.getHead() + "_right_" + player.getAttackType() + "_0" + j1;
@@ -659,7 +675,7 @@ public class Window {
                             isAttackUp = false;
                         }
                         if (j4 == 5) player.getAttackBox().update(player.getX() + 18, player.getY() - 10, player.getX() + 18 + 56, player.getY() - 10 + 21);
-                        if (j4 == 4) hitSound.play(soundMap.get("rapierHit"));
+                        if (j4 == 4) hitSound.play(soundMap.get("swish"));
                         player_animation = "player_" + player.getAttackType() + "_up_0" + j4;
                         weapon = "weapon_" + player.getWeapon() + "_up_" + player.getAttackType() + "_0" + j4;
                         head =  "HEAD_" + player.getHead() + "_up_" + player.getAttackType() + "_0" + j4;
@@ -683,7 +699,7 @@ public class Window {
                             isAttackDown = false;
                         }
                         if (j2 == 5) player.getAttackBox().update(player.getX() + 10, player.getY() + 20, player.getX() + 10 + 55, player.getY() + 45 + 39);
-                        if (j2 == 4) hitSound.play(soundMap.get("rapierHit"));
+                        if (j2 == 4) hitSound.play(soundMap.get("swish"));
                         player_animation = "player_" + player.getAttackType() + "_down_0" + j2;
                         weapon = "weapon_" + player.getWeapon() + "_down_" + player.getAttackType() + "_0" + j2;
                         head =  "HEAD_" + player.getHead() + "_down_" + player.getAttackType() + "_0" + j2;
