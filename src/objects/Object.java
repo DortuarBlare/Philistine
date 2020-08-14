@@ -22,6 +22,17 @@ public abstract class Object {
         this.collisionBox = collisionBox;
     }
 
+    public Object(String texture, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+        this.texture = texture;
+        this.noclip = true;
+        this.isLying = false;
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.collisionBox = collisionBox;
+    }
+
     public int getMinX() { return minX; }
 
     public int getMinY() { return minY; }

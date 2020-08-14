@@ -7,16 +7,16 @@ import java.util.TimerTask;
 
 public class Slime extends Mob {
     private int knockbackTime = 0, animationTime = 1;
-    private String direction;
+    private String knockbackDirection;
     private boolean animationTaskStarted = false;
     private Timer timer = new Timer();
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
-            if (direction.equals("Left")) moveLeft();
-            else if (direction.equals("Right")) moveRight();
-            else if (direction.equals("Up")) moveUp();
-            else if (direction.equals("Down")) moveDown();
+            if (knockbackDirection.equals("left")) moveLeft();
+            else if (knockbackDirection.equals("right")) moveRight();
+            else if (knockbackDirection.equals("up")) moveUp();
+            else if (knockbackDirection.equals("down")) moveDown();
             knockbackTime++;
         }
     };
@@ -34,7 +34,7 @@ public class Slime extends Mob {
         setMoveDirection("left");
     }
 
-    public void stopTimerSlime() {
+    public void stopTimer() {
         knockbackTime = 0;
         animationTaskStarted = false;
         timer.cancel();
@@ -43,10 +43,10 @@ public class Slime extends Mob {
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
-                if (direction.equals("Left")) moveLeft();
-                else if (direction.equals("Right")) moveRight();
-                else if (direction.equals("Up")) moveUp();
-                else if (direction.equals("Down")) moveDown();
+                if (knockbackDirection.equals("left")) moveLeft();
+                else if (knockbackDirection.equals("right")) moveRight();
+                else if (knockbackDirection.equals("up")) moveUp();
+                else if (knockbackDirection.equals("down")) moveDown();
                 knockbackTime++;
             }
         };
@@ -80,5 +80,5 @@ public class Slime extends Mob {
 
     public void setAnimationTaskStarted(boolean animationTaskStarted) { this.animationTaskStarted = animationTaskStarted; }
 
-    public void setDirection(String direction) { this.direction = direction; }
+    public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
 }

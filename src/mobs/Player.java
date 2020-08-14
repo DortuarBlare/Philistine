@@ -31,10 +31,10 @@ public class Player extends Mob {
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
-            if (knockbackDirection.equals("Left")) moveLeft();
-            else if (knockbackDirection.equals("Right")) moveRight();
-            else if (knockbackDirection.equals("Up")) moveUp();
-            else if (knockbackDirection.equals("Down")) moveDown();
+            if (knockbackDirection.equals("left")) moveLeft();
+            else if (knockbackDirection.equals("right")) moveRight();
+            else if (knockbackDirection.equals("up")) moveUp();
+            else if (knockbackDirection.equals("down")) moveDown();
             time++;
         }
     };
@@ -43,7 +43,7 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         setMoveDirection("down");
         attackBox = new AABB();
-        weapon = new Weapon("longsword", "slash", 10, true, false, 0, 0, 0, 0, new AABB());
+        weapon = new Weapon("longsword", "slash", 10, new AABB());
         head = new Armor("plate_helmet", "head", 5, true);
         shoulders = new Armor("plate_armor", "shoulders", 5, true);
         torso = new Armor("plate_armor", "torso", 5, true);

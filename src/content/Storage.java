@@ -51,23 +51,34 @@ public class Storage {
             "player_slash_up_01", "player_slash_up_02", "player_slash_up_03", "player_slash_up_04", "player_slash_up_05", "player_slash_up_06",
             "player_slash_left_01", "player_slash_left_02", "player_slash_left_03", "player_slash_left_04", "player_slash_left_05", "player_slash_left_06",
             "player_slash_down_01", "player_slash_down_02", "player_slash_down_03", "player_slash_down_04", "player_slash_down_05", "player_slash_down_06",
+
+            "player_thrust_left_01", "player_thrust_left_02", "player_thrust_left_03", "player_thrust_left_04", "player_thrust_left_05", "player_thrust_left_06", "player_thrust_left_07", "player_thrust_left_08",
+            "player_thrust_right_01", "player_thrust_right_02", "player_thrust_right_03", "player_thrust_right_04", "player_thrust_right_05", "player_thrust_right_06", "player_thrust_right_07", "player_thrust_right_08",
+            "player_thrust_up_01", "player_thrust_up_02", "player_thrust_up_03", "player_thrust_up_04", "player_thrust_up_05", "player_thrust_up_06", "player_thrust_up_07", "player_thrust_up_08",
+            "player_thrust_down_01", "player_thrust_down_02", "player_thrust_down_03", "player_thrust_down_04", "player_thrust_down_05", "player_thrust_down_06", "player_thrust_down_07", "player_thrust_down_08",
+
             "player_hurt_01", "player_hurt_02", "player_hurt_03", "player_hurt_04", "player_hurt_05", "player_hurt_06",
 
             // Оружие
-            "weapon_rapier_right_slash_01", "weapon_rapier_right_slash_02", "weapon_rapier_right_slash_03", "weapon_rapier_right_slash_04", "weapon_rapier_right_slash_05", "weapon_rapier_right_slash_06",
-            "weapon_rapier_up_slash_01", "weapon_rapier_up_slash_02", "weapon_rapier_up_slash_03", "weapon_rapier_up_slash_04", "weapon_rapier_up_slash_05", "weapon_rapier_up_slash_06",
-            "weapon_rapier_down_slash_01", "weapon_rapier_down_slash_02", "weapon_rapier_down_slash_03", "weapon_rapier_down_slash_04", "weapon_rapier_down_slash_05", "weapon_rapier_down_slash_06",
-            "weapon_rapier_left_slash_01", "weapon_rapier_left_slash_02", "weapon_rapier_left_slash_03", "weapon_rapier_left_slash_04", "weapon_rapier_left_slash_05", "weapon_rapier_left_slash_06",
-
             "weapon_longsword_left_slash_01", "weapon_longsword_left_slash_02", "weapon_longsword_left_slash_03", "weapon_longsword_left_slash_04", "weapon_longsword_left_slash_05", "weapon_longsword_left_slash_06",
             "weapon_longsword_right_slash_01", "weapon_longsword_right_slash_02", "weapon_longsword_right_slash_03", "weapon_longsword_right_slash_04", "weapon_longsword_right_slash_05", "weapon_longsword_right_slash_06",
             "weapon_longsword_up_slash_01", "weapon_longsword_up_slash_02", "weapon_longsword_up_slash_03", "weapon_longsword_up_slash_04", "weapon_longsword_up_slash_05", "weapon_longsword_up_slash_06",
             "weapon_longsword_down_slash_01", "weapon_longsword_down_slash_02", "weapon_longsword_down_slash_03", "weapon_longsword_down_slash_04", "weapon_longsword_down_slash_05", "weapon_longsword_down_slash_06",
 
+            "weapon_rapier_right_slash_01", "weapon_rapier_right_slash_02", "weapon_rapier_right_slash_03", "weapon_rapier_right_slash_04", "weapon_rapier_right_slash_05", "weapon_rapier_right_slash_06",
+            "weapon_rapier_up_slash_01", "weapon_rapier_up_slash_02", "weapon_rapier_up_slash_03", "weapon_rapier_up_slash_04", "weapon_rapier_up_slash_05", "weapon_rapier_up_slash_06",
+            "weapon_rapier_down_slash_01", "weapon_rapier_down_slash_02", "weapon_rapier_down_slash_03", "weapon_rapier_down_slash_04", "weapon_rapier_down_slash_05", "weapon_rapier_down_slash_06",
+            "weapon_rapier_left_slash_01", "weapon_rapier_left_slash_02", "weapon_rapier_left_slash_03", "weapon_rapier_left_slash_04", "weapon_rapier_left_slash_05", "weapon_rapier_left_slash_06",
+
             "weapon_dagger_left_slash_01", "weapon_dagger_left_slash_02", "weapon_dagger_left_slash_03", "weapon_dagger_left_slash_04", "weapon_dagger_left_slash_05", "weapon_dagger_left_slash_06",
             "weapon_dagger_right_slash_01", "weapon_dagger_right_slash_02", "weapon_dagger_right_slash_03", "weapon_dagger_right_slash_04", "weapon_dagger_right_slash_05", "weapon_dagger_right_slash_06",
             "weapon_dagger_up_slash_01", "weapon_dagger_up_slash_02", "weapon_dagger_up_slash_03", "weapon_dagger_up_slash_04", "weapon_dagger_up_slash_05", "weapon_dagger_up_slash_06",
             "weapon_dagger_down_slash_01", "weapon_dagger_down_slash_02", "weapon_dagger_down_slash_03", "weapon_dagger_down_slash_04", "weapon_dagger_down_slash_05", "weapon_dagger_down_slash_06",
+
+            "weapon_spear_left_thrust_01", "weapon_spear_left_thrust_02", "weapon_spear_left_thrust_03", "weapon_spear_left_thrust_04", "weapon_spear_left_thrust_05", "weapon_spear_left_thrust_06", "weapon_spear_left_thrust_07", "weapon_spear_left_thrust_08",
+            "weapon_spear_right_thrust_01", "weapon_spear_right_thrust_02", "weapon_spear_right_thrust_03", "weapon_spear_right_thrust_04", "weapon_spear_right_thrust_05", "weapon_spear_right_thrust_06", "weapon_spear_right_thrust_07", "weapon_spear_right_thrust_08",
+            "weapon_spear_up_thrust_01", "weapon_spear_up_thrust_02", "weapon_spear_up_thrust_03", "weapon_spear_up_thrust_04", "weapon_spear_up_thrust_05", "weapon_spear_up_thrust_06", "weapon_spear_up_thrust_07", "weapon_spear_up_thrust_08",
+            "weapon_spear_down_thrust_01", "weapon_spear_down_thrust_02", "weapon_spear_down_thrust_03", "weapon_spear_down_thrust_04", "weapon_spear_down_thrust_05", "weapon_spear_down_thrust_06", "weapon_spear_down_thrust_07", "weapon_spear_down_thrust_08",
 
             // Одежда игрока
             "HEAD_hair_left_move_01", "HEAD_hair_left_move_02", "HEAD_hair_left_move_03", "HEAD_hair_left_move_04", "HEAD_hair_left_move_05", "HEAD_hair_left_move_06", "HEAD_hair_left_move_07", "HEAD_hair_left_move_08", "HEAD_hair_left_move_09",
