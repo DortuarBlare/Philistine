@@ -4,7 +4,7 @@ import math.AABB;
 
 public class Furniture extends Object {
 
-    public Furniture(boolean noclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox, String texture) {
-        super(noclip, isLying, minX, minY, maxX, maxY, collisionBox, texture);
+    public Furniture(String texture, boolean noclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+        super(texture, noclip, isLying, minX, minY, maxX, maxY, collisionBox);
     }
 }

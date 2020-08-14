@@ -11,7 +11,8 @@ public abstract class Object {
     private boolean isLying;
     private boolean noclip;
 
-    public Object(boolean noclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox, String texture) {
+    public Object(String texture, boolean noclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+        this.texture = texture;
         this.noclip = noclip;
         this.isLying = isLying;
         this.minX = minX;
@@ -19,7 +20,6 @@ public abstract class Object {
         this.maxX = maxX;
         this.maxY = maxY;
         this.collisionBox = collisionBox;
-        this.texture = texture;
     }
 
     public int getMinX() { return minX; }

@@ -1,3 +1,5 @@
+package content;
+
 import org.lwjgl.openal.*;
 import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;

@@ -6,8 +6,8 @@ public class Weapon extends Object {
     private int damage;
     private String attackType;
 
-    public Weapon(int damage, String attackType, boolean noclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox, String texture) {
-        super(noclip, isLying, minX, minY, maxX, maxY, collisionBox, texture);
+    public Weapon(String texture, String attackType, int damage, boolean noclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+        super(texture, noclip, isLying, minX, minY, maxX, maxY, collisionBox);
         this.damage = damage;
         this.attackType = attackType;
     }

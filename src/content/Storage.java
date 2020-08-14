@@ -1,5 +1,7 @@
+package content;
+
 public class Storage {
-    static final int[] firstLevelWalls = {
+    public static final int[] firstLevelWalls = {
             111, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
             499, 232, 639, 236, // wall2
@@ -7,7 +9,7 @@ public class Storage {
             103, 139, 111, 332 // wall4
     };
 
-    static final int[] secondLevelWalls = {
+    public static final int[] secondLevelWalls = {
             0, 182, 94, 188, // wall0
             92, 140, 96, 184, // wall1
             98, 134, 526, 140, // wall2
@@ -17,24 +19,28 @@ public class Storage {
             0, 287, 92, 291 // wall6
     };
 
-    static final String[] aabbString = {
+    public static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
             "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "shirt_white", "shoes_brown"
     };
 
-    static final String[] soundString = {
-            "mainMenuTheme", "dungeonAmbient1", "stepStone", "swish", "slimeHurt", "changingArmor"
+    public static final String[] soundString = {
+            "mainMenuTheme", "dungeonAmbient1", "slimeHurt", "changingArmor"
     };
 
-    static final String[] textureString = {
+    public static final String[] playerSoundString = {
+            "stepStone", "swish"
+    };
+
+    public static final String[] textureString = {
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
-            "slime_left_01", "slime_left_02", "slime_left_03",
-            "slime_right_01", "slime_right_02", "slime_right_03",
             "level0", "level1", "level2", "level3", "MainMenu", "Press_enter", "box",
             "chestClosed", "chestOpened", "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
-            "armor0", "armor1", "armor2", "armor3", "armor4", "armor5", "shirt_white", "shoes_brown", "pants_greenish", "plate_shoes", "plate_pants", "plate_armor",
+            "armor0", "armor1", "armor2", "armor3", "armor4", "armor5",
+            "shirt_white", "shoes_brown", "pants_greenish", "plate_shoes", "plate_pants", "plate_armor",
 
+            // Анимации игрока
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",
             "player_walk_left_01", "player_walk_left_02", "player_walk_left_03", "player_walk_left_04", "player_walk_left_05", "player_walk_left_06", "player_walk_left_07", "player_walk_left_08", "player_walk_left_09",
             "player_walk_right_01", "player_walk_right_02", "player_walk_right_03", "player_walk_right_04", "player_walk_right_05", "player_walk_right_06", "player_walk_right_07", "player_walk_right_08", "player_walk_right_09",
@@ -47,6 +53,7 @@ public class Storage {
             "player_slash_down_01", "player_slash_down_02", "player_slash_down_03", "player_slash_down_04", "player_slash_down_05", "player_slash_down_06",
             "player_hurt_01", "player_hurt_02", "player_hurt_03", "player_hurt_04", "player_hurt_05", "player_hurt_06",
 
+            // Оружие
             "weapon_rapier_right_slash_01", "weapon_rapier_right_slash_02", "weapon_rapier_right_slash_03", "weapon_rapier_right_slash_04", "weapon_rapier_right_slash_05", "weapon_rapier_right_slash_06",
             "weapon_rapier_up_slash_01", "weapon_rapier_up_slash_02", "weapon_rapier_up_slash_03", "weapon_rapier_up_slash_04", "weapon_rapier_up_slash_05", "weapon_rapier_up_slash_06",
             "weapon_rapier_down_slash_01", "weapon_rapier_down_slash_02", "weapon_rapier_down_slash_03", "weapon_rapier_down_slash_04", "weapon_rapier_down_slash_05", "weapon_rapier_down_slash_06",
@@ -57,6 +64,12 @@ public class Storage {
             "weapon_longsword_up_slash_01", "weapon_longsword_up_slash_02", "weapon_longsword_up_slash_03", "weapon_longsword_up_slash_04", "weapon_longsword_up_slash_05", "weapon_longsword_up_slash_06",
             "weapon_longsword_down_slash_01", "weapon_longsword_down_slash_02", "weapon_longsword_down_slash_03", "weapon_longsword_down_slash_04", "weapon_longsword_down_slash_05", "weapon_longsword_down_slash_06",
 
+            "weapon_dagger_left_slash_01", "weapon_dagger_left_slash_02", "weapon_dagger_left_slash_03", "weapon_dagger_left_slash_04", "weapon_dagger_left_slash_05", "weapon_dagger_left_slash_06",
+            "weapon_dagger_right_slash_01", "weapon_dagger_right_slash_02", "weapon_dagger_right_slash_03", "weapon_dagger_right_slash_04", "weapon_dagger_right_slash_05", "weapon_dagger_right_slash_06",
+            "weapon_dagger_up_slash_01", "weapon_dagger_up_slash_02", "weapon_dagger_up_slash_03", "weapon_dagger_up_slash_04", "weapon_dagger_up_slash_05", "weapon_dagger_up_slash_06",
+            "weapon_dagger_down_slash_01", "weapon_dagger_down_slash_02", "weapon_dagger_down_slash_03", "weapon_dagger_down_slash_04", "weapon_dagger_down_slash_05", "weapon_dagger_down_slash_06",
+
+            // Одежда игрока
             "HEAD_hair_left_move_01", "HEAD_hair_left_move_02", "HEAD_hair_left_move_03", "HEAD_hair_left_move_04", "HEAD_hair_left_move_05", "HEAD_hair_left_move_06", "HEAD_hair_left_move_07", "HEAD_hair_left_move_08", "HEAD_hair_left_move_09",
             "HEAD_hair_right_move_01", "HEAD_hair_right_move_02", "HEAD_hair_right_move_03", "HEAD_hair_right_move_04", "HEAD_hair_right_move_05", "HEAD_hair_right_move_06", "HEAD_hair_right_move_07", "HEAD_hair_right_move_08", "HEAD_hair_right_move_09",
             "HEAD_hair_up_move_01", "HEAD_hair_up_move_02", "HEAD_hair_up_move_03", "HEAD_hair_up_move_04", "HEAD_hair_up_move_05", "HEAD_hair_up_move_06", "HEAD_hair_up_move_07", "HEAD_hair_up_move_08", "HEAD_hair_up_move_09",
@@ -309,6 +322,10 @@ public class Storage {
             "FEET_plate_shoes_up_slash_01", "FEET_plate_shoes_up_slash_02", "FEET_plate_shoes_up_slash_03", "FEET_plate_shoes_up_slash_04", "FEET_plate_shoes_up_slash_05", "FEET_plate_shoes_up_slash_06",
             "FEET_plate_shoes_down_slash_01", "FEET_plate_shoes_down_slash_02", "FEET_plate_shoes_down_slash_03", "FEET_plate_shoes_down_slash_04", "FEET_plate_shoes_down_slash_05", "FEET_plate_shoes_down_slash_06",
             "FEET_plate_shoes_hurt_01", "FEET_plate_shoes_hurt_02", "FEET_plate_shoes_hurt_03", "FEET_plate_shoes_hurt_04", "FEET_plate_shoes_hurt_05", "FEET_plate_shoes_hurt_06",
+
+            // Остальные мобы
+            "slime_left_01", "slime_left_02", "slime_left_03",
+            "slime_right_01", "slime_right_02", "slime_right_03",
 
             "skeleton_left_move_01", "skeleton_left_move_02", "skeleton_left_move_03", "skeleton_left_move_04", "skeleton_left_move_05", "skeleton_left_move_06", "skeleton_left_move_07", "skeleton_left_move_08", "skeleton_left_move_09",
             "skeleton_right_move_01", "skeleton_right_move_02", "skeleton_right_move_03", "skeleton_right_move_04", "skeleton_right_move_05", "skeleton_right_move_06", "skeleton_right_move_07", "skeleton_right_move_08", "skeleton_right_move_09",
