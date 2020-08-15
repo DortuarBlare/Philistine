@@ -8,7 +8,6 @@ import mobs.*;
 import objects.*;
 import objects.Object;
 import org.lwjgl.glfw.*;
-import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
@@ -28,7 +27,7 @@ public class Window {
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
-    private HashMap<Integer, Object> objectMap;
+    private ArrayList<Object> objectList;
     private String level = "MainMenu";
     private boolean forScale = true;
     boolean key_E_Pressed = false;
@@ -83,7 +82,7 @@ public class Window {
         textureMap = new HashMap<String, Integer>();
         soundMap = new HashMap<String, Integer>();
         aabbMap = new HashMap<String, AABB>();
-        objectMap = new HashMap<Integer, Object>();
+        objectList = new ArrayList<Object>();
 
         AudioMaster.init();
         AudioMaster.setListenerData();
@@ -111,11 +110,11 @@ public class Window {
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
 
         // Добавление всех объектов и мобов
-        objectMap.put(0, new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
-        objectMap.put(1, new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
-        objectMap.put(2, new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218)));
-        objectMap.put(3, new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218)));
-        objectMap.put(4, new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        objectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
+        objectList.add(new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
+        objectList.add(new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218)));
+        objectList.add(new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218)));
+        objectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
         mobList.add(new Slime(350, 300, 1, 50, 0, 5));
@@ -139,10 +138,10 @@ public class Window {
                         mob.getTimer().purge();
                     }
                 }
-                for (int i = 0; i < objectMap.size(); i++) {
-                    if (objectMap.get(i) instanceof Coin) {
-                        objectMap.get(i).getTimer().cancel();
-                        objectMap.get(i).getTimer().purge();
+                for (Object object : objectList) {
+                    if (object instanceof Coin) {
+                        object.getTimer().cancel();
+                        object.getTimer().purge();
                     }
                 }
             }
@@ -215,11 +214,11 @@ public class Window {
                     torch_g++;
 
                     // Отрисовка всех объектов
-                    for (int i = 0; i < objectMap.size(); i++) {
-                        Object object = objectMap.get(i);
+                    for (int i = 0; i < objectList.size(); i++) {
+                        Object object = objectList.get(i);
                         if (!object.isLying()) continue;
                         if (object instanceof Coin) {
-                            Coin coin = (Coin) objectMap.get(i);
+                            Coin coin = (Coin) objectList.get(i);
                             if (!coin.isAnimationTaskStarted()) coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
                             coin.setTexture("coin_0" + coin.getAnimationTime());
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
@@ -231,9 +230,9 @@ public class Window {
                         }
                     }
                     if (key_E_Pressed) {
-                        for (int i = 0; i < objectMap.size(); i++) {
-                            if (objectMap.get(i) instanceof Armor) {
-                                Armor changingArmor = (Armor) objectMap.get(i);
+                        for (int i = 0; i < objectList.size(); i++) {
+                            if (objectList.get(i) instanceof Armor) {
+                                Armor changingArmor = (Armor) objectList.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), changingArmor.getCollisionBox())) {
                                     Armor playerArmor = player.getArmorType(changingArmor);
                                     changingArmor.setIsLying(false);
@@ -247,12 +246,12 @@ public class Window {
                                     changingArmor.setIsLying(true);
                                     changingArmor.getCollisionBox().update(changingArmor.getMinX() + 17, changingArmor.getMinY() + 32,
                                             changingArmor.getMinX() + 46, changingArmor.getMinY() + 54);
-                                    objectMap.put(i, changingArmor);
+                                    objectList.set(i, changingArmor);
                                     break;
                                 }
                             }
-                            else if (objectMap.get(i) instanceof Weapon) {
-                                Weapon changingWeapon = (Weapon) objectMap.get(i);
+                            else if (objectList.get(i) instanceof Weapon) {
+                                Weapon changingWeapon = (Weapon) objectList.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), changingWeapon.getCollisionBox())) {
                                     Weapon playerWeapon = player.getWeapon();
                                     changingWeapon.setIsLying(false);
@@ -267,24 +266,26 @@ public class Window {
                                     changingWeapon.setIsLying(true);
                                     changingWeapon.getCollisionBox().update(changingWeapon.getMinX() + 81, changingWeapon.getMinY() + 81,
                                             changingWeapon.getMinX() + 109, changingWeapon.getMinY() + 109);
-                                    objectMap.put(i, changingWeapon);
+                                    objectList.set(i, changingWeapon);
                                     break;
                                 }
                             }
-                            else if (objectMap.get(i) instanceof Container) {
-                                Container change = (Container) objectMap.get(i);
+                            else if (objectList.get(i) instanceof Container) {
+                                Container change = (Container) objectList.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), change.getCollisionBox())) {
                                     change.setTexture("chestOpened");
-                                    for (int h = 0; h < change.loot.size(); h++)
-                                        objectMap.put(objectMap.size(), change.loot.get(h));
-                                    objectMap.put(i, change);
+                                    for (int h = 0; h < change.loot.size(); h++) {
+                                        objectList.add(change.loot.get(h));
+                                        change.loot.remove(h);
+                                        h--;
+                                    }
                                     break;
                                 }
                             }
-                            else if (objectMap.get(i) instanceof Coin) {
-                                objectMap.get(i).getTimer().cancel();
-                                objectMap.get(i).getTimer().purge();
-                                objectMap.remove(i);
+                            else if (objectList.get(i) instanceof Coin) {
+                                objectList.get(i).getTimer().cancel();
+                                objectList.get(i).getTimer().purge();
+                                objectList.remove(i);
                                 player.setMoney(player.getMoney() + 10);
                                 coinSound.play(soundMap.get("pickedCoin"));
                                 break;
@@ -379,8 +380,8 @@ public class Window {
                             }
                         }
 
-                        for (int i = 0; i < objectMap.size(); i++) {
-                            Object object = objectMap.get(i);
+                        for (int i = 0; i < objectList.size(); i++) {
+                            Object object = objectList.get(i);
                             if (!(object instanceof Furniture) && !(object instanceof Container)) {
                                 // Столкновение объектов со стенами
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall1")))
@@ -393,8 +394,8 @@ public class Window {
                                     object.stopDown();
 
                                 // Столкновение объектов с объектами
-                                for (int j = i + 1; j < objectMap.size(); j++) {
-                                    Object object2 = objectMap.get(j);
+                                for (int j = i + 1; j < objectList.size(); j++) {
+                                    Object object2 = objectList.get(j);
                                     if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
                                         if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox()))
                                             object.moveLeft();
