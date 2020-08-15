@@ -508,9 +508,60 @@ public class Window {
                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
                 createQuadTexture(0, 19, 34, 53);
 
-                glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
-                createQuadTexture(632, 348, 640, 360);
+                // money
+                int coin = 1234567890;
+                int tempCoin = coin;
+                int tempX0 = 632, tempX1 = 640, tempY0 = 0, tempY1 = 12;
+                for (int i = 0; i < getCountsOfDigits(coin); i++){
+                    switch (tempCoin % 10){
+                        case 0:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 1:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_1"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 2:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_2"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 3:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_3"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 4:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_4"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 5:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_5"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 6:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_6"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 7:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_7"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 8:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_8"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 9:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_9"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+
+                    }
+                    tempCoin = tempCoin / 10;
+                    tempX0 -= 8;
+                    tempX1 -= 8;
+                }
             }
+
 
             // Отрисовка экипировки и анимации
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getBodyAnimation()));
@@ -578,5 +629,9 @@ public class Window {
             glScaled(3, 3, 1);
             forScale = false;
         }
+    }
+
+    public static int getCountsOfDigits(long number) {
+        return(number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
     }
 }
