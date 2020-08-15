@@ -2,6 +2,9 @@ package mobs;
 
 import math.AABB;
 
+import java.util.Timer;
+
+
 public abstract class Mob {
     private int x, y;
     private int speed;
@@ -11,6 +14,7 @@ public abstract class Mob {
     private String moveDirection;
     private boolean dead;
     private boolean immortal;
+    private Timer timer = new Timer();
 
     public Mob(int x, int y, int speed, int health, int armor, int damage, AABB hitBox, AABB collisionBox) {
         this.x = x;
@@ -125,6 +129,10 @@ public abstract class Mob {
     public boolean isImmortal() { return immortal; }
 
     public void setImmortal(boolean immortal) { this.immortal = immortal; }
+
+    public Timer getTimer() { return timer; }
+
+    public void setTimer(Timer timer) { this.timer = timer; }
 
     public void takeDamage(int Damage) {this.health = this.health - (int)(Damage * ((double)(100 - (armor * 2)) / 100));}
 }

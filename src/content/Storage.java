@@ -39,6 +39,7 @@ public class Storage {
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
             "armor0", "armor1", "armor2", "armor3", "armor4", "armor5",
             "shirt_white", "shoes_brown", "pants_greenish", "plate_shoes", "plate_pants", "plate_armor",
+            "longsword", "rapier",
 
             // Анимации игрока
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",

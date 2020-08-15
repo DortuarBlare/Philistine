@@ -8,6 +8,7 @@ import mobs.*;
 import objects.Armor;
 import objects.Furniture;
 import objects.Object;
+import objects.Weapon;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.*;
@@ -115,6 +116,8 @@ public class Window {
         objectMap.put(1, new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
         objectMap.put(2, new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218)));
         objectMap.put(3, new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218)));
+        objectMap.put(4, new Weapon("rapier", "slash", 10, true, true, 200, 100, 392, 292, new AABB(281, 181, 309, 209)));
+
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
         mobList.add(new Slime(350, 300, 1, 50, 0, 5));
         mobList.add(new Slime(330, 300, 1, 50, 0, 5));
@@ -133,8 +136,12 @@ public class Window {
                 AL10.alDeleteBuffers(soundMap.get("mainMenuTheme"));
                 AL10.alDeleteBuffers(soundMap.get("dungeonAmbient1"));
                 glfwSetWindowShouldClose(window, true);
-                player.getTimer().cancel();
-                player.getTimer().purge();
+                for (Mob mob : mobList) {
+                    if (!mob.isDead()) {
+                        mob.getTimer().cancel();
+                        mob.getTimer().purge();
+                    }
+                }
             }
             if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
                 level = "FirstLevel";
@@ -213,22 +220,43 @@ public class Window {
                     }
                     if (key_E_Pressed) {
                         for (int i = 0; i < objectMap.size(); i++) {
-                            Object object = objectMap.get(i);
-                            if (object instanceof Armor) {
-                                if (AABB.AABBvsAABB(player.getCollisionBox(), object.getCollisionBox())) {
-                                    Armor armor = player.getArmorType((Armor) object);
-                                    object.setIsLying(false);
-                                    player.setArmor((Armor) object);
+                            if (objectMap.get(i) instanceof Armor) {
+                                Armor changingArmor = (Armor) objectMap.get(i);
+                                if (AABB.AABBvsAABB(player.getCollisionBox(), changingArmor.getCollisionBox())) {
+                                    Armor playerArmor = player.getArmorType(changingArmor);
+                                    changingArmor.setIsLying(false);
+                                    player.setArmor(changingArmor);
                                     armorChange.play(soundMap.get("changingArmor"));
-                                    object = armor;
-                                    object.setMinX(player.getCollisionBox().getMin().x - 20);
-                                    object.setMinY(player.getCollisionBox().getMin().y - 30);
-                                    object.setMaxX(player.getCollisionBox().getMin().x + 44);
-                                    object.setMaxY(player.getCollisionBox().getMin().y + 34);
-                                    object.setIsLying(true);
-                                    object.getCollisionBox().update(object.getMinX() + 17, object.getMinY() + 32,
-                                            object.getMinX() + 46, object.getMinY() + 54);
-                                    objectMap.put(i, object);
+                                    changingArmor = playerArmor;
+                                    changingArmor.setMinX(player.getCollisionBox().getMin().x - 20);
+                                    changingArmor.setMinY(player.getCollisionBox().getMin().y - 30);
+                                    changingArmor.setMaxX(player.getCollisionBox().getMin().x + 44);
+                                    changingArmor.setMaxY(player.getCollisionBox().getMin().y + 34);
+                                    changingArmor.setIsLying(true);
+                                    changingArmor.getCollisionBox().update(changingArmor.getMinX() + 17, changingArmor.getMinY() + 32,
+                                            changingArmor.getMinX() + 46, changingArmor.getMinY() + 54);
+                                    objectMap.put(i, changingArmor);
+                                    break;
+                                }
+                            }
+                            else if (objectMap.get(i) instanceof Weapon) {
+                                Weapon changingWeapon = (Weapon) objectMap.get(i);
+                                if (AABB.AABBvsAABB(player.getCollisionBox(), changingWeapon.getCollisionBox())) {
+                                    Weapon playerWeapon = player.getWeapon();
+                                    changingWeapon.setIsLying(false);
+                                    changingWeapon.resize();
+                                    player.setWeapon(changingWeapon);
+                                    armorChange.play(soundMap.get("changingArmor"));
+                                    changingWeapon = playerWeapon;
+                                    changingWeapon.setMinX(player.getCollisionBox().getMin().x - 64);
+                                    changingWeapon.setMinY(player.getCollisionBox().getMin().y - 64);
+                                    changingWeapon.setMaxX(player.getCollisionBox().getMin().x + 128);
+                                    changingWeapon.setMaxY(player.getCollisionBox().getMin().y + 128);
+                                    changingWeapon.setIsLying(true);
+                                    changingWeapon.getCollisionBox().update(changingWeapon.getMinX() + 81, changingWeapon.getMinY() + 81,
+                                            changingWeapon.getMinX() + 109, changingWeapon.getMinY() + 109);
+                                    objectMap.put(i, changingWeapon);
+                                    break;
                                 }
                             }
                         }
