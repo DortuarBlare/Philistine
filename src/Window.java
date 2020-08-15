@@ -6,6 +6,7 @@ import math.AABB;
 import math.CollisionMessage;
 import mobs.*;
 import objects.Armor;
+import objects.Container;
 import objects.Furniture;
 import objects.Object;
 import objects.Weapon;
@@ -112,7 +113,7 @@ public class Window {
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
 
         // Добавление всех объектов и мобов
-        objectMap.put(0, new Furniture("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
+        objectMap.put(0, new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
         objectMap.put(1, new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
         objectMap.put(2, new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218)));
         objectMap.put(3, new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218)));
@@ -238,8 +239,7 @@ public class Window {
                                     objectMap.put(i, changingArmor);
                                     break;
                                 }
-                            }
-                            else if (objectMap.get(i) instanceof Weapon) {
+                            } else if (objectMap.get(i) instanceof Weapon) {
                                 Weapon changingWeapon = (Weapon) objectMap.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), changingWeapon.getCollisionBox())) {
                                     Weapon playerWeapon = player.getWeapon();
@@ -256,6 +256,16 @@ public class Window {
                                     changingWeapon.getCollisionBox().update(changingWeapon.getMinX() + 81, changingWeapon.getMinY() + 81,
                                             changingWeapon.getMinX() + 109, changingWeapon.getMinY() + 109);
                                     objectMap.put(i, changingWeapon);
+                                    break;
+                                }
+                            } else if (objectMap.get(i) instanceof Container){
+                                Container change = (Container) objectMap.get(i);
+                                if (AABB.AABBvsAABB(player.getCollisionBox(), change.getCollisionBox())){
+                                    change.setTexture("chestOpened");
+                                    for (int h = 0; h < change.loot.size(); h++){
+                                        objectMap.put(objectMap.size(), change.loot.get(h));
+                                    }
+                                    objectMap.put(i, change);
                                     break;
                                 }
                             }
