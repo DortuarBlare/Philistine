@@ -358,12 +358,11 @@ public class Window {
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall3")))
                                     object.stopDown();
 
-                                for (int j = 0; j < objectMap.size(); j++) {
+                                for (int j = i + 1; j < objectMap.size(); j++) {
                                     Object object2 = objectMap.get(j);
                                     if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
-                                        if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())) {
+                                        while (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())){
                                             object.stopRight();
-                                            object2.stopLeft();
                                         }
                                     }
                                 }
