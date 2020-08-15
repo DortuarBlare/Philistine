@@ -36,6 +36,19 @@ public class Weapon extends Object {
         }
     }
 
+    public void resize() {
+        switch (getTexture()) {
+            case "longsword":
+            case "rapier": {
+                setMinX(64);
+                setMinY(64);
+                setMaxX(128);
+                setMaxY(128);
+                break;
+            }
+        }
+    }
+
     public int getDamage() { return damage; }
 
     public void setDamage(int damage) { this.damage = damage; }

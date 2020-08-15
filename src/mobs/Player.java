@@ -27,7 +27,6 @@ public class Player extends Mob {
     private int player_animation_attack_left_i = 1, player_animation_attack_right_i = 1, player_animation_attack_up_i = 1,  player_animation_attack_down_i = 1;
     private int time = 0;
     private String knockbackDirection;
-//    private Timer timer = new Timer();
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
