@@ -56,7 +56,7 @@ public class Window {
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         // Работа с экраном
-        window = glfwCreateWindow(1920, 1080, "Philistine", /*glfwGetPrimaryMonitor()*/NULL, NULL);
+        window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
@@ -236,7 +236,8 @@ public class Window {
                                     objectMap.put(i, changingArmor);
                                     break;
                                 }
-                            } else if (objectMap.get(i) instanceof Weapon) {
+                            }
+                            else if (objectMap.get(i) instanceof Weapon) {
                                 Weapon changingWeapon = (Weapon) objectMap.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), changingWeapon.getCollisionBox())) {
                                     Weapon playerWeapon = player.getWeapon();
@@ -255,13 +256,13 @@ public class Window {
                                     objectMap.put(i, changingWeapon);
                                     break;
                                 }
-                            } else if (objectMap.get(i) instanceof Container){
+                            }
+                            else if (objectMap.get(i) instanceof Container) {
                                 Container change = (Container) objectMap.get(i);
-                                if (AABB.AABBvsAABB(player.getCollisionBox(), change.getCollisionBox())){
+                                if (AABB.AABBvsAABB(player.getCollisionBox(), change.getCollisionBox())) {
                                     change.setTexture("chestOpened");
-                                    for (int h = 0; h < change.loot.size(); h++){
+                                    for (int h = 0; h < change.loot.size(); h++)
                                         objectMap.put(objectMap.size(), change.loot.get(h));
-                                    }
                                     objectMap.put(i, change);
                                     break;
                                 }
@@ -335,7 +336,8 @@ public class Window {
                     }
 
                     // Проверка всех мобов на столкновение со стенами, объектами и другими мобами. Объекты с объектами
-                    for (Mob mob : mobList) {
+                    for (int i1 = 0; i1 < mobList.size(); i1++) {
+                        Mob mob = mobList.get(i1);
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                             mob.stopRight();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
@@ -347,8 +349,8 @@ public class Window {
 
                         for (int i = 0; i < objectMap.size(); i++) {
                             Object object = objectMap.get(i);
-
                             if (!(object instanceof Furniture) && !(object instanceof Container)) {
+                                // Столкновение объектов со стенами
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall1")))
                                     object.stopRight();
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall4")))
@@ -358,12 +360,11 @@ public class Window {
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall3")))
                                     object.stopDown();
 
+                                // Столкновение объектов с объектами
                                 for (int j = i + 1; j < objectMap.size(); j++) {
                                     Object object2 = objectMap.get(j);
                                     if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
-                                        while (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())){
-                                            object.stopRight();
-                                        }
+                                        if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())) object.moveLeft();
                                     }
                                 }
                             }
@@ -373,7 +374,8 @@ public class Window {
                                 mob.stop(CollisionMessage.getMessage());
                         }
 
-                        for (Mob mob2 : mobList) {
+                        for (int j1 = i1 + 1; j1 < mobList.size(); j1++) {
+                            Mob mob2 = mobList.get(j1);
                             if (!(mob instanceof Player)) {
                                 if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
                                     mob.stop(CollisionMessage.getMessage());
@@ -505,6 +507,9 @@ public class Window {
                 if (player.getArmor() < 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor() / 5));
                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
                 createQuadTexture(0, 19, 34, 53);
+
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
+                createQuadTexture(632, 348, 640, 360);
             }
 
             // Отрисовка экипировки и анимации

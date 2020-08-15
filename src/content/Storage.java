@@ -40,6 +40,7 @@ public class Storage {
             "armor0", "armor1", "armor2", "armor3", "armor4", "armor5",
             "shirt_white", "shoes_brown", "pants_greenish", "plate_shoes", "plate_pants", "plate_armor",
             "longsword", "rapier", "coin_01", "scroll5", "potionRed",
+            "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9",
 
             // Анимации игрока
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",
