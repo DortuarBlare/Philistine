@@ -267,6 +267,10 @@ public class Window {
                                     break;
                                 }
                             }
+                            else if (objectMap.get(i) instanceof Coin){
+                                objectMap.remove(i);
+                                player.setMoney(player.getMoney() + 10);
+                            }
                         }
                     }
                     key_E_Pressed = false;
