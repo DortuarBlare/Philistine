@@ -139,7 +139,7 @@ public class Window {
             if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
                 level = "FirstLevel";
                 glTranslated(forCameraInMainMenu, 0, 0);
-                player.setX(200);
+                player.setX(150);
                 player.setY(150);
                 player.setSpeed(2);
             }
@@ -156,6 +156,7 @@ public class Window {
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             // Переключение уровня
             switch (level) {
                 case "MainMenu": {
@@ -206,7 +207,7 @@ public class Window {
                     // Отрисовка всех объектов
                     for (int i = 0; i < objectMap.size(); i++) {
                         Object object = objectMap.get(i);
-                        if (!object.getIsLying()) continue;
+                        if (!object.isLying()) continue;
                         glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
@@ -245,29 +246,29 @@ public class Window {
                                 slime.getHitbox().update(slime.getX() + 3, slime.getY() + 2, slime.getX() + 14, slime.getY() + 10);
                                 slime.getCollisionBox().update(slime.getX() + 1, slime.getY() + 1, slime.getX() + 16, slime.getY() + 11);
 
-                                // Преследование игрока слаймом, обновление хитбокса и перерисовка текстуры
+                                // Преследование игрока слаймом
                                 if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
                                     if (slime.getHitbox().getMin().x > player.getHitbox().getMin().x) slime.moveLeft();
                                     else slime.moveRight();
                                     if (slime.getHitbox().getMin().y > player.getHitbox().getMin().y) slime.moveUp();
                                     else slime.moveDown();
                                 }
-                                // Получение урона от слизня
+                                // Игрок получает урона от слизня
                                 if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.isImmortal()) {
-                                    if (player.getX() > slime.getX()) player.setKnockbackDirection("Right");
-                                    else if (player.getX() < slime.getX()) player.setKnockbackDirection("Left");
-                                    else if (player.getY() > slime.getY()) player.setKnockbackDirection("Down");
-                                    else if (player.getY() < slime.getY()) player.setKnockbackDirection("Up");
+                                    if (player.getX() > slime.getX() && player.getY() > slime.getY()) player.setKnockbackDirection("right");
+                                    else if (player.getX() < slime.getX()) player.setKnockbackDirection("left");
+                                    else if (player.getY() > slime.getY()) player.setKnockbackDirection("down");
+                                    else if (player.getY() < slime.getY()) player.setKnockbackDirection("up");
                                     player.takeDamage(slime.getDamage());
                                     player.setImmortal(true);
                                     player.getTimer().schedule(player.getKnockbackTask(), 0, 10);
                                 }
                                 // Слизень получает урон от игрока
                                 if (AABB.AABBvsAABB(player.getAttackBox(), slime.getHitbox()) && !slime.isImmortal()) {
-                                    if (player.getX() > slime.getX()) slime.setDirection("Left");
-                                    else if (player.getX() < slime.getX()) slime.setDirection("Right");
-                                    else if (player.getY() > slime.getY()) slime.setDirection("Up");
-                                    else if (player.getY() < slime.getY()) slime.setDirection("Down");
+                                    if (player.isAttackLeft()) slime.setKnockbackDirection("left");
+                                    else if (player.isAttackRight()) slime.setKnockbackDirection("right");
+                                    else if (player.isAttackUp()) slime.setKnockbackDirection("up");
+                                    else if (player.isAttackDown()) slime.setKnockbackDirection("down");
                                     slime.setHealth(slime.getHealth() - player.getDamage());
                                     slime.setImmortal(true);
                                     slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
@@ -278,7 +279,7 @@ public class Window {
                                     player.setImmortal(false);
                                 }
                                 if (slime.getKnockbackTime() >= 25) {
-                                    slime.stopTimerSlime();
+                                    slime.stopTimer();
                                     slime.setImmortal(false);
                                 }
 
@@ -311,13 +312,14 @@ public class Window {
 
                         for (int i = 0; i < objectMap.size(); i++) {
                             Object object = objectMap.get(i);
-                            if (object.getIsNoclip()) continue;
-                            if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox())) mob.stop(CollisionMessage.getMessage());
+                            if (object.isNoclip()) continue;
+                            if (AABB.AABBvsAABB3(mob.getCollisionBox(), object.getCollisionBox()))
+                                mob.stop(CollisionMessage.getMessage());
                         }
 
                         for (Mob mob2 : mobList) {
                             if (!(mob instanceof Player)) {
-                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
+                                if (AABB.AABBvsAABB3(mob.getCollisionBox(), mob2.getCollisionBox()))
                                     mob.stop(CollisionMessage.getMessage());
                             }
                         }
@@ -430,9 +432,8 @@ public class Window {
                 }
             }
 
-            //Движение игрока и обновление одежды
+            // Метод для обработки игрока и отрисовка интерфейса
             if (!level.equals("MainMenu")) {
-                // Метод для обработки игрока
                 player.update(window);
 
                 // Полоска здоровья
@@ -450,7 +451,7 @@ public class Window {
                 createQuadTexture(0, 19, 34, 53);
             }
 
-            // Отрисовка экипировки, анимации и интерфейса
+            // Отрисовка экипировки и анимации
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getBodyAnimation()));
             createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             if (!player.getFeetTexture().equals("nothing")) {
@@ -469,21 +470,23 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getShouldersAnimation()));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if (!player.getHandsTexture().equals("nothing")) {
-                glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getHandsAnimation()));
+            if (!player.getBeltTexture().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getBeltAnimation()));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
             if (!player.getHeadTexture().equals("nothing")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getHeadAnimation()));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if (!player.getBeltTexture().equals("nothing")) {
-                glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getBeltAnimation()));
+            if (!player.getHandsTexture().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getHandsAnimation()));
                 createQuadTexture(player.getX(), player.getY(), player.getX() + 64, player.getY() + 64);
             }
-            if ((player.isAttackLeft() || player.isAttackRight() || player.isAttackUp() || player.isAttackDown()) && !player.isDead() && !level.equals("MainMenu")) {
+            if ((player.isAttackLeft() || player.isAttackRight() || player.isAttackUp() ||
+                    player.isAttackDown()) && !player.isDead() && !level.equals("MainMenu")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getWeaponAnimation()));
-                createQuadTexture(player.getX() - 64, player.getY() - 64, player.getX() + 128, player.getY() + 128);
+                createQuadTexture(player.getX() - player.getWeapon().getMinX(), player.getY() - player.getWeapon().getMinY(),
+                        player.getX() + player.getWeapon().getMaxX(), player.getY() + player.getWeapon().getMaxY());
             }
 
             glfwPollEvents();

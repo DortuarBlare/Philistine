@@ -7,14 +7,24 @@ public abstract class Object {
     private int maxX, maxY;
     private AABB collisionBox;
     private String texture;
-    private boolean isInteractive;
     private boolean isLying;
-    private boolean noclip;
+    private boolean isNoclip;
 
-    public Object(String texture, boolean noclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+    public Object(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
         this.texture = texture;
-        this.noclip = noclip;
+        this.isNoclip = isNoclip;
         this.isLying = isLying;
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.collisionBox = collisionBox;
+    }
+
+    public Object(String texture, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+        this.texture = texture;
+        this.isNoclip = true;
+        this.isLying = false;
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
@@ -44,13 +54,9 @@ public abstract class Object {
 
     public void setTexture(String texture) { this.texture = texture; }
 
-    public boolean getIsInteractive() { return isInteractive; }
-
-    public void setIsInteractive(boolean isInteractive) { this.isInteractive = isInteractive; }
-
-    public boolean getIsLying() { return isLying; }
+    public boolean isLying() { return isLying; }
 
     public void setIsLying(boolean isLying) { this.isLying = isLying; }
 
-    public boolean getIsNoclip() { return noclip; }
+    public boolean isNoclip() { return isNoclip; }
 }
