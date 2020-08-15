@@ -5,11 +5,8 @@ import content.Texture;
 import math.AABB;
 import math.CollisionMessage;
 import mobs.*;
-import objects.Armor;
-import objects.Container;
-import objects.Furniture;
+import objects.*;
 import objects.Object;
-import objects.Weapon;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.*;
@@ -59,7 +56,7 @@ public class Window {
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         // Работа с экраном
-        window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
+        window = glfwCreateWindow(1920, 1080, "Philistine", /*glfwGetPrimaryMonitor()*/NULL, NULL);
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
@@ -337,7 +334,7 @@ public class Window {
                         }
                     }
 
-                    // Проверка всех мобов на столкновение со стенами, объектами и другими мобами
+                    // Проверка всех мобов на столкновение со стенами, объектами и другими мобами. Объекты с объектами
                     for (Mob mob : mobList) {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                             mob.stopRight();
@@ -350,11 +347,8 @@ public class Window {
 
                         for (int i = 0; i < objectMap.size(); i++) {
                             Object object = objectMap.get(i);
-                            if (object.isNoclip()) continue;
-                            if (AABB.AABBvsAABB3(mob.getCollisionBox(), object.getCollisionBox()))
-                                mob.stop(CollisionMessage.getMessage());
 
-                            if ((object instanceof Weapon) || (object instanceof Armor)) {
+                            if (!(object instanceof Furniture) && !(object instanceof Container)) {
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall1")))
                                     object.stopRight();
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall4")))
@@ -363,12 +357,26 @@ public class Window {
                                     object.stopUp();
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall3")))
                                     object.stopDown();
+
+                                for (int j = 0; j < objectMap.size(); j++) {
+                                    Object object2 = objectMap.get(j);
+                                    if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
+                                        if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())) {
+                                            object.stopRight();
+                                            object2.stopLeft();
+                                        }
+                                    }
+                                }
                             }
+
+                            if (object.isNoclip()) continue;
+                            if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
+                                mob.stop(CollisionMessage.getMessage());
                         }
 
                         for (Mob mob2 : mobList) {
                             if (!(mob instanceof Player)) {
-                                if (AABB.AABBvsAABB3(mob.getCollisionBox(), mob2.getCollisionBox()))
+                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
                                     mob.stop(CollisionMessage.getMessage());
                             }
                         }
