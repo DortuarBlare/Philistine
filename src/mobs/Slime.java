@@ -9,7 +9,7 @@ public class Slime extends Mob {
     private int knockbackTime = 0, animationTime = 1;
     private String knockbackDirection;
     private boolean animationTaskStarted = false;
-    private Timer timer = new Timer();
+//    private Timer timer = new Timer();
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
@@ -37,9 +37,9 @@ public class Slime extends Mob {
     public void stopTimer() {
         knockbackTime = 0;
         animationTaskStarted = false;
-        timer.cancel();
-        timer.purge();
-        timer = new Timer();
+        getTimer().cancel();
+        getTimer().purge();
+        setTimer(new Timer());
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
@@ -65,8 +65,6 @@ public class Slime extends Mob {
 
     @Override
     public void moveDown() { setY(getY() + getSpeed()); }
-
-    public Timer getTimer() { return timer; }
 
     public TimerTask getKnockbackTask() { return knockbackTask; }
 

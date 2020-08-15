@@ -27,7 +27,7 @@ public class Player extends Mob {
     private int player_animation_attack_left_i = 1, player_animation_attack_right_i = 1, player_animation_attack_up_i = 1,  player_animation_attack_down_i = 1;
     private int time = 0;
     private String knockbackDirection;
-    private Timer timer = new Timer();
+//    private Timer timer = new Timer();
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
@@ -68,9 +68,9 @@ public class Player extends Mob {
 
     public void stopTimer() {
         time = 0;
-        timer.cancel();
-        timer.purge();
-        timer = new Timer();
+        getTimer().cancel();
+        getTimer().purge();
+        setTimer(new Timer());
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
@@ -441,8 +441,6 @@ public class Player extends Mob {
     public Weapon getWeapon() { return weapon; }
 
     public void setWeapon(Weapon weapon) { this.weapon = weapon; }
-
-    public Timer getTimer() { return timer; }
 
     public TimerTask getKnockbackTask() { return knockbackTask; }
 

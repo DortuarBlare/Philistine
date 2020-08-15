@@ -133,8 +133,12 @@ public class Window {
                 AL10.alDeleteBuffers(soundMap.get("mainMenuTheme"));
                 AL10.alDeleteBuffers(soundMap.get("dungeonAmbient1"));
                 glfwSetWindowShouldClose(window, true);
-                player.getTimer().cancel();
-                player.getTimer().purge();
+                for (Mob mob : mobList) {
+                    if (!mob.isDead()) {
+                        mob.getTimer().cancel();
+                        mob.getTimer().purge();
+                    }
+                }
             }
             if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
                 level = "FirstLevel";
