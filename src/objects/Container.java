@@ -14,16 +14,16 @@ public class Container extends Object {
         for (int i = 0; i < 2; i++){
             double b = random();
             if (b >= 0 && b < 0.3){
-                loot.add(loot.size() ,new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
+                loot.add(loot.size() ,new Coin("coin_01", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 15, this.getMaxY() + 16, new AABB(317, 132, 410, 218)));
                 System.out.println("coin");
             } else if (b >= 0.3 && b < 0.4){
-                loot.add(loot.size() ,new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
+                loot.add(loot.size() ,new Potion("potionRed", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 10, this.getMaxY() + 16, new AABB(317, 132, 410, 218)));
                 System.out.println("potion");
             } else if (b >= 0.4 && b < 0.55){
-                loot.add(loot.size() ,new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
+                loot.add(loot.size() ,new Scroll("scroll5", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 20, this.getMaxY() + 16, new AABB(317, 132, 410, 218)));
                 System.out.println("scroll");
             } else if (b >= 0.55 && b < 0.75){
-                loot.add(loot.size() ,new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
+                loot.add(loot.size() ,new Armor("shirt_white", "torso", 1, true, true, this.getMaxX(), this.getMaxY() + 64, this.getMaxX() + 64, this.getMaxY(), new AABB(317, 132, 410, 218)));
                 System.out.println("armor");
             } else if (b >= 0.75 && b <= 1){
                 System.out.println("nothing");
