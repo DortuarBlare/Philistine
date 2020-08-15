@@ -56,7 +56,7 @@ public class Window {
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         // Работа с экраном
-        window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
+        window = glfwCreateWindow(1920, 1080, "Philistine", /*glfwGetPrimaryMonitor()*/NULL, NULL);
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
@@ -115,7 +115,7 @@ public class Window {
         objectMap.put(1, new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
         objectMap.put(2, new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218)));
         objectMap.put(3, new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218)));
-        objectMap.put(4, new Weapon("rapier", "slash", 10, true, true, 200, 100, 392, 292, new AABB(281, 181, 309, 209)));
+        objectMap.put(4, new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
         mobList.add(new Slime(350, 300, 1, 50, 0, 5));
@@ -132,13 +132,17 @@ public class Window {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 AudioMaster.destroy();
-                AL10.alDeleteBuffers(soundMap.get("mainMenuTheme"));
-                AL10.alDeleteBuffers(soundMap.get("dungeonAmbient1"));
                 glfwSetWindowShouldClose(window, true);
                 for (Mob mob : mobList) {
                     if (!mob.isDead()) {
                         mob.getTimer().cancel();
                         mob.getTimer().purge();
+                    }
+                }
+                for (int i = 0; i < objectMap.size(); i++) {
+                    if (objectMap.get(i) instanceof Coin) {
+                        objectMap.get(i).getTimer().cancel();
+                        objectMap.get(i).getTimer().purge();
                     }
                 }
             }
@@ -214,8 +218,17 @@ public class Window {
                     for (int i = 0; i < objectMap.size(); i++) {
                         Object object = objectMap.get(i);
                         if (!object.isLying()) continue;
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
-                        createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
+                        if (object instanceof Coin) {
+                            Coin coin = (Coin) objectMap.get(i);
+                            if (!coin.isAnimationTaskStarted()) coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
+                            coin.setTexture("coin_0" + coin.getAnimationTime());
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
+                            createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
+                        }
+                        else {
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                            createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
+                        }
                     }
                     if (key_E_Pressed) {
                         for (int i = 0; i < objectMap.size(); i++) {
@@ -269,6 +282,8 @@ public class Window {
                                 }
                             }
                             else if (objectMap.get(i) instanceof Coin) {
+                                objectMap.get(i).getTimer().cancel();
+                                objectMap.get(i).getTimer().purge();
                                 objectMap.remove(i);
                                 player.setMoney(player.getMoney() + 10);
                                 coinSound.play(soundMap.get("pickedCoin"));
@@ -353,6 +368,15 @@ public class Window {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
                             mob.stopDown();
 
+                        // Столкновение мобов с мобами
+                        for (int j1 = i1 + 1; j1 < mobList.size(); j1++) {
+                            Mob mob2 = mobList.get(j1);
+                            if (!(mob instanceof Player)) {
+                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
+                                    mob.stop(CollisionMessage.getMessage());
+                            }
+                        }
+
                         for (int i = 0; i < objectMap.size(); i++) {
                             Object object = objectMap.get(i);
                             if (!(object instanceof Furniture) && !(object instanceof Container)) {
@@ -378,14 +402,6 @@ public class Window {
                             if (object.isNoclip()) continue;
                             if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
                                 mob.stop(CollisionMessage.getMessage());
-                        }
-
-                        for (int j1 = i1 + 1; j1 < mobList.size(); j1++) {
-                            Mob mob2 = mobList.get(j1);
-                            if (!(mob instanceof Player)) {
-                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
-                                    mob.stop(CollisionMessage.getMessage());
-                            }
                         }
                     }
 

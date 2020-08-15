@@ -2,6 +2,8 @@ package objects;
 
 import math.AABB;
 
+import java.util.Timer;
+
 public abstract class Object {
     private int minX, minY;
     private int maxX, maxY;
@@ -9,6 +11,7 @@ public abstract class Object {
     private String texture;
     private boolean isLying;
     private boolean isNoclip;
+    private Timer timer = new Timer();
 
     public Object(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
         this.texture = texture;
@@ -88,6 +91,8 @@ public abstract class Object {
         collisionBox.update(collisionBox.getMin().x, collisionBox.getMin().y - 1,
                 collisionBox.getMax().x, collisionBox.getMax().y - 1);
     }
+
+    public Timer getTimer() { return timer; }
 
     public int getMinX() { return minX; }
 
