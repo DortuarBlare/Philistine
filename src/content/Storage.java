@@ -25,7 +25,7 @@ public class Storage {
     };
 
     public static final String[] soundString = {
-            "mainMenuTheme", "dungeonAmbient1", "slimeHurt", "changingArmor"
+            "mainMenuTheme", "dungeonAmbient1", "slimeHurt", "changingArmor", "pickedCoin"
     };
 
     public static final String[] playerSoundString = {

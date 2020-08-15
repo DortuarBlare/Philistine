@@ -35,7 +35,7 @@ public class Window {
     boolean forMainMenu = true;
     boolean forMainTheme = true;
     int forCameraInMainMenu = 0;
-    Source backgroundMusic, mobHurtSound, armorChange;
+    Source backgroundMusic, mobHurtSound, armorChange, coinSound;
     Player player;
 
     public void run() {
@@ -90,6 +90,7 @@ public class Window {
         backgroundMusic = new Source(1);
         mobHurtSound = new Source(0);
         armorChange = new Source(0);
+        coinSound = new Source(0);
 
         // Единичная загрузка всех текстур
         for (int i = 0, id = 0; i < Storage.textureString.length; i++)
@@ -267,9 +268,10 @@ public class Window {
                                     break;
                                 }
                             }
-                            else if (objectMap.get(i) instanceof Coin){
+                            else if (objectMap.get(i) instanceof Coin) {
                                 objectMap.remove(i);
                                 player.setMoney(player.getMoney() + 10);
+                                coinSound.play(soundMap.get("pickedCoin"));
                             }
                         }
                     }
