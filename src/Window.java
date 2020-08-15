@@ -56,7 +56,7 @@ public class Window {
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         // Работа с экраном
-        window = glfwCreateWindow(1920, 1080, "Philistine", /*glfwGetPrimaryMonitor()*/NULL, NULL);
+        window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
@@ -287,6 +287,7 @@ public class Window {
                                 objectMap.remove(i);
                                 player.setMoney(player.getMoney() + 10);
                                 coinSound.play(soundMap.get("pickedCoin"));
+                                break;
                             }
                         }
                     }
@@ -359,6 +360,7 @@ public class Window {
                     // Проверка всех мобов на столкновение со стенами, объектами и другими мобами. Объекты с объектами
                     for (int i1 = 0; i1 < mobList.size(); i1++) {
                         Mob mob = mobList.get(i1);
+
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                             mob.stopRight();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
@@ -394,7 +396,8 @@ public class Window {
                                 for (int j = i + 1; j < objectMap.size(); j++) {
                                     Object object2 = objectMap.get(j);
                                     if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
-                                        if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())) object.moveLeft();
+                                        if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox()))
+                                            object.moveLeft();
                                     }
                                 }
                             }
@@ -530,11 +533,11 @@ public class Window {
                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
                 createQuadTexture(0, 19, 34, 53);
 
-                // money
+                // Количество монет
                 int tempCoin = player.getMoney();
                 int tempX0 = 633, tempX1 = 640, tempY0 = 0, tempY1 = 10;
-                for (int i = 0; i < getCountsOfDigits(player.getMoney()); i++){
-                    switch (tempCoin % 10){
+                for (int i = 0; i < getCountsOfDigits(player.getMoney()); i++) {
+                    switch (tempCoin % 10) {
                         case 0:
                             glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
                             createQuadTexture(tempX0, tempY0, tempX1, tempY1);
@@ -582,7 +585,6 @@ public class Window {
                     tempX1 -= 7;
                 }
             }
-
 
             // Отрисовка экипировки и анимации
             glBindTexture(GL_TEXTURE_2D, textureMap.get(player.getBodyAnimation()));
