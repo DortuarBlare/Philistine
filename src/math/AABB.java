@@ -56,9 +56,33 @@ public class AABB {
         return false;
     }
 
-    /*public static String getFirstAABBPosition(AABB first, AABB second) {
-        if (first.max.x < second.min.x)
-    }*/
+    public static boolean AABBvsAABB3(AABB first, AABB second) {
+        if ( (first.min.x >= second.max.x - 5 && first.min.x <= second.max.x) &&
+                ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
+                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ) ) {
+            CollisionMessage.setMessage("left");
+            return true;
+        }
+        if ( (first.max.x <= second.min.x + 5 && first.max.x >= second.min.x) &&
+                ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
+                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ) ) {
+            CollisionMessage.setMessage("right");
+            return true;
+        }
+        if ( (first.min.y >= second.max.y - 5 && first.min.y <= second.max.y) &&
+                ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
+                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ) ) {
+            CollisionMessage.setMessage("up");
+            return true;
+        }
+        if ( (first.max.y <= second.min.y + 5 && first.max.y >= second.min.y) &&
+                ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
+                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ) ) {
+            CollisionMessage.setMessage("down");
+            return true;
+        }
+        return false;
+    }
 
     public void update(int xmin, int ymin, int xmax, int ymax) {
         min.x = xmin;

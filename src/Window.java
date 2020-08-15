@@ -207,7 +207,7 @@ public class Window {
                     // Отрисовка всех объектов
                     for (int i = 0; i < objectMap.size(); i++) {
                         Object object = objectMap.get(i);
-                        if (!object.getIsLying()) continue;
+                        if (!object.isLying()) continue;
                         glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
@@ -312,14 +312,14 @@ public class Window {
 
                         for (int i = 0; i < objectMap.size(); i++) {
                             Object object = objectMap.get(i);
-                            if (object.getIsNoclip()) continue;
-                            if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
+                            if (object.isNoclip()) continue;
+                            if (AABB.AABBvsAABB3(mob.getCollisionBox(), object.getCollisionBox()))
                                 mob.stop(CollisionMessage.getMessage());
                         }
 
                         for (Mob mob2 : mobList) {
                             if (!(mob instanceof Player)) {
-                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
+                                if (AABB.AABBvsAABB3(mob.getCollisionBox(), mob2.getCollisionBox()))
                                     mob.stop(CollisionMessage.getMessage());
                             }
                         }

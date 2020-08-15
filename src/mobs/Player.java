@@ -19,6 +19,7 @@ public class Player extends Mob {
     private Source stepSound, hitSound;
     private Armor head, shoulders, torso, belt, hands, legs, feet;
     private Weapon weapon;
+    private AABB attackBox;
     private String bodyAnimation, weaponAnimation, headAnimation, shouldersAnimation, torsoAnimation, beltAnimation, handsAnimation, legsAnimation, feetAnimation;
     private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private int player_animation_move_left_i = 2, player_animation_move_right_i = 2, player_animation_move_up_i = 2, player_animation_move_down_i = 2;
@@ -26,15 +27,14 @@ public class Player extends Mob {
     private int player_animation_attack_left_i = 1, player_animation_attack_right_i = 1, player_animation_attack_up_i = 1,  player_animation_attack_down_i = 1;
     private int time = 0;
     private String knockbackDirection;
-    private AABB attackBox;
     private Timer timer = new Timer();
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
-            if (knockbackDirection.equals("left")) moveLeft();
-            else if (knockbackDirection.equals("right")) moveRight();
-            else if (knockbackDirection.equals("up")) moveUp();
-            else if (knockbackDirection.equals("down")) moveDown();
+            if (knockbackDirection.equals("left")) moveRight();
+            else if (knockbackDirection.equals("right")) moveLeft();
+            else if (knockbackDirection.equals("up")) moveDown();
+            else if (knockbackDirection.equals("down")) moveUp();
             time++;
         }
     };
@@ -255,7 +255,7 @@ public class Player extends Mob {
                 handsAnimation = "HANDS_" + getHandsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + player_animation_attack_left_i;
                 legsAnimation = "LEGS_" + getLegsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + player_animation_attack_left_i;
                 feetAnimation = "FEET_" + getFeetTexture() + "_left_" + getWeapon().getAttackType() + "_0" + player_animation_attack_left_i;
-                if (player_animation_attack_g == 4) {
+                if (player_animation_attack_g == 5) {
                     player_animation_attack_left_i++;
                     player_animation_attack_g = 0;
                 }
@@ -278,7 +278,7 @@ public class Player extends Mob {
                 handsAnimation = "HANDS_" + getHandsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + player_animation_attack_right_i;
                 legsAnimation = "LEGS_" + getLegsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + player_animation_attack_right_i;
                 feetAnimation = "FEET_" + getFeetTexture() + "_right_" + getWeapon().getAttackType() + "_0" + player_animation_attack_right_i;
-                if (player_animation_attack_g == 4) {
+                if (player_animation_attack_g == 5) {
                     player_animation_attack_g = 0;
                     player_animation_attack_right_i++;
                 }
@@ -301,8 +301,7 @@ public class Player extends Mob {
                 handsAnimation = "HANDS_" + getHandsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + player_animation_attack_up_i;
                 legsAnimation = "LEGS_" + getLegsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + player_animation_attack_up_i;
                 feetAnimation = "FEET_" + getFeetTexture() + "_up_" + getWeapon().getAttackType() + "_0" + player_animation_attack_up_i;
-                if (player_animation_attack_g == 4) {
-
+                if (player_animation_attack_g == 5) {
                     player_animation_attack_g = 0;
                     player_animation_attack_up_i++;
                 }
@@ -325,8 +324,7 @@ public class Player extends Mob {
                 handsAnimation = "HANDS_" + getHandsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + player_animation_attack_down_i;
                 legsAnimation = "LEGS_" + getLegsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + player_animation_attack_down_i;
                 feetAnimation = "FEET_" + getFeetTexture() + "_down_" + getWeapon().getAttackType() + "_0" + player_animation_attack_down_i;
-                if (player_animation_attack_g == 4) {
-
+                if (player_animation_attack_g == 5) {
                     player_animation_attack_g = 0;
                     player_animation_attack_down_i++;
                 }
