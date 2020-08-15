@@ -511,7 +511,7 @@ public class Window {
                 // money
                 int coin = 1234567890;
                 int tempCoin = coin;
-                int tempX0 = 632, tempX1 = 640, tempY0 = 0, tempY1 = 12;
+                int tempX0 = 633, tempX1 = 640, tempY0 = 0, tempY1 = 10;
                 for (int i = 0; i < getCountsOfDigits(coin); i++){
                     switch (tempCoin % 10){
                         case 0:
@@ -557,8 +557,8 @@ public class Window {
 
                     }
                     tempCoin = tempCoin / 10;
-                    tempX0 -= 8;
-                    tempX1 -= 8;
+                    tempX0 -= 7;
+                    tempX1 -= 7;
                 }
             }
 
