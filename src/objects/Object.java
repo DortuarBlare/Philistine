@@ -32,6 +32,34 @@ public abstract class Object {
         this.collisionBox = collisionBox;
     }
 
+    public void stopLeft() {
+        minX += 1;
+        maxX += 1;
+        collisionBox.update(collisionBox.getMin().x + 1, collisionBox.getMin().y,
+                collisionBox.getMax().x + 1, collisionBox.getMax().y);
+    }
+
+    public void stopRight() {
+        minX -= 1;
+        maxX -= 1;
+        collisionBox.update(collisionBox.getMin().x - 1, collisionBox.getMin().y,
+                collisionBox.getMax().x - 1, collisionBox.getMax().y);
+    }
+
+    public void stopUp() {
+        minY += 1;
+        maxY += 1;
+        collisionBox.update(collisionBox.getMin().x, collisionBox.getMin().y + 1,
+                collisionBox.getMax().x, collisionBox.getMax().y + 1);
+    }
+
+    public void stopDown() {
+        minY -= 1;
+        maxY -= 1;
+        collisionBox.update(collisionBox.getMin().x, collisionBox.getMin().y - 1,
+                collisionBox.getMax().x, collisionBox.getMax().y - 1);
+    }
+
     public int getMinX() { return minX; }
 
     public int getMinY() { return minY; }

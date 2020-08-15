@@ -353,6 +353,17 @@ public class Window {
                             if (object.isNoclip()) continue;
                             if (AABB.AABBvsAABB3(mob.getCollisionBox(), object.getCollisionBox()))
                                 mob.stop(CollisionMessage.getMessage());
+
+                            if ((object instanceof Weapon) || (object instanceof Armor)) {
+                                if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall1")))
+                                    object.stopRight();
+                                if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall4")))
+                                    object.stopLeft();
+                                if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall2")))
+                                    object.stopUp();
+                                if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall3")))
+                                    object.stopDown();
+                            }
                         }
 
                         for (Mob mob2 : mobList) {
