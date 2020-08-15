@@ -509,10 +509,9 @@ public class Window {
                 createQuadTexture(0, 19, 34, 53);
 
                 // money
-                int coin = 1234567890;
-                int tempCoin = coin;
+                int tempCoin = player.getMoney();
                 int tempX0 = 633, tempX1 = 640, tempY0 = 0, tempY1 = 10;
-                for (int i = 0; i < getCountsOfDigits(coin); i++){
+                for (int i = 0; i < getCountsOfDigits(player.getMoney()); i++){
                     switch (tempCoin % 10){
                         case 0:
                             glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
