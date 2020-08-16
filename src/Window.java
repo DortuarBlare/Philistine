@@ -270,8 +270,7 @@ public class Window {
                                     changingWeapon.setMaxX(player.getCollisionBox().getMin().x + 128);
                                     changingWeapon.setMaxY(player.getCollisionBox().getMin().y + 128);
                                     changingWeapon.setIsLying(true);
-                                    changingWeapon.getCollisionBox().update(changingWeapon.getMinX() + 81, changingWeapon.getMinY() + 81,
-                                            changingWeapon.getMinX() + 109, changingWeapon.getMinY() + 109);
+                                    changingWeapon.correctCollisionBox();
                                     objectList.set(i, changingWeapon);
                                     break;
                                 }

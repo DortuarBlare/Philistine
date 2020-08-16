@@ -44,7 +44,7 @@ public class Player extends Mob {
         setMoveDirection("down");
         attackBox = new AABB();
         money = 157;
-        weapon = new Weapon("longsword", "slash", 10, new AABB());
+        weapon = new Weapon("spear", "thrust", 10, new AABB());
         head = new Armor("plate_helmet", "head", 5, true);
         shoulders = new Armor("plate_armor", "shoulders", 5, true);
         torso = new Armor("plate_armor", "torso", 5, true);
