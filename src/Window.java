@@ -111,9 +111,9 @@ public class Window {
 
         // Добавление всех объектов и мобов
         objectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
-        objectList.add(new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
-        objectList.add(new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218)));
-        objectList.add(new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218)));
+        objectList.add(new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164));
+        objectList.add(new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164));
+        objectList.add(new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164));
         objectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
@@ -226,6 +226,8 @@ public class Window {
                         else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
+
+                    // Подбор всех возможных предметов
                     if (key_E_Pressed) {
                         for (int i = 0; i < objectList.size(); i++) {
                             if (objectList.get(i) instanceof Armor) {
@@ -241,8 +243,7 @@ public class Window {
                                     changingArmor.setMaxX(player.getCollisionBox().getMin().x + 44);
                                     changingArmor.setMaxY(player.getCollisionBox().getMin().y + 34);
                                     changingArmor.setIsLying(true);
-                                    changingArmor.getCollisionBox().update(changingArmor.getMinX() + 17, changingArmor.getMinY() + 32,
-                                            changingArmor.getMinX() + 46, changingArmor.getMinY() + 54);
+                                    changingArmor.correctCollisionBox();
                                     objectList.set(i, changingArmor);
                                     break;
                                 }
