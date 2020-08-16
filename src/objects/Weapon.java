@@ -18,6 +18,7 @@ public class Weapon extends Object {
         this.attackType = attackType;
         switch (texture) {
             case "longsword":
+            case "long_spear":
             case "rapier": {
                 setMinX(64);
                 setMinY(64);
@@ -26,6 +27,7 @@ public class Weapon extends Object {
                 break;
             }
             case "dagger":
+            case "stick":
             case "spear": {
                 setMinX(0);
                 setMinY(0);
@@ -48,6 +50,7 @@ public class Weapon extends Object {
                 break;
             }
             case "dagger":
+            case "stick":
             case "spear": {
                 setMinX(0);
                 setMinY(0);

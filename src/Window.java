@@ -160,10 +160,22 @@ public class Window {
                 player.setY(150);
                 player.setSpeed(2);
             }
-            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackLeft(true);
-            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackRight(true);
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackUp(true);
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackDown(true);
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackRight() && !player.isAttackUp() && !player.isAttackDown())
+                    player.setAttackLeft(true);
+            }
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackLeft() && !player.isAttackUp() && !player.isAttackDown())
+                    player.setAttackRight(true);
+            }
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackDown())
+                    player.setAttackUp(true);
+            }
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackUp())
+                    player.setAttackDown(true);
+            }
             if (key == GLFW_KEY_E && action == GLFW_PRESS && !level.equals("MainMenu")) key_E_Pressed = true;
         });
     }
@@ -235,7 +247,7 @@ public class Window {
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
-                    // Подбор всех возможных предметов
+                    // Подбор всех возможных предметов с клавишей Е
                     if (key_E_Pressed) {
                         for (int i = 0; i < objectList.size(); i++) {
                             if (objectList.get(i) instanceof Armor) {
@@ -330,10 +342,7 @@ public class Window {
                                     slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
                                     mobHurtSound.play(soundMap.get("slimeHurt"));
                                 }
-                                if (player.getTime() >= 15) {
-                                    player.stopTimer();
-                                    player.setImmortal(false);
-                                }
+                                if (player.getKnockbackTime() >= 15) player.stopTimer();
                                 if (slime.getKnockbackTime() >= 25) {
                                     slime.stopTimer();
                                     slime.setImmortal(false);
@@ -430,7 +439,6 @@ public class Window {
                     break;
                 }
                 case "SecondLevel": {
-//                    Skeleton skeleton = (Skeleton) mobList.get(2);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level1")); // Фон второго уровня
                     createQuadTexture(0, 0, 640, 360);
 
@@ -519,6 +527,7 @@ public class Window {
                         player.setX(638 - 64 + 15);
                         player.setY(281);
                     }
+
                     // Проверка перехода на 3 уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToThirdLevel"))) {
                         level = "ThirdLevel";
@@ -529,6 +538,7 @@ public class Window {
                         }
                         player.setX(240);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
 
                     // Проверка перехода на 4 уровень
@@ -541,13 +551,14 @@ public class Window {
                         }
                         player.setX(180);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
-
                     break;
                 }
                 case "ThirdLevel":{
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level2"));
                     createQuadTexture(0, 0, 640, 360);
+
                     for (Mob mob : mobList) {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                             mob.stopRight();
@@ -558,6 +569,7 @@ public class Window {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
                             mob.stopDown();
                     }
+
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromThirdToSecondLevel"))) {
                         level = "SecondLevel";
@@ -568,6 +580,7 @@ public class Window {
                         }
                         player.setX(180);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
                     break;
                 }
@@ -585,6 +598,7 @@ public class Window {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
                             mob.stopDown();
                     }
+
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromForthToSecondLevel"))) {
                         level = "SecondLevel";
@@ -595,8 +609,8 @@ public class Window {
                         }
                         player.setX(240);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
-
                     break;
                 }
             }
