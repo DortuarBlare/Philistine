@@ -29,9 +29,7 @@ public class Container extends Object {
                 loot.add(loot.size(), new Armor("shirt_white", "torso", 1, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64));
                 System.out.println("armor");
             }
-            else if (b >= 0.75 && b <= 1) {
-                System.out.println("nothing");
-            }
+            else if (b >= 0.75 && b <= 1) System.out.println("nothing");
         }
     }
 }

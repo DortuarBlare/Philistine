@@ -35,6 +35,7 @@ public class Window {
     boolean forMainTheme = true;
     int forPlacingCamera = 0;
     Source backgroundMusic, mobHurtSound, armorChange, coinSound;
+    Coin coinGUI;
     Player player;
 
     public void run() {
@@ -90,6 +91,8 @@ public class Window {
         mobHurtSound = new Source(0);
         armorChange = new Source(0);
         coinSound = new Source(0);
+        coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
+        coinGUI.getTimer().schedule(coinGUI.getAnimationTask(), 0, 120);
 
         // Единичная загрузка всех текстур
         for (int i = 0, id = 0; i < Storage.textureString.length; i++)
@@ -530,13 +533,15 @@ public class Window {
                 createQuadTexture(0, 0, 103, 18);
 
                 // Щит с броней
-                if (player.getArmor() < 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor() / 5));
-                else glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
-                createQuadTexture(0, 19, 34, 53);
+                int tempArmor = player.getArmor() % 5 == 0 ? player.getArmor() : player.getArmor() - (player.getArmor() % 5);
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(tempArmor + "armor"));
+                createQuadTexture(0, 20, 60, 40);
 
                 // Количество монет
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("coin_0" + coinGUI.getAnimationTime()));
+                createQuadTexture(0, 42, 11, 54);
                 int tempCoin = player.getMoney();
-                int tempX0 = 633, tempX1 = 640, tempY0 = 0, tempY1 = 10;
+                int tempX0 = 13 + (getCountsOfDigits(player.getMoney()) * 7) - 7, tempX1 = 13 + (getCountsOfDigits(player.getMoney()) * 7), tempY0 = 44, tempY1 = 54;
                 for (int i = 0; i < getCountsOfDigits(player.getMoney()); i++) {
                     switch (tempCoin % 10) {
                         case 0:
@@ -656,6 +661,6 @@ public class Window {
     }
 
     public static int getCountsOfDigits(long number) {
-        return(number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
+        return (number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
     }
 }
