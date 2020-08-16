@@ -368,5 +368,10 @@ public class Storage {
             "skeleton_right_move_01", "skeleton_right_move_02", "skeleton_right_move_03", "skeleton_right_move_04", "skeleton_right_move_05", "skeleton_right_move_06", "skeleton_right_move_07", "skeleton_right_move_08", "skeleton_right_move_09",
             "skeleton_up_move_01", "skeleton_up_move_02", "skeleton_up_move_03", "skeleton_up_move_04", "skeleton_up_move_05", "skeleton_up_move_06", "skeleton_up_move_07", "skeleton_up_move_08", "skeleton_up_move_09",
             "skeleton_down_move_01", "skeleton_down_move_02", "skeleton_down_move_03", "skeleton_down_move_04", "skeleton_down_move_05", "skeleton_down_move_06", "skeleton_down_move_07", "skeleton_down_move_08", "skeleton_down_move_09",
+
+            "spider_left_move_01", "spider_left_move_02", "spider_left_move_03", "spider_left_move_04", "spider_left_move_05", "spider_left_move_06", "spider_left_move_07", "spider_left_move_08", "spider_left_move_09", "spider_left_move_010",
+            "spider_right_move_01", "spider_right_move_02", "spider_right_move_03", "spider_right_move_04", "spider_right_move_05", "spider_right_move_06", "spider_right_move_07", "spider_right_move_08", "spider_right_move_09", "spider_right_move_010",
+            "spider_up_move_01", "spider_up_move_02",  "spider_up_move_03", "spider_up_move_04", "spider_up_move_05", "spider_up_move_06", "spider_up_move_07", "spider_up_move_08", "spider_up_move_09", "spider_up_move_010",
+            "spider_down_move_01", "spider_down_move_02", "spider_down_move_03", "spider_down_move_04", "spider_down_move_05", "spider_down_move_06", "spider_down_move_07", "spider_down_move_08", "spider_down_move_09", "spider_down_move_010",
     };
 }
