@@ -35,6 +35,7 @@ public class Window {
     boolean forMainTheme = true;
     int forPlacingCamera = 0;
     Source backgroundMusic, mobHurtSound, armorChange, coinSound;
+    Coin coinGUI;
     Player player;
 
     public void run() {
@@ -90,6 +91,8 @@ public class Window {
         mobHurtSound = new Source(0);
         armorChange = new Source(0);
         coinSound = new Source(0);
+        coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
+        coinGUI.getTimer().schedule(coinGUI.getAnimationTask(), 0, 120);
 
         // Единичная загрузка всех текстур
         for (int i = 0, id = 0; i < Storage.textureString.length; i++)
@@ -115,9 +118,9 @@ public class Window {
 
         // Добавление всех объектов и мобов
         objectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
-        objectList.add(new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164, new AABB(317, 132, 410, 218)));
-        objectList.add(new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164, new AABB(445, 132, 538, 218)));
-        objectList.add(new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164, new AABB(381, 132, 474, 218)));
+        objectList.add(new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164));
+        objectList.add(new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164));
+        objectList.add(new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164));
         objectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
@@ -231,6 +234,8 @@ public class Window {
                         else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
+
+                    // Подбор всех возможных предметов
                     if (key_E_Pressed) {
                         for (int i = 0; i < objectList.size(); i++) {
                             if (objectList.get(i) instanceof Armor) {
@@ -246,8 +251,7 @@ public class Window {
                                     changingArmor.setMaxX(player.getCollisionBox().getMin().x + 44);
                                     changingArmor.setMaxY(player.getCollisionBox().getMin().y + 34);
                                     changingArmor.setIsLying(true);
-                                    changingArmor.getCollisionBox().update(changingArmor.getMinX() + 17, changingArmor.getMinY() + 32,
-                                            changingArmor.getMinX() + 46, changingArmor.getMinY() + 54);
+                                    changingArmor.correctCollisionBox();
                                     objectList.set(i, changingArmor);
                                     break;
                                 }
@@ -612,13 +616,15 @@ public class Window {
                 createQuadTexture(0, 0, 103, 18);
 
                 // Щит с броней
-                if (player.getArmor() < 30) glBindTexture(GL_TEXTURE_2D, textureMap.get("armor" + player.getArmor() / 5));
-                else glBindTexture(GL_TEXTURE_2D, textureMap.get("armor5"));
-                createQuadTexture(0, 19, 34, 53);
+                int tempArmor = player.getArmor() % 5 == 0 ? player.getArmor() : player.getArmor() - (player.getArmor() % 5);
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(tempArmor + "armor"));
+                createQuadTexture(0, 20, 60, 40);
 
                 // Количество монет
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("coin_0" + coinGUI.getAnimationTime()));
+                createQuadTexture(0, 42, 11, 54);
                 int tempCoin = player.getMoney();
-                int tempX0 = 633, tempX1 = 640, tempY0 = 0, tempY1 = 10;
+                int tempX0 = 13 + (getCountsOfDigits(player.getMoney()) * 7) - 7, tempX1 = 13 + (getCountsOfDigits(player.getMoney()) * 7), tempY0 = 44, tempY1 = 54;
                 for (int i = 0; i < getCountsOfDigits(player.getMoney()); i++) {
                     switch (tempCoin % 10) {
                         case 0:
@@ -738,6 +744,6 @@ public class Window {
     }
 
     public static int getCountsOfDigits(long number) {
-        return(number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
+        return (number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
     }
 }
