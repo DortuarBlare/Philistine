@@ -108,6 +108,10 @@ public class Window {
             aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
+        aabbMap.get("entranceToThirdLevel").update(197, 134, 237, 145);
+        aabbMap.get("entranceToForthLevel").update(247, 134, 283, 144);
+        aabbMap.get("entranceFromThirdToSecondLevel").update(249, 134, 288, 146);
+        aabbMap.get("entranceFromForthToSecondLevel").update(199, 132, 236, 141);
 
         // Добавление всех объектов и мобов
         objectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
@@ -144,6 +148,7 @@ public class Window {
                         object.getTimer().purge();
                     }
                 }
+                System.exit(0);
             }
             if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
                 level = "FirstLevel";
@@ -511,6 +516,84 @@ public class Window {
                         player.setX(638 - 64 + 15);
                         player.setY(281);
                     }
+                    // Проверка перехода на 3 уровень
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToThirdLevel"))) {
+                        level = "ThirdLevel";
+                        // Обновление хитбоксов стен для 3 уровня
+                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(Storage.thirdLevelWalls[j], Storage.thirdLevelWalls[j + 1],
+                                    Storage.thirdLevelWalls[j + 2], Storage.thirdLevelWalls[j + 3]);
+                        }
+                        player.setX(240);
+                        player.setY(120);
+                    }
+
+                    // Проверка перехода на 4 уровень
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToForthLevel"))) {
+                        level = "ForthLevel";
+                        // Обновление хитбоксов стен для 4 уровня
+                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(Storage.forthLevelWalls[j], Storage.forthLevelWalls[j + 1],
+                                    Storage.forthLevelWalls[j + 2], Storage.forthLevelWalls[j + 3]);
+                        }
+                        player.setX(180);
+                        player.setY(120);
+                    }
+
+                    break;
+                }
+                case "ThirdLevel":{
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("level2"));
+                    createQuadTexture(0, 0, 640, 360);
+                    for (Mob mob : mobList) {
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                            mob.stopRight();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                            mob.stopLeft();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                            mob.stopUp();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
+                            mob.stopDown();
+                    }
+                    // Проверка перехода на второй уровень
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromThirdToSecondLevel"))) {
+                        level = "SecondLevel";
+                        // Обновление хитбоксов стен для второго уровня
+                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
+                                    Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
+                        }
+                        player.setX(180);
+                        player.setY(120);
+                    }
+                    break;
+                }
+                case "ForthLevel":{
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("level3"));
+                    createQuadTexture(0, 0, 640, 360);
+
+                    for (Mob mob : mobList) {
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                            mob.stopRight();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                            mob.stopLeft();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                            mob.stopUp();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
+                            mob.stopDown();
+                    }
+                    // Проверка перехода на второй уровень
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromForthToSecondLevel"))) {
+                        level = "SecondLevel";
+                        // Обновление хитбоксов стен для второго уровня
+                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
+                                    Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
+                        }
+                        player.setX(240);
+                        player.setY(120);
+                    }
+
                     break;
                 }
             }

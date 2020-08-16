@@ -6,7 +6,9 @@ public class Storage {
             496, 143, 498, 232, // wall1
             499, 232, 639, 236, // wall2
             111, 339, 639, 341, // wall3
-            103, 139, 111, 332 // wall4
+            103, 139, 111, 332, // wall4
+            0, 0, 0, 0, // wall5
+            0, 0, 0, 0 // wall6
     };
 
     public static final int[] secondLevelWalls = {
@@ -19,9 +21,30 @@ public class Storage {
             0, 287, 92, 291 // wall6
     };
 
+    public static final int[] thirdLevelWalls = {
+            96, 135, 528, 141, // wall0
+            528, 147, 534, 339, // wall1
+            96, 339, 528, 342, // wall2
+            90, 141, 96, 336, // wall3
+            0, 0, 0, 0, // wall4
+            0, 0, 0, 0, // wall5
+            0, 0, 0, 0 // wall6
+    };
+
+    public static final int[] forthLevelWalls = {
+            96, 135, 528, 141, // wall0
+            528, 147, 534, 339, // wall1
+            96, 339, 528, 342, // wall2
+            90, 141, 96, 336, // wall3
+            0, 0, 0, 0, // wall4
+            0, 0, 0, 0, // wall5
+            0, 0, 0, 0 // wall6
+    };
+
     public static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToFourthLevel", "pants_greenish", "shirt_white", "shoes_brown"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "pants_greenish", "shirt_white", "shoes_brown",
+            "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel"
     };
 
     public static final String[] soundString = {
