@@ -75,10 +75,10 @@ public class Player extends Mob {
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
-                if (knockbackDirection.equals("Left")) moveLeft();
-                else if (knockbackDirection.equals("Right")) moveRight();
-                else if (knockbackDirection.equals("Up")) moveUp();
-                else if (knockbackDirection.equals("Down")) moveDown();
+                if (knockbackDirection.equals("left")) moveLeft();
+                else if (knockbackDirection.equals("right")) moveRight();
+                else if (knockbackDirection.equals("up")) moveUp();
+                else if (knockbackDirection.equals("down")) moveDown();
                 time++;
             }
         };

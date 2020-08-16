@@ -24,16 +24,16 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
     private long window;
     private ArrayList<Mob> mobList;
+    private ArrayList<Object> objectList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
-    private ArrayList<Object> objectList;
     private String level = "MainMenu";
     private boolean forScale = true;
     boolean key_E_Pressed = false;
     boolean forMainMenu = true;
     boolean forMainTheme = true;
-    int forCameraInMainMenu = 0;
+    int forPlacingCamera = 0;
     Source backgroundMusic, mobHurtSound, armorChange, coinSound;
     Player player;
 
@@ -147,7 +147,7 @@ public class Window {
             }
             if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
                 level = "FirstLevel";
-                glTranslated(forCameraInMainMenu, 0, 0);
+                glTranslated(forPlacingCamera, 0, 0);
                 player.setX(150);
                 player.setY(150);
                 player.setSpeed(2);
@@ -181,12 +181,12 @@ public class Window {
                     else if (player.getX() == 290) forMainMenu = true;
                     if (forMainMenu) {
                         glTranslated(-1, 0, 0);
-                        forCameraInMainMenu++;
+                        forPlacingCamera++;
                         player.updateForMainMenu("right");
                     }
                     else {
                         glTranslated(1, 0, 0);
-                        forCameraInMainMenu--;
+                        forPlacingCamera--;
                         player.updateForMainMenu("left");
                     }
                     break;
@@ -214,20 +214,17 @@ public class Window {
                     torch_g++;
 
                     // Отрисовка всех объектов
-                    for (int i = 0; i < objectList.size(); i++) {
-                        Object object = objectList.get(i);
+                    for (Object object : objectList) {
                         if (!object.isLying()) continue;
                         if (object instanceof Coin) {
-                            Coin coin = (Coin) objectList.get(i);
-                            if (!coin.isAnimationTaskStarted()) coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
+                            Coin coin = (Coin) object;
+                            if (!coin.isAnimationTaskStarted())
+                                coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
                             coin.setTexture("coin_0" + coin.getAnimationTime());
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
-                            createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                         }
-                        else {
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
-                            createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
-                        }
+                        else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
                     if (key_E_Pressed) {
                         for (int i = 0; i < objectList.size(); i++) {
@@ -281,14 +278,6 @@ public class Window {
                                     }
                                     break;
                                 }
-                            }
-                            else if (objectList.get(i) instanceof Coin) {
-                                objectList.get(i).getTimer().cancel();
-                                objectList.get(i).getTimer().purge();
-                                objectList.remove(i);
-                                player.setMoney(player.getMoney() + 10);
-                                coinSound.play(soundMap.get("pickedCoin"));
-                                break;
                             }
                         }
                     }
@@ -403,6 +392,16 @@ public class Window {
                                 }
                             }
 
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), object.getCollisionBox())) {
+                                if ((mob instanceof Player) && (object instanceof Coin)) {
+                                    object.getTimer().cancel();
+                                    object.getTimer().purge();
+                                    objectList.remove(object);
+                                    player.setMoney(player.getMoney() + 10);
+                                    coinSound.play(soundMap.get("pickedCoin"));
+                                    break;
+                                }
+                            }
                             if (object.isNoclip()) continue;
                             if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
                                 mob.stop(CollisionMessage.getMessage());
