@@ -13,7 +13,7 @@ public class Container extends Object {
         loot = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             double b = random();
-            /*if (b >= 0 && b < 0.3) {
+            if (b >= 0 && b < 0.3) {
                 loot.add(loot.size(), new Coin("coin_01", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 11, this.getMaxY() + 12, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 9, this.getMaxY() + 9)));
                 System.out.println("coin");
             }
@@ -24,8 +24,8 @@ public class Container extends Object {
             else if (b >= 0.4 && b < 0.55) {
                 loot.add(loot.size(), new Scroll("scroll5", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 20, this.getMaxY() + 16, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 20, this.getMaxY() + 16)));
                 System.out.println("scroll");
-            }*/
-            /*else */if (/*b >= 0.55*/b >= 0 && b < 0.75) {
+            }
+            else if (b >= 0.55&& b < 0.75) {
                 Armor armor;
                 int randomNumber = (int) (Math.random() * 23);
                 switch (randomNumber) {
@@ -45,10 +45,10 @@ public class Container extends Object {
                         armor = new Armor("plate_helmet", "head", 5, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
                         break;
                     case 6:
-                        armor = new Armor("leather_armor", "shoulders", 2, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
+                        armor = new Armor("leather_shoulderPads", "shoulders", 2, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
                         break;
                     case 7:
-                        armor = new Armor("plate_armor", "shoulders", 5, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
+                        armor = new Armor("plate_shoulderPads", "shoulders", 5, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
                         break;
                     case 8:
                         armor = new Armor("shirt_white", "torso", 1, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);

@@ -209,7 +209,7 @@ public class Player extends Mob {
         money = 0;
         weapon = new Weapon("long_spear", "thrust", 10, new AABB());
         head = new Armor("plate_helmet", "head", 5, true);
-        shoulders = new Armor("plate_armor", "shoulders", 5, true);
+        shoulders = new Armor("plate_shoulderPads", "shoulders", 5, true);
         torso = new Armor("plate_armor", "torso", 5, true);
         belt = new Armor("leather", "belt", 2, true);
         hands = new Armor("leather_bracers", "hands", 2, true);

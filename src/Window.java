@@ -248,10 +248,7 @@ public class Window {
                             coin.setTexture("coin_0" + coin.getAnimationTime());
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
                         }
-                        else {
-                            System.out.println(object.getTexture());
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
-                        }
+                        else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
