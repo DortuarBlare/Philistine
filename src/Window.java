@@ -119,6 +119,7 @@ public class Window {
         // Добавление всех объектов и мобов
         objectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
         objectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        objectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
         mobList.add(new Slime(350, 300, 1, 50, 0, 5));
@@ -263,13 +264,16 @@ public class Window {
                                     player.setArmor(changingArmor);
                                     armorChange.play(soundMap.get("changingArmor"));
                                     changingArmor = playerArmor;
-                                    changingArmor.setMinX(player.getCollisionBox().getMin().x - 20);
-                                    changingArmor.setMinY(player.getCollisionBox().getMin().y - 30);
-                                    changingArmor.setMaxX(player.getCollisionBox().getMin().x + 44);
-                                    changingArmor.setMaxY(player.getCollisionBox().getMin().y + 34);
-                                    changingArmor.setIsLying(true);
-                                    changingArmor.correctCollisionBox();
-                                    objectList.set(i, changingArmor);
+                                    if (changingArmor.getTexture().equals("nothing")) objectList.remove(i);
+                                    else {
+                                        changingArmor.setMinX(player.getCollisionBox().getMin().x - 20);
+                                        changingArmor.setMinY(player.getCollisionBox().getMin().y - 30);
+                                        changingArmor.setMaxX(player.getCollisionBox().getMin().x + 44);
+                                        changingArmor.setMaxY(player.getCollisionBox().getMin().y + 34);
+                                        changingArmor.setIsLying(true);
+                                        changingArmor.correctCollisionBox();
+                                        objectList.set(i, changingArmor);
+                                    }
                                     break;
                                 }
                             }
@@ -282,13 +286,16 @@ public class Window {
                                     player.setWeapon(changingWeapon);
                                     armorChange.play(soundMap.get("changingArmor"));
                                     changingWeapon = playerWeapon;
-                                    changingWeapon.setMinX(player.getCollisionBox().getMin().x - 64);
-                                    changingWeapon.setMinY(player.getCollisionBox().getMin().y - 64);
-                                    changingWeapon.setMaxX(player.getCollisionBox().getMin().x + 128);
-                                    changingWeapon.setMaxY(player.getCollisionBox().getMin().y + 128);
-                                    changingWeapon.setIsLying(true);
-                                    changingWeapon.correctCollisionBox();
-                                    objectList.set(i, changingWeapon);
+                                    if (changingWeapon.getTexture().equals("nothing")) objectList.remove(i);
+                                    else {
+                                        changingWeapon.setMinX(player.getCollisionBox().getMin().x - 64);
+                                        changingWeapon.setMinY(player.getCollisionBox().getMin().y - 64);
+                                        changingWeapon.setMaxX(player.getCollisionBox().getMin().x + 128);
+                                        changingWeapon.setMaxY(player.getCollisionBox().getMin().y + 128);
+                                        changingWeapon.setIsLying(true);
+                                        changingWeapon.correctCollisionBox();
+                                        objectList.set(i, changingWeapon);
+                                    }
                                     break;
                                 }
                             }
