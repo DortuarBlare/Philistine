@@ -87,7 +87,46 @@ public class Player extends Mob {
                     }
                     break;
                 case "long_spear":
-
+                    if (isAttackLeft) {
+                        if (hitAnimationTime == 5)
+                            getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
+                        if (hitAnimationTime == 6)
+                            getAttackBox().update(getX() - 39, getY() + 42, getX() + 12, getY() + 46);
+                        if (hitAnimationTime == 7)
+                            getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
+                        if (hitAnimationTime == 8)
+                            getAttackBox().update(0,0,0,0);
+                    }
+                    else if (isAttackRight) {
+                        if (hitAnimationTime == 5)
+                            getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
+                        if (hitAnimationTime == 6)
+                            getAttackBox().update(getX() + 51, getY() + 43, getX() + 103, getY() + 46);
+                        if (hitAnimationTime == 7)
+                            getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
+                        if (hitAnimationTime == 8)
+                            getAttackBox().update(0,0,0,0);
+                    }
+                    else if (isAttackUp) {
+                        if (hitAnimationTime == 5)
+                            getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
+                        if (hitAnimationTime == 6)
+                            getAttackBox().update(getX() + 38, getY() - 37, getX() + 42, getY() + 18);
+                        if (hitAnimationTime == 7)
+                            getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
+                        if (hitAnimationTime == 8)
+                            getAttackBox().update(0,0,0,0);
+                    }
+                    else if (isAttackDown) {
+                        if (hitAnimationTime == 5)
+                            getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
+                        if (hitAnimationTime == 6)
+                            getAttackBox().update(getX() + 27, getY() + 51, getX() + 31, getY() + 103);
+                        if (hitAnimationTime == 7)
+                            getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
+                        if (hitAnimationTime == 8)
+                            getAttackBox().update(0,0,0,0);
+                    }
                     break;
                 case "spear":
                     if (isAttackLeft) {
@@ -168,7 +207,7 @@ public class Player extends Mob {
         setMoveDirection("down");
         attackBox = new AABB();
         money = 0;
-        weapon = new Weapon("stick", "thrust", 10, new AABB());
+        weapon = new Weapon("long_spear", "thrust", 10, new AABB());
         head = new Armor("plate_helmet", "head", 5, true);
         shoulders = new Armor("plate_armor", "shoulders", 5, true);
         torso = new Armor("plate_armor", "torso", 5, true);
@@ -260,7 +299,46 @@ public class Player extends Mob {
                         }
                         break;
                     case "long_spear":
-
+                        if (isAttackLeft) {
+                            if (hitAnimationTime == 5)
+                                getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
+                            if (hitAnimationTime == 6)
+                                getAttackBox().update(getX() - 39, getY() + 42, getX() + 12, getY() + 46);
+                            if (hitAnimationTime == 7)
+                                getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
+                            if (hitAnimationTime == 8)
+                                getAttackBox().update(0,0,0,0);
+                        }
+                        else if (isAttackRight) {
+                            if (hitAnimationTime == 5)
+                                getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
+                            if (hitAnimationTime == 6)
+                                getAttackBox().update(getX() + 51, getY() + 43, getX() + 103, getY() + 46);
+                            if (hitAnimationTime == 7)
+                                getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
+                            if (hitAnimationTime == 8)
+                                getAttackBox().update(0,0,0,0);
+                        }
+                        else if (isAttackUp) {
+                            if (hitAnimationTime == 5)
+                                getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
+                            if (hitAnimationTime == 6)
+                                getAttackBox().update(getX() + 38, getY() - 37, getX() + 42, getY() + 18);
+                            if (hitAnimationTime == 7)
+                                getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
+                            if (hitAnimationTime == 8)
+                                getAttackBox().update(0,0,0,0);
+                        }
+                        else if (isAttackDown) {
+                            if (hitAnimationTime == 5)
+                                getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
+                            if (hitAnimationTime == 6)
+                                getAttackBox().update(getX() + 27, getY() + 51, getX() + 31, getY() + 103);
+                            if (hitAnimationTime == 7)
+                                getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
+                            if (hitAnimationTime == 8)
+                                getAttackBox().update(0,0,0,0);
+                        }
                         break;
                     case "spear":
                         if (isAttackLeft) {

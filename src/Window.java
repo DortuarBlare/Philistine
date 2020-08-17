@@ -118,9 +118,6 @@ public class Window {
 
         // Добавление всех объектов и мобов
         objectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
-        objectList.add(new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164));
-        objectList.add(new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164));
-        objectList.add(new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164));
         objectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
@@ -161,20 +158,28 @@ public class Window {
                 player.setSpeed(2);
             }
             if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu")) {
-                if (!player.isAttackRight() && !player.isAttackUp() && !player.isAttackDown())
+                if (!player.isAttackRight() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackLeft(true);
+                    player.setMoveDirection("left");
+                }
             }
             if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu")) {
-                if (!player.isAttackLeft() && !player.isAttackUp() && !player.isAttackDown())
+                if (!player.isAttackLeft() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackRight(true);
+                    player.setMoveDirection("right");
+                }
             }
             if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu")) {
-                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackDown())
+                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackDown()) {
                     player.setAttackUp(true);
+                    player.setMoveDirection("up");
+                }
             }
             if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu")) {
-                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackUp())
+                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackUp()) {
                     player.setAttackDown(true);
+                    player.setMoveDirection("down");
+                }
             }
             if (key == GLFW_KEY_E && action == GLFW_PRESS && !level.equals("MainMenu")) key_E_Pressed = true;
         });
@@ -243,7 +248,10 @@ public class Window {
                             coin.setTexture("coin_0" + coin.getAnimationTime());
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
                         }
-                        else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        else {
+                            System.out.println(object.getTexture());
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        }
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
