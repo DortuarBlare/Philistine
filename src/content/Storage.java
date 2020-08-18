@@ -2,11 +2,11 @@ package content;
 
 public class Storage {
     public static final int[] firstLevelWalls = {
-            111, 128, 495, 140, // wall0
+            108, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
             499, 232, 639, 236, // wall2
-            111, 339, 639, 341, // wall3
-            103, 139, 111, 332, // wall4
+            108, 339, 640, 359, // wall3
+            0, 45, 107, 338, // wall4
             0, 0, 0, 0, // wall5
             0, 0, 0, 0 // wall6
     };
@@ -43,8 +43,7 @@ public class Storage {
 
     public static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "pants_greenish", "shirt_white", "shoes_brown",
-            "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel"
     };
 
     public static final String[] soundString = {

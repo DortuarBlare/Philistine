@@ -5,8 +5,8 @@ import math.AABB;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Slime extends Mob {
-    private int knockbackTime = 0, animationTime = 1;
+public class Spider extends Mob {
+    private int knockbackTime = 0, animationTime = 2;
     private String knockbackDirection;
     private boolean animationTaskStarted = false;
     private TimerTask knockbackTask = new TimerTask() {
@@ -26,11 +26,11 @@ public class Slime extends Mob {
         public void run() {
             animationTaskStarted = true;
             animationTime++;
-            if (animationTime == 4) animationTime = 1;
+            if (animationTime == 11) animationTime = 2;
         }
     };
 
-    public Slime(int x, int y, int speed, int health, int armor, int damage) {
+    public Spider(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         setMoveDirection("left");
     }
@@ -59,60 +59,40 @@ public class Slime extends Mob {
             public void run() {
                 animationTaskStarted = true;
                 animationTime++;
-                if (animationTime == 4) animationTime = 1;
+                if (animationTime == 11) animationTime = 2;
             }
         };
     }
 
     public void follow(Player player) {
         if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                animationTime == 3) moveUpLeft();
+                player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
 
         else if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                animationTime == 3) moveUpRight();
+                player.getHitbox().getMin().x > getHitbox().getMin().x) moveUpRight();
 
         else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                animationTime == 3) moveDownLeft();
+                player.getHitbox().getMin().x < getHitbox().getMin().x) moveDownLeft();
 
         else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                animationTime == 3) moveDownRight();
+                player.getHitbox().getMin().x > getHitbox().getMin().x) moveDownRight();
 
-        else if (player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                animationTime == 3) moveLeft();
+        else if (player.getHitbox().getMin().x < getHitbox().getMin().x) moveLeft();
 
-        else if (player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                 animationTime == 3) moveRight();
+        else if (player.getHitbox().getMin().x > getHitbox().getMin().x) moveRight();
 
-        else if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                animationTime == 3) moveUp();
+        else if (player.getHitbox().getMin().y < getHitbox().getMin().y) moveUp();
 
-        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                animationTime == 3) moveDown();
+        else if (player.getHitbox().getMin().y > getHitbox().getMin().y) moveDown();
     }
-
-    public void startAnimationTask() { getTimer().schedule(animationTask, 0, 300); }
-
-    @Override
-    public void moveUp() { setY(getY() - getSpeed()); }
-
-    @Override
-    public void moveDown() { setY(getY() + getSpeed()); }
 
     public TimerTask getKnockbackTask() { return knockbackTask; }
 
     public TimerTask getAnimationTask() { return animationTask; }
 
-    public int getKnockbackTime() { return knockbackTime; }
-
     public int getAnimationTime() { return animationTime; }
 
     public boolean isAnimationTaskStarted() { return animationTaskStarted; }
-
-    public void setAnimationTaskStarted(boolean animationTaskStarted) { this.animationTaskStarted = animationTaskStarted; }
 
     public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
 }

@@ -27,8 +27,11 @@ public class Container extends Object {
             }
             else if (b >= 0.55&& b < 0.75) {
                 Armor armor;
-                int randomNumber = (int) (Math.random() * 23);
+                int randomNumber = (int) (Math.random() * 22);
                 switch (randomNumber) {
+                    case 0:
+                        armor = new Armor("plate_shoes", "feet", 5, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
+                        break;
                     case 1:
                         armor = new Armor("leather_hat", "head", 2, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
                         break;
@@ -91,9 +94,6 @@ public class Container extends Object {
                         break;
                     case 21:
                         armor = new Armor("shoes_brown", "feet", 1, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
-                        break;
-                    case 22:
-                        armor = new Armor("plate_shoes", "feet", 5, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64);
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + randomNumber);

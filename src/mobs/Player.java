@@ -24,18 +24,20 @@ public class Player extends Mob {
     private String bodyAnimation, weaponAnimation, headAnimation, shouldersAnimation, torsoAnimation, beltAnimation, handsAnimation, legsAnimation, feetAnimation;
     private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private int player_animation_move_left_i = 2, player_animation_move_right_i = 2, player_animation_move_up_i = 2, player_animation_move_down_i = 2;
-    private int player_animation_move_g = 0, player_animation_death_g = 0, player_animation_death_i = 1;
+    private int player_animation_move_g = 0, player_animation_death_i = 1, player_animation_death_g = 0;
     private int knockbackTime = 0, hitAnimationTime = 1;
     private boolean hitAnimationTaskStarted = false;
     private String knockbackDirection;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
+            setImmortal(true);
             if (knockbackDirection.equals("left")) moveRight();
             else if (knockbackDirection.equals("right")) moveLeft();
             else if (knockbackDirection.equals("up")) moveDown();
             else if (knockbackDirection.equals("down")) moveUp();
             knockbackTime++;
+            if (knockbackTime >= 15) stopTimer();
         }
     };
     private TimerTask hitAnimationTask = new TimerTask() {
@@ -243,6 +245,7 @@ public class Player extends Mob {
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
+                setImmortal(true);
                 if (knockbackDirection.equals("left")) moveLeft();
                 else if (knockbackDirection.equals("right")) moveRight();
                 else if (knockbackDirection.equals("up")) moveUp();
@@ -722,6 +725,8 @@ public class Player extends Mob {
                 }
                 player_animation_death_g++;
             }
+            getTimer().cancel();
+            getTimer().purge();
         }
     }
 
