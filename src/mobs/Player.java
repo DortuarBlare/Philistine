@@ -20,7 +20,7 @@ public class Player extends Mob {
     private Armor head, shoulders, torso, belt, hands, legs, feet;
     private Weapon weapon;
     private AABB attackBox;
-    private int money;
+    private int money, keys;
     private String bodyAnimation, weaponAnimation, headAnimation, shouldersAnimation, torsoAnimation, beltAnimation, handsAnimation, legsAnimation, feetAnimation;
     private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private int player_animation_move_left_i = 2, player_animation_move_right_i = 2, player_animation_move_up_i = 2, player_animation_move_down_i = 2;
@@ -44,6 +44,7 @@ public class Player extends Mob {
         setMoveDirection("down");
         attackBox = new AABB();
         money = 157;
+        keys = 1;
         weapon = new Weapon("longsword", "slash", 10, new AABB());
         head = new Armor("plate_helmet", "head", 5, true);
         shoulders = new Armor("plate_armor", "shoulders", 5, true);
@@ -502,4 +503,12 @@ public class Player extends Mob {
     public int getMoney() { return money; }
 
     public void setMoney(int money) { this.money = money; }
+
+    public int getKeys() {
+        return keys;
+    }
+
+    public void setKeys(int keys) {
+        this.keys = keys;
+    }
 }

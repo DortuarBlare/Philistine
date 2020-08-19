@@ -276,10 +276,11 @@ public class Window {
                                     break;
                                 }
                             }
-                            else if (objectList.get(i) instanceof Container) {
+                            else if (objectList.get(i) instanceof Container && player.getKeys() > 0) {
                                 Container change = (Container) objectList.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), change.getCollisionBox())) {
                                     change.setTexture("chestOpened");
+                                    player.setKeys(player.getKeys() - 1);
                                     for (int h = 0; h < change.loot.size(); h++) {
                                         objectList.add(change.loot.get(h));
                                         change.loot.remove(h);
@@ -411,6 +412,17 @@ public class Window {
                                     break;
                                 }
                             }
+
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), object.getCollisionBox())) {
+                                if ((mob instanceof Player) && (object instanceof Potion)) {
+                                    object.getTimer().cancel();
+                                    object.getTimer().purge();
+                                    objectList.remove(object);
+                                    player.setHealth(player.getHealth() + 10);
+                                    break;
+                                }
+                            }
+
                             if (object.isNoclip()) continue;
                             if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
                                 mob.stop(CollisionMessage.getMessage());
@@ -673,6 +685,60 @@ public class Window {
                     tempX0 -= 7;
                     tempX1 -= 7;
                 }
+            }
+
+            // Количество ключей
+            glBindTexture(GL_TEXTURE_2D, textureMap.get("keyGold"));
+            createQuadTexture(0, 55, 16, 61);
+            int tempKeys = player.getKeys();
+            int tempX0 = 16 + (getCountsOfDigits(player.getKeys()) * 7) - 7, tempX1 = 16 + (getCountsOfDigits(player.getKeys()) * 7), tempY0 = 55, tempY1 = 67;
+            for (int i = 0; i < getCountsOfDigits(player.getKeys()); i++) {
+                switch (tempKeys % 10) {
+                    case 0:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 1:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_1"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 2:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_2"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 3:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_3"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 4:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_4"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 5:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_5"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 6:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_6"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 7:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_7"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 8:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_8"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+                    case 9:
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_9"));
+                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                        break;
+
+                }
+                tempKeys = tempKeys / 10;
+                tempX0 -= 7;
+                tempX1 -= 7;
             }
 
             // Отрисовка экипировки и анимации
