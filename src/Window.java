@@ -515,11 +515,11 @@ public class Window {
                                     spider.getTimer().purge();
                                     mobList.remove(spider);
                                 }
-                                else {
+                                /*else {
                                     int tempHealth = spider.getHealth() % 10 == 0 ? spider.getHealth() * 2 : (spider.getHealth() * 2) - ((spider.getHealth() * 2) % 10) + 10;
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
                                     createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 2);
-                                }
+                                }*/
                             }
                         }
                     }

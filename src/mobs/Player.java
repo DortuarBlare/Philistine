@@ -251,6 +251,7 @@ public class Player extends Mob {
                 else if (knockbackDirection.equals("up")) moveUp();
                 else if (knockbackDirection.equals("down")) moveDown();
                 knockbackTime++;
+                if (knockbackTime >= 15) stopTimer();
             }
         };
         hitAnimationTask = new TimerTask() {

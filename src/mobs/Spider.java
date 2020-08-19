@@ -26,7 +26,7 @@ public class Spider extends Mob {
         public void run() {
             animationTaskStarted = true;
             animationTime++;
-            if (animationTime == 11) animationTime = 2;
+            if (animationTime == 8) animationTime = 2;
         }
     };
 
@@ -59,7 +59,7 @@ public class Spider extends Mob {
             public void run() {
                 animationTaskStarted = true;
                 animationTime++;
-                if (animationTime == 11) animationTime = 2;
+                if (animationTime == 8) animationTime = 2;
             }
         };
     }
