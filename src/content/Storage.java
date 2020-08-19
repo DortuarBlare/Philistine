@@ -51,7 +51,7 @@ public class Storage {
     };
 
     public static final String[] playerSoundString = {
-            "stepStone", "swish"
+            "stepStone", "swish", "selectionClick"
     };
 
     public static final String[] textureString = {

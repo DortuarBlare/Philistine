@@ -94,8 +94,6 @@ public class Slime extends Mob {
                 animationTime == 3) moveDown();
     }
 
-    public void startAnimationTask() { getTimer().schedule(animationTask, 0, 300); }
-
     @Override
     public void moveUp() { setY(getY() - getSpeed()); }
 

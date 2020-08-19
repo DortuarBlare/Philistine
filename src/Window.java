@@ -399,7 +399,7 @@ public class Window {
                         if (!mobList.get(i).isDead()) {
                             if (mobList.get(i) instanceof Slime) {
                                 Slime slime = (Slime) mobList.get(i);
-                                if (!slime.isAnimationTaskStarted()) slime.startAnimationTask();
+                                if (!slime.isAnimationTaskStarted()) slime.getTimer().schedule(slime.getAnimationTask(), 0, 300);
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() + "_0" + slime.getAnimationTime()));
                                 createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
                                 slime.getHitbox().update(slime.getX() + 3, slime.getY() + 2, slime.getX() + 14, slime.getY() + 10);

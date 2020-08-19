@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 
 public class Player extends Mob {
     private HashMap<String, Integer> playerSounds;
-    private Source stepSound, hitSound;
+    private Source stepSound, hitSound, choiceSound;
     private Armor head, shoulders, torso, belt, hands, legs, feet;
     private Weapon weapon;
     private AABB attackBox;
@@ -233,6 +233,7 @@ public class Player extends Mob {
         playerSounds = new HashMap<String, Integer>();
         stepSound = new Source(0);
         hitSound = new Source(0);
+        choiceSound = new Source(0);
         for (int i = 0, id = 0; i < Storage.playerSoundString.length; i++)
             playerSounds.put(Storage.playerSoundString[i], id = AudioMaster.loadSound("sounds/" + Storage.playerSoundString[i]));
     }
@@ -955,7 +956,10 @@ public class Player extends Mob {
 
     public boolean isYes() { return yes; }
 
-    public void setYes(boolean yes) { this.yes = yes; }
+    public void setYes(boolean yes) {
+        this.yes = yes;
+        choiceSound.play(playerSounds.get("selectionClick"));
+    }
 
     public boolean isChoiceBubble() { return choiceBubble; }
 
