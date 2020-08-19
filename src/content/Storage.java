@@ -72,7 +72,7 @@ public class Storage {
             "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
 
             // Окружение
-            "you_Shall_Not_Pass",
+            "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
             "guard_stand_01", "guard_stand_02", "guard_stand_03", "guard_stand_04", "guard_stand_05", "guard_stand_06", "guard_stand_07", "guard_stand_08", "guard_stand_09", "guard_stand_010",
 
             // Анимации игрока

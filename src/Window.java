@@ -173,18 +173,35 @@ public class Window {
                 }
                 System.exit(0);
             }
-            if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) level = "Town";
+            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("MainMenu")) level = "Town";
+            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("Town")) {
+                player.setX(player.getX() - 1);
+                player.setChoiceBubble(false);
+                if (player.isYes()) {
+                    level = "FirstLevel";
+                    glTranslated(player.getForPlacingCamera(), 0, 0);
+                    player.setX(150);
+                    player.setY(150);
+                    player.setSpeed(2);
+                }
+            }
             if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
                 if (!player.isAttackRight() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackLeft(true);
                     player.setMoveDirection("left");
                 }
             }
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && level.equals("Town")) {
+                if (player.isChoiceBubble()) player.setYes(!player.isYes());
+            }
             if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
                 if (!player.isAttackLeft() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackRight(true);
                     player.setMoveDirection("right");
                 }
+            }
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && level.equals("Town")) {
+                if (player.isChoiceBubble()) player.setYes(!player.isYes());
             }
             if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
                 if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackDown()) {
@@ -262,6 +279,12 @@ public class Window {
                     if (player.getX() <= 50) {
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("you_Shall_Not_Pass"));
                         createQuadTexture(34, 136, 94, 195);
+                    }
+                    if (player.getX() + 32 == 1519) {
+                        player.setChoiceBubble(true);
+                        if (player.isYes()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_Yes"));
+                        else if (!player.isYes()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_No"));
+                        createQuadTexture(player.getX() - 20, player.getY() - 55, player.getX() + 40, player.getY());
                     }
 
                     player.updateForTown(window);

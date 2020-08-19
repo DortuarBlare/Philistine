@@ -27,6 +27,8 @@ public class Player extends Mob {
     private int player_animation_move_left_i = 2, player_animation_move_right_i = 2, player_animation_move_up_i = 2, player_animation_move_down_i = 2;
     private int player_animation_move_g = 0, player_animation_death_i = 1, player_animation_death_g = 0;
     private int forPlacingCamera = 0;
+    private boolean choiceBubble = false;
+    private boolean yes = false;
     private int knockbackTime = 0, hitAnimationTime = 1;
     private boolean hitAnimationTaskStarted = false;
     private String knockbackDirection;
@@ -781,48 +783,56 @@ public class Player extends Mob {
         legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
         feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
 
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-            if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
-            if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
-            bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
-            headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
-            shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
-            torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
-            beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
-            handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
-            legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
-            feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
-            if (player_animation_move_g == 8) {
-                player_animation_move_left_i++;
-                player_animation_move_g = 0;
+        if (!choiceBubble) {
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+                if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
+                if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
+                bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
+                headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
+                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
+                torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
+                handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
+                legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
+                feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
+                if (player_animation_move_g == 8) {
+                    player_animation_move_left_i++;
+                    player_animation_move_g = 0;
+                }
+                player_animation_move_g++;
+                moveLeft();
+                if (!(getX() < 290) && !(getX() > 1186)) {
+                    glTranslated(1, 0, 0);
+                    setForPlacingCamera(getForPlacingCamera() - 1);
+                }
+                if (getX() + 40 > 1410 && getX() + 40 < 1503) {
+                    if (getY() != 192) setY(getY() + 1);
+                }
             }
-            player_animation_move_g++;
-            moveLeft();
-            if (!(getX() < 290) && !(getX() > 1186)) {
-                glTranslated(1, 0, 0);
-                setForPlacingCamera(getForPlacingCamera() - 1);
-            }
-        }
-        else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-            if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
-            if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) stepSound.play(playerSounds.get("stepStone"));
-            bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
-            headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
-            shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
-            torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
-            beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
-            handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
-            legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
-            feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
-            if (player_animation_move_g == 8) {
-                player_animation_move_right_i++;
-                player_animation_move_g = 0;
-            }
-            player_animation_move_g++;
-            moveRight();
-            if (!(getX() > 1186) && !(getX() < 290)) {
-                glTranslated(-1, 0, 0);
-                setForPlacingCamera(getForPlacingCamera() + 1);
+            else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+                if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
+                if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) stepSound.play(playerSounds.get("stepStone"));
+                bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
+                headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
+                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
+                torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
+                handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
+                legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
+                feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
+                if (player_animation_move_g == 8) {
+                    player_animation_move_right_i++;
+                    player_animation_move_g = 0;
+                }
+                player_animation_move_g++;
+                moveRight();
+                if (!(getX() > 1186) && !(getX() < 290)) {
+                    glTranslated(-1, 0, 0);
+                    setForPlacingCamera(getForPlacingCamera() + 1);
+                }
+                if (getX() + 40 > 1410 && getX() + 40 < 1503) {
+                    if (getY() != 100) setY(getY() - 1);
+                }
             }
         }
     }
@@ -939,11 +949,15 @@ public class Player extends Mob {
 
     public void setMoney(int money) { this.money = money; }
 
-    public int getKeys() {
-        return keys;
-    }
+    public int getKeys() { return keys; }
 
-    public void setKeys(int keys) {
-        this.keys = keys;
-    }
+    public void setKeys(int keys) { this.keys = keys; }
+
+    public boolean isYes() { return yes; }
+
+    public void setYes(boolean yes) { this.yes = yes; }
+
+    public boolean isChoiceBubble() { return choiceBubble; }
+
+    public void setChoiceBubble(boolean choiceBubble) { this.choiceBubble = choiceBubble; }
 }
