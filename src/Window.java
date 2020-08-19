@@ -36,7 +36,6 @@ public class Window {
     boolean key_E_Pressed = false;
     boolean forMainMenu = true;
     boolean forMainTheme = true;
-    int forPlacingCamera = 0;
     Source backgroundMusic, mobHurtSound, armorChange, coinSound;
     Coin coinGUI;
     Player player;
@@ -174,32 +173,26 @@ public class Window {
                 }
                 System.exit(0);
             }
-            if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-                level = "FirstLevel";
-                glTranslated(forPlacingCamera, 0, 0);
-                player.setX(150);
-                player.setY(150);
-                player.setSpeed(2);
-            }
-            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu")) {
+            if (level.equals("MainMenu") && key == GLFW_KEY_ENTER && action == GLFW_PRESS) level = "Town";
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
                 if (!player.isAttackRight() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackLeft(true);
                     player.setMoveDirection("left");
                 }
             }
-            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu")) {
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
                 if (!player.isAttackLeft() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackRight(true);
                     player.setMoveDirection("right");
                 }
             }
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu")) {
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
                 if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackDown()) {
                     player.setAttackUp(true);
                     player.setMoveDirection("up");
                 }
             }
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu")) {
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
                 if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackUp()) {
                     player.setAttackDown(true);
                     player.setMoveDirection("down");
@@ -210,7 +203,7 @@ public class Window {
     }
 
     private void loop() {
-        int torch_i = 1, torch_g = 0;
+        int torch_i = 1, torch_g = 0, guard_i = 1, guard_g = 0;
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -224,20 +217,54 @@ public class Window {
                     }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
                     createQuadTexture(0, 0, 1536, 360);
+
+                    // Анимация охранника
+                    if (guard_i == 11) guard_i = 1;
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("guard_stand_0" + guard_i));
+                    createQuadTexture(30, 190, 62, 224);
+                    if (guard_g == 10) {
+                        guard_i++;
+                        guard_g = 0;
+                    }
+                    guard_g++;
+
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("Press_enter"));
                     createQuadTexture(player.getX() - 18, player.getY() - 100, player.getX() + 82, player.getY() - 72);
                     if (player.getX() == 1186) forMainMenu = false;
                     else if (player.getX() == 290) forMainMenu = true;
                     if (forMainMenu) {
                         glTranslated(-1, 0, 0);
-                        forPlacingCamera++;
+                        player.setForPlacingCamera(player.getForPlacingCamera() + 1);
                         player.updateForMainMenu("right");
                     }
                     else {
                         glTranslated(1, 0, 0);
-                        forPlacingCamera--;
+                        player.setForPlacingCamera(player.getForPlacingCamera() - 1);
                         player.updateForMainMenu("left");
                     }
+                    break;
+                }
+                case "Town": {
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
+                    createQuadTexture(0, 0, 1536, 360);
+
+                    // Анимация охранника
+                    if (guard_i == 11) guard_i = 1;
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("guard_stand_0" + guard_i));
+                    createQuadTexture(30, 190, 62, 224);
+                    if (guard_g == 10) {
+                        guard_i++;
+                        guard_g = 0;
+                    }
+                    guard_g++;
+
+                    if (player.getX() <= 48) player.stopLeft();
+                    if (player.getX() <= 50) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("you_Shall_Not_Pass"));
+                        createQuadTexture(34, 136, 94, 195);
+                    }
+
+                    player.updateForTown(window);
                     break;
                 }
                 case "FirstLevel": {
@@ -526,8 +553,8 @@ public class Window {
                                 // Отрисовка хелсбара
                                 if (spider.getHealth() <= 0) {
                                     spider.setDead(true);
-                                    spider.getTimer().cancel();
-                                    spider.getTimer().purge();
+                                    /*spider.getTimer().cancel();
+                                    spider.getTimer().purge();*/
                                     mobList.remove(spider);
                                 }
                                 /*else {
@@ -651,7 +678,7 @@ public class Window {
             }
 
             // Метод для обработки игрока и отрисовка интерфейса
-            if (!level.equals("MainMenu")) {
+            if (!level.equals("MainMenu") && !level.equals("Town")) {
                 player.update(window);
 
                 // Полоска здоровья
@@ -721,60 +748,63 @@ public class Window {
                     tempX0 -= 7;
                     tempX1 -= 7;
                 }
-            }
 
-            // Количество ключей
-            glBindTexture(GL_TEXTURE_2D, textureMap.get("keyGold"));
-            createQuadTexture(0, 55, 16, 61);
-            int tempKeys = player.getKeys();
-            int tempX0 = 16 + (getCountsOfDigits(player.getKeys()) * 7) - 7, tempX1 = 16 + (getCountsOfDigits(player.getKeys()) * 7), tempY0 = 55, tempY1 = 67;
-            for (int i = 0; i < getCountsOfDigits(player.getKeys()); i++) {
-                switch (tempKeys % 10) {
-                    case 0:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 1:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_1"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 2:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_2"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 3:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_3"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 4:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_4"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 5:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_5"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 6:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_6"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 7:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_7"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 8:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_8"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
-                    case 9:
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("number_9"));
-                        createQuadTexture(tempX0, tempY0, tempX1, tempY1);
-                        break;
+                // Количество ключей
+                glBindTexture(GL_TEXTURE_2D, textureMap.get("keyGold"));
+                createQuadTexture(0, 55, 16, 61);
+                int tempKeys = player.getKeys();
+                tempX0 = 16 + (getCountsOfDigits(player.getKeys()) * 7) - 7;
+                tempX1 = 16 + (getCountsOfDigits(player.getKeys()) * 7);
+                tempY0 = 55;
+                tempY1 = 65;
+                for (int i = 0; i < getCountsOfDigits(player.getKeys()); i++) {
+                    switch (tempKeys % 10) {
+                        case 0:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 1:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_1"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 2:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_2"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 3:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_3"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 4:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_4"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 5:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_5"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 6:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_6"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 7:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_7"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 8:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_8"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
+                        case 9:
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("number_9"));
+                            createQuadTexture(tempX0, tempY0, tempX1, tempY1);
+                            break;
 
+                    }
+                    tempKeys = tempKeys / 10;
+                    tempX0 -= 7;
+                    tempX1 -= 7;
                 }
-                tempKeys = tempKeys / 10;
-                tempX0 -= 7;
-                tempX1 -= 7;
             }
 
             // Отрисовка экипировки и анимации
