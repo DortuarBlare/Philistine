@@ -453,7 +453,10 @@ public class Window {
                                 if ((mob instanceof Player) && (object instanceof Potion)) {
                                     object.getTimer().cancel();
                                     object.getTimer().purge();
-                                    objectList.remove(object);
+                                    firstLevelObjectList.remove(object);
+                                    if (player.getHealth() > 90)
+                                        player.setHealth(100);
+                                    else
                                     player.setHealth(player.getHealth() + 10);
                                     break;
                                 }
