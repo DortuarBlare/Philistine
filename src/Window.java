@@ -146,6 +146,8 @@ public class Window {
         aabbMap.get("entranceToForthLevel").update(247, 134, 283, 144);
         aabbMap.get("entranceFromThirdToSecondLevel").update(249, 134, 288, 146);
         aabbMap.get("entranceFromForthToSecondLevel").update(199, 132, 236, 141);
+        aabbMap.get("entranceFromTavernToTown").update(225,313,256,318);
+        aabbMap.get("entranceFromForgeToTown").update(225,313,256,318);
 
         // Добавление всех объектов и мобов
         firstLevelObjectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
@@ -287,7 +289,95 @@ public class Window {
                         createQuadTexture(player.getX() - 20, player.getY() - 55, player.getX() + 40, player.getY());
                     }
 
+                    if (key_E_Pressed){
+                        if (player.getX() + 32 > 305 && player.getX() + 32 < 341){
+                            level = "tavern";
+                            glTranslated(player.getForPlacingCamera(), 0, 0);
+                            // Обновление хитбоксов стен для tavern
+                            for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                                aabbMap.get("wall" + i).update(Storage.tavernLevelWalls[j], Storage.tavernLevelWalls[j + 1],
+                                        Storage.tavernLevelWalls[j + 2], Storage.tavernLevelWalls[j + 3]);
+                            }
+                            player.setX(210);
+                            player.setY(230);
+                            player.setMoveDirection("up");
+                        }
+                        else if (player.getX() + 32 > 620 && player.getX() + 32 < 651){
+                            level = "forge";
+                            glTranslated(player.getForPlacingCamera(), 0, 0);
+                            // Обновление хитбоксов стен для forge
+                            for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                                aabbMap.get("wall" + i).update(Storage.forgeLevelWalls[j], Storage.forgeLevelWalls[j + 1],
+                                        Storage.forgeLevelWalls[j + 2], Storage.forgeLevelWalls[j + 3]);
+                            }
+                            player.setX(210);
+                            player.setY(230);
+                            player.setMoveDirection("up");
+                        }
+                    }
+                    key_E_Pressed = false;
+
                     player.updateForTown(window);
+                    break;
+                }
+                case "tavern":{
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("tavern")); // Фон второго уровня
+                    createQuadTexture(0, 0, 640, 360);
+
+                    for (Mob mob : mobList) {
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                            mob.stopRight();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
+                            mob.stopLeft();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                            mob.stopUp();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                            mob.stopDown();
+                    }
+
+                    // Проверка выхода в город
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromTavernToTown"))) {
+                        level = "Town";
+                        // Обновление хитбоксов стен для второго уровня
+                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
+                                    Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
+                        }
+                        player.setX(322);
+                        player.setY(192);
+                        player.setMoveDirection("right");
+                    }
+
+                    break;
+                }
+                case "forge":{
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("forge")); // Фон второго уровня
+                    createQuadTexture(0, 0, 640, 360);
+
+                    for (Mob mob : mobList) {
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                            mob.stopRight();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
+                            mob.stopLeft();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                            mob.stopUp();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                            mob.stopDown();
+                    }
+
+                    // Проверка выхода в город
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromForgeToTown"))) {
+                        level = "Town";
+                        // Обновление хитбоксов стен для второго уровня
+                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
+                                    Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
+                        }
+                        player.setX(625);
+                        player.setY(192);
+                        player.setMoveDirection("right");
+                    }
+
                     break;
                 }
                 case "FirstLevel": {

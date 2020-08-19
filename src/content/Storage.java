@@ -41,9 +41,39 @@ public class Storage {
             0, 0, 0, 0 // wall6
     };
 
+    public static final int[] townLevelWalls = {
+            0, 0, 0, 0, // wall0
+            0, 0, 0, 0, // wall1
+            0, 0, 0, 0, // wall2
+            0, 0, 0, 0, // wall3
+            0, 0, 0, 0, // wall4
+            0, 0, 0, 0, // wall5
+            0, 0, 0, 0 // wall6
+    };
+
+    public static final int[] tavernLevelWalls = {
+            189, 279, 223, 280, // wall0
+            184, 239, 188, 278, // wall1
+            189, 237, 447, 240, // wall2
+            448, 242, 451, 277, // wall3
+            257, 279, 448, 273, // wall4
+            256, 280, 261, 318, // wall5
+            222, 280, 224, 318 // wall6
+    };
+
+    public static final int[] forgeLevelWalls = {
+            189, 279, 223, 280, // wall0
+            184, 232, 188, 278, // wall1
+            189, 233, 298, 239, // wall2
+            300, 241, 303, 277, // wall3
+            257, 279, 448, 273, // wall4
+            256, 280, 261, 318, // wall5
+            222, 280, 224, 318 // wall6
+    };
+
     public static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel", "entranceFromTavernToTown", "entranceFromForgeToTown"
     };
 
     public static final String[] soundString = {
@@ -205,6 +235,8 @@ public class Storage {
             "HEAD_chain_hood_down_thrust_01", "HEAD_chain_hood_down_thrust_02", "HEAD_chain_hood_down_thrust_03", "HEAD_chain_hood_down_thrust_04", "HEAD_chain_hood_down_thrust_05", "HEAD_chain_hood_down_thrust_06", "HEAD_chain_hood_down_thrust_07", "HEAD_chain_hood_down_thrust_08",
 
             "HEAD_chain_hood_hurt_01", "HEAD_chain_hood_hurt_02", "HEAD_chain_hood_hurt_03", "HEAD_chain_hood_hurt_04", "HEAD_chain_hood_hurt_05", "HEAD_chain_hood_hurt_06",
+
+            "tavern", "forge",
 
             "HEAD_plate_helmet_left_move_01", "HEAD_plate_helmet_left_move_02", "HEAD_plate_helmet_left_move_03", "HEAD_plate_helmet_left_move_04", "HEAD_plate_helmet_left_move_05", "HEAD_plate_helmet_left_move_06", "HEAD_plate_helmet_left_move_07", "HEAD_plate_helmet_left_move_08", "HEAD_plate_helmet_left_move_09",
             "HEAD_plate_helmet_right_move_01", "HEAD_plate_helmet_right_move_02", "HEAD_plate_helmet_right_move_03", "HEAD_plate_helmet_right_move_04", "HEAD_plate_helmet_right_move_05", "HEAD_plate_helmet_right_move_06", "HEAD_plate_helmet_right_move_07", "HEAD_plate_helmet_right_move_08", "HEAD_plate_helmet_right_move_09",
