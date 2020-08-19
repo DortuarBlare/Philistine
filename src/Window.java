@@ -14,6 +14,8 @@ import org.lwjgl.system.*;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -24,7 +26,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
     private long window;
     private ArrayList<Mob> mobList;
-    private ArrayList<Object> objectList;
+    private ArrayList<Object> firstLevelObjectList;
+    private ArrayList<Object> secondLevelObjectList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
@@ -37,6 +40,34 @@ public class Window {
     Source backgroundMusic, mobHurtSound, armorChange, coinSound;
     Coin coinGUI;
     Player player;
+    private int time = 0;
+    private boolean mobSpawnStarted = false;
+    private Timer mobTimer = new Timer();
+    private TimerTask mobSpawnTask = new TimerTask() {
+        @Override
+        public void run() {
+            if (level.equals("FirstLevel")) mobList.add(new Slime(350, 300, 1, 50, 0, 5));
+            else if (level.equals("SecondLevel")) mobList.add(new Spider(350, 300, 1, 30, 0, 10));
+            time++;
+            if (time == 2) stopMobSpawn();
+        }
+    };
+
+    private void stopMobSpawn() {
+        time = 0;
+        mobTimer.cancel();
+        mobTimer.purge();
+        mobTimer = new Timer();
+        mobSpawnTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (level.equals("FirstLevel")) mobList.add(new Slime(350, 300, 1, 50, 0, 5));
+                else if (level.equals("SecondLevel")) mobList.add(new Spider(350, 300, 1, 30, 0, 10));
+                time++;
+                if (time == 2) stopMobSpawn();
+            }
+        };
+    }
 
     public void run() {
         System.out.println("Игра запущена");
@@ -83,7 +114,8 @@ public class Window {
         textureMap = new HashMap<String, Integer>();
         soundMap = new HashMap<String, Integer>();
         aabbMap = new HashMap<String, AABB>();
-        objectList = new ArrayList<Object>();
+        firstLevelObjectList = new ArrayList<Object>();
+        secondLevelObjectList = new ArrayList<Object>();
 
         AudioMaster.init();
         AudioMaster.setListenerData();
@@ -117,22 +149,11 @@ public class Window {
         aabbMap.get("entranceFromForthToSecondLevel").update(199, 132, 236, 141);
 
         // Добавление всех объектов и мобов
-        objectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
-        objectList.add(new Armor("shirt_white", "torso", 1, true, true, 300, 100, 364, 164));
-        objectList.add(new Armor("pants_greenish", "legs", 1, true, true, 428, 100, 492, 164));
-        objectList.add(new Armor("shoes_brown", "feet", 1, true, true, 364, 100, 428, 164));
-        objectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        firstLevelObjectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
+        firstLevelObjectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
-        mobList.add(new Slime(350, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(330, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(310, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(290, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(270, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(250, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(230, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(210, 300, 1, 50, 0, 5));
-        mobList.add(new Slime(190, 300, 1, 50, 0, 5));
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -145,7 +166,7 @@ public class Window {
                         mob.getTimer().purge();
                     }
                 }
-                for (Object object : objectList) {
+                for (Object object : firstLevelObjectList) {
                     if (object instanceof Coin) {
                         object.getTimer().cancel();
                         object.getTimer().purge();
@@ -160,10 +181,30 @@ public class Window {
                 player.setY(150);
                 player.setSpeed(2);
             }
-            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackLeft(true);
-            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackRight(true);
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackUp(true);
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu")) player.setAttackDown(true);
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackRight() && !player.isAttackUp() && !player.isAttackDown()) {
+                    player.setAttackLeft(true);
+                    player.setMoveDirection("left");
+                }
+            }
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackLeft() && !player.isAttackUp() && !player.isAttackDown()) {
+                    player.setAttackRight(true);
+                    player.setMoveDirection("right");
+                }
+            }
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackDown()) {
+                    player.setAttackUp(true);
+                    player.setMoveDirection("up");
+                }
+            }
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackUp()) {
+                    player.setAttackDown(true);
+                    player.setMoveDirection("down");
+                }
+            }
             if (key == GLFW_KEY_E && action == GLFW_PRESS && !level.equals("MainMenu")) key_E_Pressed = true;
         });
     }
@@ -221,8 +262,13 @@ public class Window {
                     }
                     torch_g++;
 
+                    if (!mobSpawnStarted) {
+                        mobSpawnStarted = true;
+                        mobTimer.schedule(mobSpawnTask, 0, 5000);
+                    }
+
                     // Отрисовка всех объектов
-                    for (Object object : objectList) {
+                    for (Object object : firstLevelObjectList) {
                         if (!object.isLying()) continue;
                         if (object instanceof Coin) {
                             Coin coin = (Coin) object;
@@ -235,29 +281,32 @@ public class Window {
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
-                    // Подбор всех возможных предметов
+                    // Подбор всех возможных предметов с клавишей Е
                     if (key_E_Pressed) {
-                        for (int i = 0; i < objectList.size(); i++) {
-                            if (objectList.get(i) instanceof Armor) {
-                                Armor changingArmor = (Armor) objectList.get(i);
+                        for (int i = 0; i < firstLevelObjectList.size(); i++) {
+                            if (firstLevelObjectList.get(i) instanceof Armor) {
+                                Armor changingArmor = (Armor) firstLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), changingArmor.getCollisionBox())) {
                                     Armor playerArmor = player.getArmorType(changingArmor);
                                     changingArmor.setIsLying(false);
                                     player.setArmor(changingArmor);
                                     armorChange.play(soundMap.get("changingArmor"));
                                     changingArmor = playerArmor;
-                                    changingArmor.setMinX(player.getCollisionBox().getMin().x - 20);
-                                    changingArmor.setMinY(player.getCollisionBox().getMin().y - 30);
-                                    changingArmor.setMaxX(player.getCollisionBox().getMin().x + 44);
-                                    changingArmor.setMaxY(player.getCollisionBox().getMin().y + 34);
-                                    changingArmor.setIsLying(true);
-                                    changingArmor.correctCollisionBox();
-                                    objectList.set(i, changingArmor);
+                                    if (changingArmor.getTexture().equals("nothing")) firstLevelObjectList.remove(i);
+                                    else {
+                                        changingArmor.setMinX(player.getCollisionBox().getMin().x - 20);
+                                        changingArmor.setMinY(player.getCollisionBox().getMin().y - 30);
+                                        changingArmor.setMaxX(player.getCollisionBox().getMin().x + 44);
+                                        changingArmor.setMaxY(player.getCollisionBox().getMin().y + 34);
+                                        changingArmor.setIsLying(true);
+                                        changingArmor.correctCollisionBox();
+                                        firstLevelObjectList.set(i, changingArmor);
+                                    }
                                     break;
                                 }
                             }
-                            else if (objectList.get(i) instanceof Weapon) {
-                                Weapon changingWeapon = (Weapon) objectList.get(i);
+                            else if (firstLevelObjectList.get(i) instanceof Weapon) {
+                                Weapon changingWeapon = (Weapon) firstLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), changingWeapon.getCollisionBox())) {
                                     Weapon playerWeapon = player.getWeapon();
                                     changingWeapon.setIsLying(false);
@@ -265,24 +314,26 @@ public class Window {
                                     player.setWeapon(changingWeapon);
                                     armorChange.play(soundMap.get("changingArmor"));
                                     changingWeapon = playerWeapon;
-                                    changingWeapon.setMinX(player.getCollisionBox().getMin().x - 64);
-                                    changingWeapon.setMinY(player.getCollisionBox().getMin().y - 64);
-                                    changingWeapon.setMaxX(player.getCollisionBox().getMin().x + 128);
-                                    changingWeapon.setMaxY(player.getCollisionBox().getMin().y + 128);
-                                    changingWeapon.setIsLying(true);
-                                    changingWeapon.getCollisionBox().update(changingWeapon.getMinX() + 81, changingWeapon.getMinY() + 81,
-                                            changingWeapon.getMinX() + 109, changingWeapon.getMinY() + 109);
-                                    objectList.set(i, changingWeapon);
+                                    if (changingWeapon.getTexture().equals("nothing")) firstLevelObjectList.remove(i);
+                                    else {
+                                        changingWeapon.setMinX(player.getCollisionBox().getMin().x - 64);
+                                        changingWeapon.setMinY(player.getCollisionBox().getMin().y - 64);
+                                        changingWeapon.setMaxX(player.getCollisionBox().getMin().x + 128);
+                                        changingWeapon.setMaxY(player.getCollisionBox().getMin().y + 128);
+                                        changingWeapon.setIsLying(true);
+                                        changingWeapon.correctCollisionBox();
+                                        firstLevelObjectList.set(i, changingWeapon);
+                                    }
                                     break;
                                 }
                             }
-                            else if (objectList.get(i) instanceof Container && player.getKeys() > 0) {
-                                Container change = (Container) objectList.get(i);
+                            else if (firstLevelObjectList.get(i) instanceof Container && player.getKeys() > 0) {
+                                Container change = (Container) firstLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(player.getCollisionBox(), change.getCollisionBox())) {
                                     change.setTexture("chestOpened");
                                     player.setKeys(player.getKeys() - 1);
                                     for (int h = 0; h < change.loot.size(); h++) {
-                                        objectList.add(change.loot.get(h));
+                                        firstLevelObjectList.add(change.loot.get(h));
                                         change.loot.remove(h);
                                         h--;
                                     }
@@ -298,27 +349,21 @@ public class Window {
                         if (!mobList.get(i).isDead()) {
                             if (mobList.get(i) instanceof Slime) {
                                 Slime slime = (Slime) mobList.get(i);
-                                if (!slime.isAnimationTaskStarted()) slime.getTimer().schedule(slime.getAnimationTask(), 0, 120);
+                                if (!slime.isAnimationTaskStarted()) slime.startAnimationTask();
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() + "_0" + slime.getAnimationTime()));
                                 createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
                                 slime.getHitbox().update(slime.getX() + 3, slime.getY() + 2, slime.getX() + 14, slime.getY() + 10);
                                 slime.getCollisionBox().update(slime.getX() + 1, slime.getY() + 1, slime.getX() + 16, slime.getY() + 11);
 
                                 // Преследование игрока слаймом
-                                if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && (int)(Math.random() * 6) == 5) {
-                                    if (slime.getHitbox().getMin().x > player.getHitbox().getMin().x) slime.moveLeft();
-                                    else slime.moveRight();
-                                    if (slime.getHitbox().getMin().y > player.getHitbox().getMin().y) slime.moveUp();
-                                    else slime.moveDown();
-                                }
+                                if (!AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox())) slime.follow(player);
                                 // Игрок получает урона от слизня
-                                if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.isImmortal()) {
+                                if (AABB.AABBvsAABB(player.getHitbox(), slime.getHitbox()) && !player.isDead() && !player.isImmortal()) {
                                     if (player.getX() > slime.getX() && player.getY() > slime.getY()) player.setKnockbackDirection("right");
                                     else if (player.getX() < slime.getX()) player.setKnockbackDirection("left");
                                     else if (player.getY() > slime.getY()) player.setKnockbackDirection("down");
                                     else if (player.getY() < slime.getY()) player.setKnockbackDirection("up");
                                     player.takeDamage(slime.getDamage());
-                                    player.setImmortal(true);
                                     player.getTimer().schedule(player.getKnockbackTask(), 0, 10);
                                 }
                                 // Слизень получает урон от игрока
@@ -328,24 +373,15 @@ public class Window {
                                     else if (player.isAttackUp()) slime.setKnockbackDirection("up");
                                     else if (player.isAttackDown()) slime.setKnockbackDirection("down");
                                     slime.setHealth(slime.getHealth() - player.getDamage());
-                                    slime.setImmortal(true);
                                     slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
                                     mobHurtSound.play(soundMap.get("slimeHurt"));
-                                }
-                                if (player.getTime() >= 15) {
-                                    player.stopTimer();
-                                    player.setImmortal(false);
-                                }
-                                if (slime.getKnockbackTime() >= 25) {
-                                    slime.stopTimer();
-                                    slime.setImmortal(false);
                                 }
 
                                 // Отрисовка хелсбара
                                 if (slime.getHealth() <= 0) {
                                     slime.setDead(true);
-                                    slime.getTimer().cancel();
-                                    slime.getTimer().purge();
+//                                    slime.getTimer().cancel();
+//                                    slime.getTimer().purge();
                                     mobList.remove(slime);
                                 }
                                 else {
@@ -379,8 +415,8 @@ public class Window {
                             }
                         }
 
-                        for (int i = 0; i < objectList.size(); i++) {
-                            Object object = objectList.get(i);
+                        for (int i = 0; i < firstLevelObjectList.size(); i++) {
+                            Object object = firstLevelObjectList.get(i);
                             if (!(object instanceof Furniture) && !(object instanceof Container)) {
                                 // Столкновение объектов со стенами
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall1")))
@@ -393,8 +429,8 @@ public class Window {
                                     object.stopDown();
 
                                 // Столкновение объектов с объектами
-                                for (int j = i + 1; j < objectList.size(); j++) {
-                                    Object object2 = objectList.get(j);
+                                for (int j = i + 1; j < firstLevelObjectList.size(); j++) {
+                                    Object object2 = firstLevelObjectList.get(j);
                                     if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
                                         if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox()))
                                             object.moveLeft();
@@ -406,7 +442,7 @@ public class Window {
                                 if ((mob instanceof Player) && (object instanceof Coin)) {
                                     object.getTimer().cancel();
                                     object.getTimer().purge();
-                                    objectList.remove(object);
+                                    firstLevelObjectList.remove(object);
                                     player.setMoney(player.getMoney() + 10);
                                     coinSound.play(soundMap.get("pickedCoin"));
                                     break;
@@ -432,6 +468,7 @@ public class Window {
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
                         level = "SecondLevel";
+                        mobSpawnStarted = false;
                         // Обновление хитбоксов стен для второго уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
@@ -443,71 +480,61 @@ public class Window {
                     break;
                 }
                 case "SecondLevel": {
-//                    Skeleton skeleton = (Skeleton) mobList.get(2);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level1")); // Фон второго уровня
                     createQuadTexture(0, 0, 640, 360);
 
-                    // Все операции со скелетоном
-                    /*if (!skeleton.isDead()) {
-                        if (forSkeletonAnimation) {
-                            skeleton.getTimer().schedule(skeleton.getAnimationTask(), 0, 120);
-                            forSkeletonAnimation = false;
-                        }
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("skeleton_" + skeleton.getMoveDirection() + "_move_0" + skeleton.getAnimationTime()));
-                        skeleton.getHitbox().update(skeleton.getX() + 18, skeleton.getY() + 15, skeleton.getX() + 45, skeleton.getY() + 61);
-                        skeleton.getCollisionBox().update(skeleton.getX() + 16, skeleton.getY() + 44, skeleton.getX() + 47, skeleton.getY() + 62);
-                        createQuadTexture(skeleton.getX(), skeleton.getY(), skeleton.getX() + 64, skeleton.getY() + 64);
-
-                        // Преследование игрока скелетоном
-                        if (!AABB.AABBvsAABB(player.getHitbox(), skeleton.getHitbox())) {
-                            if (player.getHitbox().getMin().y < skeleton.getHitbox().getMin().y &&
-                                    player.getHitbox().getMin().x < skeleton.getHitbox().getMin().x) skeleton.moveUpLeft();
-                            else if (player.getHitbox().getMin().y < skeleton.getHitbox().getMin().y &&
-                                    player.getHitbox().getMin().x > skeleton.getHitbox().getMin().x) skeleton.moveUpRight();
-                            else if (player.getHitbox().getMin().y > skeleton.getHitbox().getMin().y &&
-                                    player.getHitbox().getMin().x < skeleton.getHitbox().getMin().x) skeleton.moveDownLeft();
-                            else if (player.getHitbox().getMin().y > skeleton.getHitbox().getMin().y &&
-                                    player.getHitbox().getMin().x > skeleton.getHitbox().getMin().x) skeleton.moveDownRight();
-                            else if (player.getHitbox().getMin().x < skeleton.getHitbox().getMin().x) skeleton.moveLeft();
-                            else if (player.getHitbox().getMin().x > skeleton.getHitbox().getMin().x) skeleton.moveRight();
-                            else if (player.getHitbox().getMin().y < skeleton.getHitbox().getMin().y) skeleton.moveUp();
-                            else if (player.getHitbox().getMin().y > skeleton.getHitbox().getMin().y) skeleton.moveDown();
-                        }
-
-                        // Получение урона от скелетона
-                        if (AABB.AABBvsAABB(player.getHitbox(), skeleton.getHitbox()) && !player.isDead() && !player.isImmortal()) {
-                            if (player.getX() > skeleton.getX()) player.setKnockbackDirection("Right");
-                            else if (player.getX() < skeleton.getX()) player.setKnockbackDirection("Left");
-                            else if (player.getY() > skeleton.getY()) player.setKnockbackDirection("Down");
-                            else if (player.getY() < skeleton.getY()) player.setKnockbackDirection("Up");
-                            player.takeDamage(skeleton.getDamage());
-                            player.setImmortal(true);
-                            player.getTimer().schedule(player.getTimerTaskPlayer(), 0, 10);
-                        }
-                        // Скелетон получает урон от игрока
-                        if (AABB.AABBvsAABB(player.getAttackBox(), skeleton.getHitbox()) && !skeleton.isImmortal()) {
-                            if (player.getX() > skeleton.getX()) skeleton.setDirection("Left");
-                            else if (player.getX() < skeleton.getX()) skeleton.setDirection("Right");
-                            else if (player.getY() > skeleton.getY()) skeleton.setDirection("Up");
-                            else if (player.getY() < skeleton.getY()) skeleton.setDirection("Down");
-                            skeleton.setHealth(skeleton.getHealth() - player.getDamage());
-                            skeleton.setImmortal(true);
-                            skeleton.getTimer().schedule(skeleton.getKnockbackTimerTask(), 0, 10);
-                        }
-                        player.getAttackBox().update(0, 0, 0, 0);
-                        if (player.getTime() >= 15) {
-                            player.stopTimerPlayer();
-                            player.setImmortal(false);
-                        }
-                        if (skeleton.getKnockbackTime() >= 25) {
-                            skeleton.stopKnockbackTimer();
-                            skeleton.setImmortal(false);
-                            forSkeletonAnimation = true;
-                        }
-
-                        if (skeleton.getHealth() <= 0) skeleton.setDead(true);
+                    if (!mobSpawnStarted) {
+                        mobSpawnStarted = true;
+                        mobTimer.schedule(mobSpawnTask, 3000, 10000);
                     }
-                    else skeleton.getHitbox().update(0,0,0,0);*/
+
+                    // Все операции с мобами
+                    for (int i = 1; i < mobList.size(); i++) {
+                        if (!mobList.get(i).isDead()) {
+                            if (mobList.get(i) instanceof Spider) {
+                                Spider spider = (Spider) mobList.get(i);
+                                if (!spider.isAnimationTaskStarted()) spider.getTimer().schedule(spider.getAnimationTask(), 0, 150);
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
+                                createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 64);
+                                spider.getHitbox().update(spider.getX() + 10, spider.getY() + 15, spider.getX() + 51, spider.getY() + 49);
+                                spider.getCollisionBox().update(spider.getX() + 10, spider.getY() + 15, spider.getX() + 51, spider.getY() + 49);
+
+                                // Преследование игрока пауком
+                                if (!AABB.AABBvsAABB(player.getHitbox(), spider.getHitbox())) spider.follow(player);
+                                // Игрок получает урона от паука
+                                if (AABB.AABBvsAABB(player.getHitbox(), spider.getHitbox()) && !player.isDead() && !player.isImmortal()) {
+                                    if (player.getX() > spider.getX() && player.getY() > spider.getY()) player.setKnockbackDirection("right");
+                                    else if (player.getX() < spider.getX()) player.setKnockbackDirection("left");
+                                    else if (player.getY() > spider.getY()) player.setKnockbackDirection("down");
+                                    else if (player.getY() < spider.getY()) player.setKnockbackDirection("up");
+                                    player.takeDamage(spider.getDamage());
+                                    player.getTimer().schedule(player.getKnockbackTask(), 0, 10);
+                                }
+                                // Паук получает урон от игрока
+                                if (AABB.AABBvsAABB(player.getAttackBox(), spider.getHitbox()) && !spider.isImmortal()) {
+                                    if (player.isAttackLeft()) spider.setKnockbackDirection("left");
+                                    else if (player.isAttackRight()) spider.setKnockbackDirection("right");
+                                    else if (player.isAttackUp()) spider.setKnockbackDirection("up");
+                                    else if (player.isAttackDown()) spider.setKnockbackDirection("down");
+                                    spider.setHealth(spider.getHealth() - player.getDamage());
+                                    spider.getTimer().schedule(spider.getKnockbackTask(), 0, 10);
+                                }
+
+                                // Отрисовка хелсбара
+                                if (spider.getHealth() <= 0) {
+                                    spider.setDead(true);
+                                    spider.getTimer().cancel();
+                                    spider.getTimer().purge();
+                                    mobList.remove(spider);
+                                }
+                                /*else {
+                                    int tempHealth = spider.getHealth() % 10 == 0 ? spider.getHealth() * 2 : (spider.getHealth() * 2) - ((spider.getHealth() * 2) % 10) + 10;
+                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
+                                    createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 2);
+                                }*/
+                            }
+                        }
+                    }
 
                     // Проверка всех мобов на столкновение со стенами
                     for (Mob mob : mobList) {
@@ -532,6 +559,7 @@ public class Window {
                         player.setX(638 - 64 + 15);
                         player.setY(281);
                     }
+
                     // Проверка перехода на 3 уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceToThirdLevel"))) {
                         level = "ThirdLevel";
@@ -542,6 +570,7 @@ public class Window {
                         }
                         player.setX(240);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
 
                     // Проверка перехода на 4 уровень
@@ -554,13 +583,14 @@ public class Window {
                         }
                         player.setX(180);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
-
                     break;
                 }
                 case "ThirdLevel":{
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level2"));
                     createQuadTexture(0, 0, 640, 360);
+
                     for (Mob mob : mobList) {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                             mob.stopRight();
@@ -571,6 +601,7 @@ public class Window {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
                             mob.stopDown();
                     }
+
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromThirdToSecondLevel"))) {
                         level = "SecondLevel";
@@ -581,6 +612,7 @@ public class Window {
                         }
                         player.setX(180);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
                     break;
                 }
@@ -598,6 +630,7 @@ public class Window {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
                             mob.stopDown();
                     }
+
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromForthToSecondLevel"))) {
                         level = "SecondLevel";
@@ -608,8 +641,8 @@ public class Window {
                         }
                         player.setX(240);
                         player.setY(120);
+                        player.setMoveDirection("down");
                     }
-
                     break;
                 }
             }

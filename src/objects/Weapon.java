@@ -18,6 +18,7 @@ public class Weapon extends Object {
         this.attackType = attackType;
         switch (texture) {
             case "longsword":
+            case "long_spear":
             case "rapier": {
                 setMinX(64);
                 setMinY(64);
@@ -26,6 +27,7 @@ public class Weapon extends Object {
                 break;
             }
             case "dagger":
+            case "stick":
             case "spear": {
                 setMinX(0);
                 setMinY(0);
@@ -39,6 +41,7 @@ public class Weapon extends Object {
     public void resize() {
         switch (getTexture()) {
             case "longsword":
+            case "long_spear":
             case "rapier": {
                 setMinX(64);
                 setMinY(64);
@@ -46,6 +49,35 @@ public class Weapon extends Object {
                 setMaxY(128);
                 break;
             }
+            case "dagger":
+            case "stick":
+            case "spear": {
+                setMinX(0);
+                setMinY(0);
+                setMaxX(64);
+                setMaxY(64);
+                break;
+            }
+        }
+    }
+
+    public void correctCollisionBox() {
+        switch (getTexture()) {
+            case "longsword":
+                getCollisionBox().update(getMinX() + 81, getMinY() + 81, getMinX() + 109, getMinY() + 109);
+                break;
+            case "rapier":
+                getCollisionBox().update(getMinX() + 96, getMinY() + 84, getMinX() + 125, getMinY() + 116);
+                break;
+            case "long_spear":
+                getCollisionBox().update(getMinX() + 77, getMinY() + 63, getMinX() + 137, getMinY() + 122);
+                break;
+            case "spear":
+                getCollisionBox().update(getMinX() + 77, getMinY() + 84, getMinX() + 116, getMinY() + 122);
+                break;
+            case "stick":
+                getCollisionBox().update(getMinX() + 76, getMinY() + 83, getMinX() + 116, getMinY() + 123);
+                break;
         }
     }
 

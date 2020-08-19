@@ -12,11 +12,13 @@ public class Slime extends Mob {
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
+            setImmortal(true);
             if (knockbackDirection.equals("left")) moveLeft();
             else if (knockbackDirection.equals("right")) moveRight();
             else if (knockbackDirection.equals("up")) moveUp();
             else if (knockbackDirection.equals("down")) moveDown();
             knockbackTime++;
+            if (knockbackTime >= 25) stopTimer();
         }
     };
     private TimerTask animationTask = new TimerTask() {
@@ -36,17 +38,20 @@ public class Slime extends Mob {
     public void stopTimer() {
         knockbackTime = 0;
         animationTaskStarted = false;
+        setImmortal(false);
         getTimer().cancel();
         getTimer().purge();
         setTimer(new Timer());
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
+                setImmortal(true);
                 if (knockbackDirection.equals("left")) moveLeft();
                 else if (knockbackDirection.equals("right")) moveRight();
                 else if (knockbackDirection.equals("up")) moveUp();
                 else if (knockbackDirection.equals("down")) moveDown();
                 knockbackTime++;
+                if (knockbackTime >= 25) stopTimer();
             }
         };
         animationTask = new TimerTask() {
@@ -58,6 +63,38 @@ public class Slime extends Mob {
             }
         };
     }
+
+    public void follow(Player player) {
+        if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                animationTime == 3) moveUpLeft();
+
+        else if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                animationTime == 3) moveUpRight();
+
+        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                animationTime == 3) moveDownLeft();
+
+        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                animationTime == 3) moveDownRight();
+
+        else if (player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                animationTime == 3) moveLeft();
+
+        else if (player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                 animationTime == 3) moveRight();
+
+        else if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                animationTime == 3) moveUp();
+
+        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                animationTime == 3) moveDown();
+    }
+
+    public void startAnimationTask() { getTimer().schedule(animationTask, 0, 300); }
 
     @Override
     public void moveUp() { setY(getY() - getSpeed()); }
