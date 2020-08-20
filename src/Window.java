@@ -107,6 +107,8 @@ public class Window {
         glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
         glEnable(GL_TEXTURE_2D);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glEnable(GL_BLEND);
 
         // Инициализация всех коллекций
@@ -380,7 +382,8 @@ public class Window {
                     createQuadTexture(0, 0, 640, 360);
 
                     if (forgeFurnace_i == 4) forgeFurnace_i = 1;
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("furnace_burn_0" + forgeFurnace_i)); // Фон кузницы
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("furnace_burn_0" + forgeFurnace_i)); // Анимация печки
+
                     createQuadTexture(223, 142, 259, 173);
                     if (forgeFurnace_g == 12) {
                         forgeFurnace_i++;
