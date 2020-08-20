@@ -802,9 +802,9 @@ public class Player extends Mob {
                 }
                 player_animation_move_g++;
                 moveLeft();
-                if (!(getX() < 290) && !(getX() > 1186)) {
+                if (!(getX() <= 290) && !(getX() > 1186)) {
                     glTranslated(1, 0, 0);
-                    setForPlacingCamera(getForPlacingCamera() - 1);
+                    forPlacingCamera--;
                 }
                 if (getX() + 40 > 1410 && getX() + 40 < 1503) {
                     if (getY() != 192) setY(getY() + 1);
@@ -827,9 +827,9 @@ public class Player extends Mob {
                 }
                 player_animation_move_g++;
                 moveRight();
-                if (!(getX() > 1186) && !(getX() < 290)) {
+                if (!(getX() > 1186) && !(getX() <= 290)) {
                     glTranslated(-1, 0, 0);
-                    setForPlacingCamera(getForPlacingCamera() + 1);
+                    forPlacingCamera++;
                 }
                 if (getX() + 40 > 1410 && getX() + 40 < 1503) {
                     if (getY() != 100) setY(getY() - 1);

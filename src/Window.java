@@ -31,14 +31,15 @@ public class Window {
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
+    Source backgroundMusic, mobHurtSound, armorChange, coinSound, doorSound;
+    Coin coinGUI;
+    Player player;
+    Blacksmith blacksmith;
     private String level = "MainMenu";
     private boolean forScale = true;
     boolean key_E_Pressed = false;
     boolean forMainMenu = true;
     boolean forMainTheme = true;
-    Source backgroundMusic, mobHurtSound, armorChange, coinSound;
-    Coin coinGUI;
-    Player player;
     private int time = 0;
     private boolean mobSpawnStarted = false;
     private Timer mobTimer = new Timer();
@@ -122,6 +123,7 @@ public class Window {
         mobHurtSound = new Source(0);
         armorChange = new Source(0);
         coinSound = new Source(0);
+        doorSound = new Source(0);
         coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
         coinGUI.getTimer().schedule(coinGUI.getAnimationTask(), 0, 120);
 
@@ -146,8 +148,8 @@ public class Window {
         aabbMap.get("entranceToForthLevel").update(247, 134, 283, 144);
         aabbMap.get("entranceFromThirdToSecondLevel").update(249, 134, 288, 146);
         aabbMap.get("entranceFromForthToSecondLevel").update(199, 132, 236, 141);
-        aabbMap.get("entranceFromTavernToTown").update(225,313,256,318);
-        aabbMap.get("entranceFromForgeToTown").update(225,313,256,318);
+        aabbMap.get("entranceFromTavernToTown").update(224,316,255,318);
+        aabbMap.get("entranceFromForgeToTown").update(384,316,415,318);
 
         // Добавление всех объектов и мобов
         firstLevelObjectList.add(new Container("chestClosed", false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
@@ -155,6 +157,7 @@ public class Window {
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214));
 
         mobList.add(player = new Player(290, 192, 1, 100, 0, 10));
+        blacksmith = new Blacksmith(176, 126, 1);
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -175,8 +178,11 @@ public class Window {
                 }
                 System.exit(0);
             }
-            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("MainMenu")) level = "Town";
-            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("Town")) {
+            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("MainMenu")) {
+                level = "Town";
+                backgroundMusic.stop(soundMap.get("mainMenuTheme"));
+            }
+            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("Town") && player.isChoiceBubble()) {
                 player.setX(player.getX() - 1);
                 player.setChoiceBubble(false);
                 if (player.isYes()) {
@@ -187,31 +193,41 @@ public class Window {
                     player.setSpeed(2);
                 }
             }
-            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
+            // Атака
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
+                    !level.equals("tavern") && !level.equals("forge")) {
                 if (!player.isAttackRight() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackLeft(true);
                     player.setMoveDirection("left");
                 }
             }
+            // Выбор в диалоговом окне
             if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && level.equals("Town")) {
                 if (player.isChoiceBubble()) player.setYes(!player.isYes());
             }
-            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
+            // Атака
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
+                    !level.equals("tavern") && !level.equals("forge")) {
                 if (!player.isAttackLeft() && !player.isAttackUp() && !player.isAttackDown()) {
                     player.setAttackRight(true);
                     player.setMoveDirection("right");
                 }
             }
+            // Выбор в диалоговом окне
             if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && level.equals("Town")) {
                 if (player.isChoiceBubble()) player.setYes(!player.isYes());
             }
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
+            // Атака
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
+                    !level.equals("tavern") && !level.equals("forge")) {
                 if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackDown()) {
                     player.setAttackUp(true);
                     player.setMoveDirection("up");
                 }
             }
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town")) {
+            // Атака
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
+                    !level.equals("tavern") && !level.equals("forge")) {
                 if (!player.isAttackLeft() && !player.isAttackRight() && !player.isAttackUp()) {
                     player.setAttackDown(true);
                     player.setMoveDirection("down");
@@ -222,7 +238,7 @@ public class Window {
     }
 
     private void loop() {
-        int torch_i = 1, torch_g = 0, guard_i = 1, guard_g = 0;
+        int torch_i = 1, torch_g = 0, guard_i = 1, guard_g = 0, forgeFurnace_i = 1, forgeFurnace_g = 0;
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -277,11 +293,13 @@ public class Window {
                     }
                     guard_g++;
 
+                    // Левая граница города
                     if (player.getX() <= 48) player.stopLeft();
                     if (player.getX() <= 50) {
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("you_Shall_Not_Pass"));
                         createQuadTexture(34, 136, 94, 195);
                     }
+                    // Переход в данж
                     if (player.getX() + 32 == 1519) {
                         player.setChoiceBubble(true);
                         if (player.isYes()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_Yes"));
@@ -289,29 +307,37 @@ public class Window {
                         createQuadTexture(player.getX() - 20, player.getY() - 55, player.getX() + 40, player.getY());
                     }
 
-                    if (key_E_Pressed){
-                        if (player.getX() + 32 > 305 && player.getX() + 32 < 341){
+                    if (key_E_Pressed) {
+                        // Вхождение в таверну
+                        if (player.getX() + 32 > 305 && player.getX() + 32 < 341) {
                             level = "tavern";
                             glTranslated(player.getForPlacingCamera(), 0, 0);
+                            player.setForPlacingCamera(3);
+
                             // Обновление хитбоксов стен для tavern
                             for (int i = 0, j = 0; i < 7; i++, j+=4) {
                                 aabbMap.get("wall" + i).update(Storage.tavernLevelWalls[j], Storage.tavernLevelWalls[j + 1],
                                         Storage.tavernLevelWalls[j + 2], Storage.tavernLevelWalls[j + 3]);
                             }
+                            doorSound.play(soundMap.get("doorOpen"));
                             player.setX(210);
-                            player.setY(230);
+                            player.setY(254);
                             player.setMoveDirection("up");
                         }
-                        else if (player.getX() + 32 > 620 && player.getX() + 32 < 651){
+                        // Вхождение в кузницу
+                        else if (player.getX() + 32 > 620 && player.getX() + 32 < 651) {
                             level = "forge";
                             glTranslated(player.getForPlacingCamera(), 0, 0);
+                            player.setForPlacingCamera(315);
+
                             // Обновление хитбоксов стен для forge
                             for (int i = 0, j = 0; i < 7; i++, j+=4) {
                                 aabbMap.get("wall" + i).update(Storage.forgeLevelWalls[j], Storage.forgeLevelWalls[j + 1],
                                         Storage.forgeLevelWalls[j + 2], Storage.forgeLevelWalls[j + 3]);
                             }
-                            player.setX(210);
-                            player.setY(230);
+                            doorSound.play(soundMap.get("doorOpen"));
+                            player.setX(368);
+                            player.setY(254);
                             player.setMoveDirection("up");
                         }
                     }
@@ -320,69 +346,84 @@ public class Window {
                     player.updateForTown(window);
                     break;
                 }
-                case "tavern":{
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("tavern")); // Фон второго уровня
+                case "tavern": {
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("tavern")); // Фон таверны
                     createQuadTexture(0, 0, 640, 360);
 
-                    for (Mob mob : mobList) {
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
-                            mob.stopRight();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
-                            mob.stopLeft();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
-                            mob.stopUp();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
-                            mob.stopDown();
-                    }
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall5")))
+                        player.stopRight();
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall6")))
+                        player.stopLeft();
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall2")))
+                        player.stopUp();
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall4")))
+                        player.stopDown();
 
                     // Проверка выхода в город
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromTavernToTown"))) {
                         level = "Town";
-                        // Обновление хитбоксов стен для второго уровня
+                        // Обновление хитбоксов стен для города
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
                                     Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
                         }
-                        player.setX(322);
+                        doorSound.play(soundMap.get("doorOpen"));
+                        glTranslated(-player.getForPlacingCamera(), 0, 0);
+                        player.setX(293);
                         player.setY(192);
                         player.setMoveDirection("right");
                     }
-
                     break;
                 }
-                case "forge":{
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("forge")); // Фон второго уровня
+                case "forge": {
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("forge")); // Фон кузницы
                     createQuadTexture(0, 0, 640, 360);
 
-                    for (Mob mob : mobList) {
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
-                            mob.stopRight();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
-                            mob.stopLeft();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
-                            mob.stopUp();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
-                            mob.stopDown();
+                    if (forgeFurnace_i == 4) forgeFurnace_i = 1;
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("furnace_burn_0" + forgeFurnace_i)); // Фон кузницы
+                    createQuadTexture(223, 142, 259, 173);
+                    if (forgeFurnace_g == 12) {
+                        forgeFurnace_i++;
+                        forgeFurnace_g = 0;
                     }
+                    forgeFurnace_g++;
+
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("blacksmith_" + blacksmith.getMoveDirection() + "_move_0" + blacksmith.getAnimationTime())); // Кузнец
+                    createQuadTexture(blacksmith.getX(), blacksmith.getY(), blacksmith.getX() + 64, blacksmith.getY() + 64);
+                    blacksmith.simulateBehavior();
+
+                    if (blacksmith.isWaitingTaskStarted()) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_question"));
+                        createQuadTexture(blacksmith.getX() + 31, blacksmith.getY(), blacksmith.getX() + 51, blacksmith.getY() + 20);
+                    }
+
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall4")))
+                        player.stopRight();
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall2")))
+                        player.stopLeft();
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall3")))
+                        player.stopUp();
+                    if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("wall5")))
+                        player.stopDown();
 
                     // Проверка выхода в город
                     if (AABB.AABBvsAABB(player.getCollisionBox(), aabbMap.get("entranceFromForgeToTown"))) {
                         level = "Town";
-                        // Обновление хитбоксов стен для второго уровня
-                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                        // Обновление хитбоксов стен для города
+                        for (int i = 0, j = 0; i < 7; i++, j += 4) {
                             aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
                                     Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
                         }
-                        player.setX(625);
+                        doorSound.play(soundMap.get("doorOpen"));
+                        glTranslated(-player.getForPlacingCamera(), 0, 0);
+                        player.setX(605);
                         player.setY(192);
                         player.setMoveDirection("right");
                     }
-
                     break;
                 }
                 case "FirstLevel": {
                     if (!forMainTheme) {
-                        backgroundMusic.stop(soundMap.get("mainMenuTheme"));
                         backgroundMusic.changeVolume(0.1f);
                         backgroundMusic.play(soundMap.get("dungeonAmbient1"));
                         forMainTheme = true;
@@ -721,8 +762,8 @@ public class Window {
                         level = "ForthLevel";
                         // Обновление хитбоксов стен для 4 уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(Storage.forthLevelWalls[j], Storage.forthLevelWalls[j + 1],
-                                    Storage.forthLevelWalls[j + 2], Storage.forthLevelWalls[j + 3]);
+                            aabbMap.get("wall" + i).update(Storage.fourthLevelWalls[j], Storage.fourthLevelWalls[j + 1],
+                                    Storage.fourthLevelWalls[j + 2], Storage.fourthLevelWalls[j + 3]);
                         }
                         player.setX(180);
                         player.setY(120);

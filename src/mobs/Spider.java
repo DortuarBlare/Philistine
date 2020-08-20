@@ -37,7 +37,6 @@ public class Spider extends Mob {
 
     public void stopTimer() {
         knockbackTime = 0;
-        animationTaskStarted = false;
         setImmortal(false);
         getTimer().cancel();
         getTimer().purge();
@@ -62,6 +61,7 @@ public class Spider extends Mob {
                 if (animationTime == 8) animationTime = 2;
             }
         };
+        animationTaskStarted = false;
     }
 
     public void follow(Player player) {

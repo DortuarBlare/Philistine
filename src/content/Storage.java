@@ -31,7 +31,7 @@ public class Storage {
             0, 0, 0, 0 // wall6
     };
 
-    public static final int[] forthLevelWalls = {
+    public static final int[] fourthLevelWalls = {
             96, 135, 528, 141, // wall0
             528, 147, 534, 339, // wall1
             96, 339, 528, 342, // wall2
@@ -62,13 +62,13 @@ public class Storage {
     };
 
     public static final int[] forgeLevelWalls = {
-            189, 279, 223, 280, // wall0
-            184, 232, 188, 278, // wall1
-            189, 233, 298, 239, // wall2
-            300, 241, 303, 277, // wall3
-            257, 279, 448, 273, // wall4
-            256, 280, 261, 318, // wall5
-            222, 280, 224, 318 // wall6
+            382, 279, 383, 317, // wall0
+            342, 277, 381, 278, // wall1
+            340, 239, 341, 278, // wall2
+            342, 237, 451, 238, // wall3
+            452, 239, 458, 276, // wall4
+            418, 277, 451, 278, // wall5
+            416, 279, 417, 317 // wall6
     };
 
     public static final String[] aabbString = {
@@ -77,7 +77,7 @@ public class Storage {
     };
 
     public static final String[] soundString = {
-            "mainMenuTheme", "dungeonAmbient1", "slimeHurt", "changingArmor", "pickedCoin"
+            "mainMenuTheme", "dungeonAmbient1", "slimeHurt", "changingArmor", "pickedCoin", "doorOpen"
     };
 
     public static final String[] playerSoundString = {
@@ -103,7 +103,13 @@ public class Storage {
 
             // Окружение
             "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
+            "emotion_question",
             "guard_stand_01", "guard_stand_02", "guard_stand_03", "guard_stand_04", "guard_stand_05", "guard_stand_06", "guard_stand_07", "guard_stand_08", "guard_stand_09", "guard_stand_010",
+            "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
+            "blacksmith_left_move_01", "blacksmith_left_move_02", "blacksmith_left_move_03", "blacksmith_left_move_04", "blacksmith_left_move_05", "blacksmith_left_move_06", "blacksmith_left_move_07", "blacksmith_left_move_08", "blacksmith_left_move_09",
+            "blacksmith_right_move_01", "blacksmith_right_move_02", "blacksmith_right_move_03", "blacksmith_right_move_04", "blacksmith_right_move_05", "blacksmith_right_move_06", "blacksmith_right_move_07", "blacksmith_right_move_08", "blacksmith_right_move_09",
+            "blacksmith_up_move_01", "blacksmith_up_move_02", "blacksmith_up_move_03", "blacksmith_up_move_04", "blacksmith_up_move_05", "blacksmith_up_move_06", "blacksmith_up_move_07", "blacksmith_up_move_08", "blacksmith_up_move_09",
+            "blacksmith_down_move_01", "blacksmith_down_move_02", "blacksmith_down_move_03", "blacksmith_down_move_04", "blacksmith_down_move_05", "blacksmith_down_move_06", "blacksmith_down_move_07", "blacksmith_down_move_08", "blacksmith_down_move_09",
 
             // Анимации игрока
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",
