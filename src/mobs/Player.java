@@ -36,10 +36,10 @@ public class Player extends Mob {
         @Override
         public void run() {
             setImmortal(true);
-            if (knockbackDirection.equals("left")) moveRight();
-            else if (knockbackDirection.equals("right")) moveLeft();
-            else if (knockbackDirection.equals("up")) moveDown();
-            else if (knockbackDirection.equals("down")) moveUp();
+            if (knockbackDirection.equals("left")) knockBackRight();
+            else if (knockbackDirection.equals("right")) knockBackLeft();
+            else if (knockbackDirection.equals("up")) knockBackDown();
+            else if (knockbackDirection.equals("down")) knockBackUp();
             knockbackTime++;
             if (knockbackTime >= 15) stopTimer();
         }

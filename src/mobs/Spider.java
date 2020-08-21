@@ -8,15 +8,16 @@ import java.util.TimerTask;
 public class Spider extends Mob {
     private int knockbackTime = 0, animationTime = 2;
     private String knockbackDirection;
-    private boolean animationTaskStarted = false;
+    private boolean animationTaskStarted = false, knockbackTaskStarted = false;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             setImmortal(true);
-            if (knockbackDirection.equals("left")) moveLeft();
-            else if (knockbackDirection.equals("right")) moveRight();
-            else if (knockbackDirection.equals("up")) moveUp();
-            else if (knockbackDirection.equals("down")) moveDown();
+            knockbackTaskStarted = true;
+            if (knockbackDirection.equals("left")) knockBackLeft();
+            else if (knockbackDirection.equals("right")) knockBackRight();
+            else if (knockbackDirection.equals("up")) knockBackUp();
+            else if (knockbackDirection.equals("down")) knockBackDown();
             knockbackTime++;
             if (knockbackTime >= 25) stopTimer();
         }
@@ -45,10 +46,11 @@ public class Spider extends Mob {
             @Override
             public void run() {
                 setImmortal(true);
-                if (knockbackDirection.equals("left")) moveLeft();
-                else if (knockbackDirection.equals("right")) moveRight();
-                else if (knockbackDirection.equals("up")) moveUp();
-                else if (knockbackDirection.equals("down")) moveDown();
+                knockbackTaskStarted = true;
+                if (knockbackDirection.equals("left")) knockBackLeft();
+                else if (knockbackDirection.equals("right")) knockBackRight();
+                else if (knockbackDirection.equals("up")) knockBackUp();
+                else if (knockbackDirection.equals("down")) knockBackDown();
                 knockbackTime++;
                 if (knockbackTime >= 25) stopTimer();
             }
@@ -95,4 +97,8 @@ public class Spider extends Mob {
     public boolean isAnimationTaskStarted() { return animationTaskStarted; }
 
     public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
+
+    public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
+
+    public void setKnockbackTaskStarted(boolean knockbackTaskStarted) { this.knockbackTaskStarted = knockbackTaskStarted; }
 }

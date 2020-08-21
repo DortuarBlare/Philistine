@@ -47,7 +47,7 @@ public class Window {
         @Override
         public void run() {
             if (level.equals("FirstLevel")) mobList.add(new Slime(350, 300, 1, 50, 0, 5));
-            else if (level.equals("SecondLevel")) mobList.add(new Spider(350, 300, 1, 30, 0, 10));
+            else if (level.equals("SecondLevel")) mobList.add(new Spider(477, 284, 1, 60, 0, 10));
             time++;
             if (time == 2) stopMobSpawn();
         }
@@ -62,7 +62,7 @@ public class Window {
             @Override
             public void run() {
                 if (level.equals("FirstLevel")) mobList.add(new Slime(350, 300, 1, 50, 0, 5));
-                else if (level.equals("SecondLevel")) mobList.add(new Spider(350, 300, 1, 30, 0, 10));
+                else if (level.equals("SecondLevel")) mobList.add(new Spider(477, 284, 1, 60, 0, 10));
                 time++;
                 if (time == 2) stopMobSpawn();
             }
@@ -557,7 +557,7 @@ public class Window {
                                     else if (player.isAttackUp()) slime.setKnockbackDirection("up");
                                     else if (player.isAttackDown()) slime.setKnockbackDirection("down");
                                     slime.setHealth(slime.getHealth() - player.getDamage());
-                                    slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
+                                    if (!slime.isKnockbackTaskStarted()) slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
                                     mobHurtSound.play(soundMap.get("slimeHurt"));
                                 }
 
@@ -704,7 +704,7 @@ public class Window {
                                     else if (player.isAttackUp()) spider.setKnockbackDirection("up");
                                     else if (player.isAttackDown()) spider.setKnockbackDirection("down");
                                     spider.setHealth(spider.getHealth() - player.getDamage());
-                                    spider.getTimer().schedule(spider.getKnockbackTask(), 0, 10);
+                                    if (!spider.isKnockbackTaskStarted()) spider.getTimer().schedule(spider.getKnockbackTask(), 0, 10);
                                 }
 
                                 // Отрисовка хелсбара

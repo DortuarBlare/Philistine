@@ -73,6 +73,14 @@ public abstract class Mob {
         moveDirection = "left";
     }
 
+    public void knockBackLeft() { x -= speed; }
+
+    public void knockBackRight() { x += speed; }
+
+    public void knockBackUp() { y -= speed; }
+
+    public void knockBackDown() { y += speed; }
+
     public void stop(String direction) {
         if (direction.equals("left")) stopLeft();
         else if (direction.equals("right")) stopRight();
