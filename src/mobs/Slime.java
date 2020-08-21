@@ -66,33 +66,33 @@ public class Slime extends Mob {
         animationTaskStarted = false;
     }
 
-    public void follow(Player player) {
-        if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                player.getHitbox().getMin().x < getHitbox().getMin().x &&
+    public void follow() {
+        if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
                 animationTime == 3) moveUpLeft();
 
-        else if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                player.getHitbox().getMin().x > getHitbox().getMin().x &&
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
                 animationTime == 3) moveUpRight();
 
-        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                player.getHitbox().getMin().x < getHitbox().getMin().x &&
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
                 animationTime == 3) moveDownLeft();
 
-        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                player.getHitbox().getMin().x > getHitbox().getMin().x &&
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
                 animationTime == 3) moveDownRight();
 
-        else if (player.getHitbox().getMin().x < getHitbox().getMin().x &&
+        else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
                 animationTime == 3) moveLeft();
 
-        else if (player.getHitbox().getMin().x > getHitbox().getMin().x &&
+        else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
                  animationTime == 3) moveRight();
 
-        else if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
                 animationTime == 3) moveUp();
 
-        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
                 animationTime == 3) moveDown();
     }
 

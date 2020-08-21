@@ -66,26 +66,27 @@ public class Spider extends Mob {
         animationTaskStarted = false;
     }
 
-    public void follow(Player player) {
-        if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
+    @Override
+    public void follow() {
+        if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
 
-        else if (player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                player.getHitbox().getMin().x > getHitbox().getMin().x) moveUpRight();
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveUpRight();
 
-        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                player.getHitbox().getMin().x < getHitbox().getMin().x) moveDownLeft();
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveDownLeft();
 
-        else if (player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                player.getHitbox().getMin().x > getHitbox().getMin().x) moveDownRight();
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveDownRight();
 
-        else if (player.getHitbox().getMin().x < getHitbox().getMin().x) moveLeft();
+        else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveLeft();
 
-        else if (player.getHitbox().getMin().x > getHitbox().getMin().x) moveRight();
+        else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveRight();
 
-        else if (player.getHitbox().getMin().y < getHitbox().getMin().y) moveUp();
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y) moveUp();
 
-        else if (player.getHitbox().getMin().y > getHitbox().getMin().y) moveDown();
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y) moveDown();
     }
 
     public TimerTask getKnockbackTask() { return knockbackTask; }

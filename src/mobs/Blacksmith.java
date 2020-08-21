@@ -5,8 +5,6 @@ import math.AABB;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public class Blacksmith extends Mob {
     private int waitingTime = 0;
     private int animationTime = 2;

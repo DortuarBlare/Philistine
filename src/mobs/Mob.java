@@ -4,7 +4,6 @@ import math.AABB;
 
 import java.util.Timer;
 
-
 public abstract class Mob {
     private int x, y;
     private int speed;
@@ -95,6 +94,8 @@ public abstract class Mob {
     public void stopUp() { y += speed; }
 
     public void stopDown() { y -= speed; }
+
+    public void follow() {}
 
     public int getX() { return x; };
 

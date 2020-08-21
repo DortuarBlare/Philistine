@@ -81,7 +81,7 @@ public class Storage {
     };
 
     public static final String[] playerSoundString = {
-            "stepStone", "swish", "selectionClick"
+            "stepStone", "swish", "selectionClick", "openMenu"
     };
 
     public static final String[] textureString = {
@@ -100,6 +100,7 @@ public class Storage {
             "longsword", "rapier", "long_spear", "spear", "stick", "scroll5", "potionRed",
             "coin_01", "coin_02", "coin_03", "coin_04", "coin_05", "coin_06", "coin_07", "coin_08",
             "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
+            "scrollMenu_Resume", "scrollMenu_Options", "scrollMenu_Exit",
 
             // Окружение
             "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",

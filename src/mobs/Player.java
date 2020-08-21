@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 
 public class Player extends Mob {
     private HashMap<String, Integer> playerSounds;
-    private Source stepSound, hitSound, choiceSound;
+    private Source stepSound, hitSound, choiceSound, menuSound;
     private Armor head, shoulders, torso, belt, hands, legs, feet;
     private Weapon weapon;
     private AABB attackBox;
@@ -28,7 +28,9 @@ public class Player extends Mob {
     private int player_animation_move_g = 0, player_animation_death_i = 1, player_animation_death_g = 0;
     private int forPlacingCamera = 0;
     private boolean choiceBubble = false;
+    private boolean scrollMenu = false;
     private boolean yes = false;
+    private String menuChoice = "Resume";
     private int knockbackTime = 0, hitAnimationTime = 1;
     private boolean hitAnimationTaskStarted = false;
     private String knockbackDirection;
@@ -234,6 +236,7 @@ public class Player extends Mob {
         stepSound = new Source(0);
         hitSound = new Source(0);
         choiceSound = new Source(0);
+        menuSound = new Source(0);
         for (int i = 0, id = 0; i < Storage.playerSoundString.length; i++)
             playerSounds.put(Storage.playerSoundString[i], id = AudioMaster.loadSound("sounds/" + Storage.playerSoundString[i]));
     }
@@ -964,4 +967,18 @@ public class Player extends Mob {
     public boolean isChoiceBubble() { return choiceBubble; }
 
     public void setChoiceBubble(boolean choiceBubble) { this.choiceBubble = choiceBubble; }
+
+    public boolean isScrollMenu() { return scrollMenu; }
+
+    public void setScrollMenu(boolean scrollMenu) {
+        this.scrollMenu = scrollMenu;
+        menuSound.play(playerSounds.get("openMenu"));
+    }
+
+    public String getMenuChoice() { return menuChoice; }
+
+    public void setMenuChoice(String menuChoice) {
+        this.menuChoice = menuChoice;
+        choiceSound.play(playerSounds.get("selectionClick"));
+    }
 }
