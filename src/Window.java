@@ -71,7 +71,7 @@ public class Window {
         };
     }
 
-    public void run() {
+    public void run() throws InterruptedException {
         System.out.println("Игра запущена");
 
         init();
@@ -297,7 +297,7 @@ public class Window {
         });
     }
 
-    private void loop() {
+    private void loop() throws InterruptedException {
         int torch_i = 1, torch_g = 0, guard_i = 1, guard_g = 0, forgeFurnace_i = 1, forgeFurnace_g = 0;
 
         while (!glfwWindowShouldClose(window)) {
@@ -606,7 +606,7 @@ public class Window {
                                     else if (SingletonPlayer.player.getY() > slime.getY()) SingletonPlayer.player.setKnockbackDirection("down");
                                     else if (SingletonPlayer.player.getY() < slime.getY()) SingletonPlayer.player.setKnockbackDirection("up");
                                     SingletonPlayer.player.takeDamage(slime.getDamage());
-                                    SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
                                 }
                                 // Слизень получает урон от игрока
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), slime.getHitbox()) && !slime.isImmortal()) {
@@ -1071,6 +1071,8 @@ public class Window {
                 }
             }
 
+            if (SingletonPlayer.player.isScrollMenu()) enemyThread.setThreadWaiting(true);
+            if (!SingletonPlayer.player.isScrollMenu() && enemyThread.getState() == Thread.State.WAITING) enemyThread.resumeThread();
             glfwPollEvents();
             glfwSwapBuffers(window);
         }

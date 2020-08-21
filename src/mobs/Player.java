@@ -32,12 +32,13 @@ public class Player extends Mob {
     private boolean yes = false;
     private String menuChoice = "Resume";
     private int knockbackTime = 0, hitAnimationTime = 1;
-    private boolean hitAnimationTaskStarted = false;
+    private boolean hitAnimationTaskStarted = false, knockbackTaskStarted = false;
     private String knockbackDirection;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             setImmortal(true);
+            knockbackTaskStarted = true;
             if (knockbackDirection.equals("left")) knockBackRight();
             else if (knockbackDirection.equals("right")) knockBackLeft();
             else if (knockbackDirection.equals("up")) knockBackDown();
@@ -255,6 +256,7 @@ public class Player extends Mob {
             @Override
             public void run() {
                 setImmortal(true);
+                knockbackTaskStarted = true;
                 if (knockbackDirection.equals("left")) moveLeft();
                 else if (knockbackDirection.equals("right")) moveRight();
                 else if (knockbackDirection.equals("up")) moveUp();
@@ -981,4 +983,8 @@ public class Player extends Mob {
         this.menuChoice = menuChoice;
         choiceSound.play(playerSounds.get("selectionClick"));
     }
+
+    public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
+
+    public void setKnockbackTaskStarted(boolean knockbackTaskStarted) { this.knockbackTaskStarted = knockbackTaskStarted; }
 }
