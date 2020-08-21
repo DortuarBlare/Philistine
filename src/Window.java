@@ -164,7 +164,7 @@ public class Window {
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS && !level.equals("MainMenu")) {
                 SingletonPlayer.player.setScrollMenu(!SingletonPlayer.player.isScrollMenu());
             }
             if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("MainMenu")) {
