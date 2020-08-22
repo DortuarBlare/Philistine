@@ -215,7 +215,7 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         setMoveDirection("down");
         attackBox = new AABB();
-        money = 10;
+        money = 30;
         keys = 1;
         weapon = new Weapon("long_spear", "thrust", 10, new AABB());
         head = new Armor("nothing", "head", 0, true);

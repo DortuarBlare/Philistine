@@ -8,13 +8,13 @@ import static java.lang.Math.random;
 
 public class Container extends Object {
     public ArrayList<Object> loot;
+
     public Container(String texture, boolean isOnlyClothes, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
         super(texture, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
         loot = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             double b = random();
-            if (!isOnlyClothes)
-            {
+            if (!isOnlyClothes) {
                 if (b >= 0 && b < 0.3) {
                     loot.add(loot.size(), new Coin("coin_01", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 11, this.getMaxY() + 12, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 9, this.getMaxY() + 9)));
                     System.out.println("coin");
@@ -104,7 +104,8 @@ public class Container extends Object {
                     System.out.println("armor");
                 }
                 else if (b >= 0.75 && b <= 1) System.out.println("nothing");
-            } else {
+            }
+            else {
                 Armor armor;
                 int randomNumber = (int) (Math.random() * 22);
                 switch (randomNumber) {

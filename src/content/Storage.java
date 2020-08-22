@@ -104,7 +104,7 @@ public class Storage {
 
             // Окружение
             "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
-            "emotion_question",
+            "emotion_question", "price", "price2",
             "guard_stand_01", "guard_stand_02", "guard_stand_03", "guard_stand_04", "guard_stand_05", "guard_stand_06", "guard_stand_07", "guard_stand_08", "guard_stand_09", "guard_stand_010",
             "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
             "blacksmith_left_move_01", "blacksmith_left_move_02", "blacksmith_left_move_03", "blacksmith_left_move_04", "blacksmith_left_move_05", "blacksmith_left_move_06", "blacksmith_left_move_07", "blacksmith_left_move_08", "blacksmith_left_move_09",
@@ -161,8 +161,6 @@ public class Storage {
             "weapon_stick_right_thrust_01", "weapon_stick_right_thrust_02", "weapon_stick_right_thrust_03", "weapon_stick_right_thrust_04", "weapon_stick_right_thrust_05", "weapon_stick_right_thrust_06", "weapon_stick_right_thrust_07", "weapon_stick_right_thrust_08",
             "weapon_stick_up_thrust_01", "weapon_stick_up_thrust_02", "weapon_stick_up_thrust_03", "weapon_stick_up_thrust_04", "weapon_stick_up_thrust_05", "weapon_stick_up_thrust_06", "weapon_stick_up_thrust_07", "weapon_stick_up_thrust_08",
             "weapon_stick_down_thrust_01", "weapon_stick_down_thrust_02", "weapon_stick_down_thrust_03", "weapon_stick_down_thrust_04", "weapon_stick_down_thrust_05", "weapon_stick_down_thrust_06", "weapon_stick_down_thrust_07", "weapon_stick_down_thrust_08",
-
-            "price",
 
             // Одежда игрока
             "HEAD_hair_left_move_01", "HEAD_hair_left_move_02", "HEAD_hair_left_move_03", "HEAD_hair_left_move_04", "HEAD_hair_left_move_05", "HEAD_hair_left_move_06", "HEAD_hair_left_move_07", "HEAD_hair_left_move_08", "HEAD_hair_left_move_09",
