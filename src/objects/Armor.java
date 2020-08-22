@@ -5,11 +5,13 @@ import math.AABB;
 public class Armor extends Object {
     private String type;
     private int defense;
+    private int price;
 
-    public Armor(String texture, String type, int defense, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY) {
+    public Armor(String texture, String type, int defense, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, int price) {
         super(texture, isNoclip, isLying, minX, minY, maxX, maxY, new AABB());
         this.type = type;
         this.defense = defense;
+        this.price = price;
         switch (type) {
             case "head":
                 getCollisionBox().update(getMinX() + 21, getMinY() + 13, getMinX() + 42, getMinY() + 36);
@@ -72,4 +74,12 @@ public class Armor extends Object {
     public int getDefense() { return defense; }
 
     public void setDefense(int defense) { this.defense = defense; }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 }

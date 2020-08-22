@@ -162,6 +162,8 @@ public class Storage {
             "weapon_stick_up_thrust_01", "weapon_stick_up_thrust_02", "weapon_stick_up_thrust_03", "weapon_stick_up_thrust_04", "weapon_stick_up_thrust_05", "weapon_stick_up_thrust_06", "weapon_stick_up_thrust_07", "weapon_stick_up_thrust_08",
             "weapon_stick_down_thrust_01", "weapon_stick_down_thrust_02", "weapon_stick_down_thrust_03", "weapon_stick_down_thrust_04", "weapon_stick_down_thrust_05", "weapon_stick_down_thrust_06", "weapon_stick_down_thrust_07", "weapon_stick_down_thrust_08",
 
+            "price",
+
             // Одежда игрока
             "HEAD_hair_left_move_01", "HEAD_hair_left_move_02", "HEAD_hair_left_move_03", "HEAD_hair_left_move_04", "HEAD_hair_left_move_05", "HEAD_hair_left_move_06", "HEAD_hair_left_move_07", "HEAD_hair_left_move_08", "HEAD_hair_left_move_09",
             "HEAD_hair_right_move_01", "HEAD_hair_right_move_02", "HEAD_hair_right_move_03", "HEAD_hair_right_move_04", "HEAD_hair_right_move_05", "HEAD_hair_right_move_06", "HEAD_hair_right_move_07", "HEAD_hair_right_move_08", "HEAD_hair_right_move_09",
