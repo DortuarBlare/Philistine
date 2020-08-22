@@ -18,11 +18,11 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 public class Player extends Mob {
     private HashMap<String, Integer> playerSounds;
     private Source stepSound, hitSound, choiceSound, menuSound;
-    private Armor head, shoulders, torso, belt, hands, legs, feet;
+    private Armor head, shoulders, overTorso, torso, belt, hands, legs, feet;
     private Weapon weapon;
     private AABB attackBox;
     private int money, keys;
-    private String bodyAnimation, weaponAnimation, headAnimation, shouldersAnimation, torsoAnimation, beltAnimation, handsAnimation, legsAnimation, feetAnimation;
+    private String bodyAnimation, weaponAnimation, headAnimation, shouldersAnimation, overTorsoAnimation, torsoAnimation, beltAnimation, handsAnimation, legsAnimation, feetAnimation;
     private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private int player_animation_move_left_i = 2, player_animation_move_right_i = 2, player_animation_move_up_i = 2, player_animation_move_down_i = 2;
     private int player_animation_move_g = 0, player_animation_death_i = 1, player_animation_death_g = 0;
@@ -30,6 +30,7 @@ public class Player extends Mob {
     private boolean choiceBubble = false;
     private boolean scrollMenu = false;
     private boolean yes = false;
+    private boolean mainMenuDirection = true;
     private String menuChoice = "Resume";
     private int knockbackTime = 0, hitAnimationTime = 1;
     private boolean hitAnimationTaskStarted = false, knockbackTaskStarted = false;
@@ -216,6 +217,7 @@ public class Player extends Mob {
         weapon = new Weapon("nothing", "slash", 10, new AABB());
         head = new Armor("nothing", "head", 0, true);
         shoulders = new Armor("nothing", "shoulders", 0, true);
+        overTorso = new Armor("nothing", "overTorso", 0, true);
         torso = new Armor("shirt_white", "torso", 1, true);
         belt = new Armor("nothing", "belt", 0, true);
         hands = new Armor("nothing", "hands", 0, true);
@@ -426,312 +428,455 @@ public class Player extends Mob {
         };
     }
 
-    public void update(long window) {
+    public void update(long window, String level) {
         if (!isDead()) {
-            bodyAnimation = "player_stand_" + getMoveDirection();
-            headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
-            shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";
-            torsoAnimation = "TORSO_" + getTorsoTexture() + "_" + getMoveDirection() + "_move_01";
-            beltAnimation = "BELT_" + getBeltTexture() + "_" + getMoveDirection() + "_move_01";
-            handsAnimation = "HANDS_" + getHandsTexture() + "_" + getMoveDirection() + "_move_01";
-            legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
-            feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
+            if (!level.equals("MainMenu") && !level.equals("Town")) {
+                bodyAnimation = "player_stand_" + getMoveDirection();
+                headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
+                shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";
+                overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_" + getMoveDirection() + "_move_01";
+                torsoAnimation = "TORSO_" + getTorsoTexture() + "_" + getMoveDirection() + "_move_01";
+                beltAnimation = "BELT_" + getBeltTexture() + "_" + getMoveDirection() + "_move_01";
+                handsAnimation = "HANDS_" + getHandsTexture() + "_" + getMoveDirection() + "_move_01";
+                legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
+                feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
 
-            if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
-                if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
-                if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_left_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveUpLeft();
-            }
-            else if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
-                if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
-                if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_right_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveUpRight();
-            }
-            else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
-                if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
-                if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_left_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveDownLeft();
-            }
-            else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
-                if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
-                if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_right_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveDownRight();
-            }
-            else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-                if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
-                if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_left_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveLeft();
-            }
-            else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-                if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
-                if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_right_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveRight();
-            }
-            else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-                if (player_animation_move_up_i == 10) player_animation_move_up_i = 2;
-                if (player_animation_move_up_i == 4 || player_animation_move_up_i == 8) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_up_0" + player_animation_move_up_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_up_move_0" + player_animation_move_up_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_up_move_0" + player_animation_move_up_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_up_move_0" + player_animation_move_up_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_up_move_0" + player_animation_move_up_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_up_move_0" + player_animation_move_up_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_up_move_0" + player_animation_move_up_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_up_move_0" + player_animation_move_up_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_up_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveUp();
-            }
-            else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-                if (player_animation_move_down_i == 10) player_animation_move_down_i = 2;
-                if (player_animation_move_down_i == 4 || player_animation_move_down_i == 8) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_down_0" + player_animation_move_down_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_down_move_0" + player_animation_move_down_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_down_move_0" + player_animation_move_down_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_down_move_0" + player_animation_move_down_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_down_move_0" + player_animation_move_down_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_down_move_0" + player_animation_move_down_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_down_move_0" + player_animation_move_down_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_down_move_0" + player_animation_move_down_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_down_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveDown();
-            }
-            if (isAttackLeft) {
-                if (!hitAnimationTaskStarted) {
-                    hitAnimationTaskStarted = true;
-                    switch (weapon.getTexture()) {
-                        case "longsword":
-                            getTimer().schedule(hitAnimationTask, 0, 100);
-                            break;
-                        case "rapier":
-                            getTimer().schedule(hitAnimationTask, 0, 90);
-                            break;
-                        case "long_spear":
-                            getTimer().schedule(hitAnimationTask, 0, 120);
-                            break;
-                        case "spear":
-                            getTimer().schedule(hitAnimationTask, 0, 85);
-                            break;
-                        case "stick":
-                            getTimer().schedule(hitAnimationTask, 0, 80);
-                            break;
-                        case "nothing":
-                            getTimer().schedule(hitAnimationTask, 0, 70);
-                            break;
+                if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
+                    if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
+                    if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
                     }
-                }
-                if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                bodyAnimation = "player_" + getWeapon().getAttackType() + "_left_0" + hitAnimationTime;
-                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_left_0" + hitAnimationTime;
-                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                beltAnimation = "BELT_" + getBeltTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                feetAnimation = "FEET_" + getFeetTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-            }
-            else if (isAttackRight) {
-                if (!hitAnimationTaskStarted) {
-                    hitAnimationTaskStarted = true;
-                    switch (weapon.getTexture()) {
-                        case "longsword":
-                            getTimer().schedule(hitAnimationTask, 0, 100);
-                            break;
-                        case "rapier":
-                            getTimer().schedule(hitAnimationTask, 0, 90);
-                            break;
-                        case "long_spear":
-                            getTimer().schedule(hitAnimationTask, 0, 120);
-                            break;
-                        case "spear":
-                            getTimer().schedule(hitAnimationTask, 0, 85);
-                            break;
-                        case "stick":
-                            getTimer().schedule(hitAnimationTask, 0, 80);
-                            break;
-                        case "nothing":
-                            getTimer().schedule(hitAnimationTask, 0, 70);
-                            break;
+                    bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_left_i++;
+                        player_animation_move_g = 0;
                     }
+                    player_animation_move_g++;
+                    moveUpLeft();
                 }
-                if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                bodyAnimation = "player_" + getWeapon().getAttackType() + "_right_0" + hitAnimationTime;
-                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_right_0" + hitAnimationTime;
-                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                beltAnimation = "BELT_" + getBeltTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                feetAnimation = "FEET_" + getFeetTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-            }
-            else if (isAttackUp) {
-                if (!hitAnimationTaskStarted) {
-                    hitAnimationTaskStarted = true;
-                    switch (weapon.getTexture()) {
-                        case "longsword":
-                            getTimer().schedule(hitAnimationTask, 0, 100);
-                            break;
-                        case "rapier":
-                            getTimer().schedule(hitAnimationTask, 0, 90);
-                            break;
-                        case "long_spear":
-                            getTimer().schedule(hitAnimationTask, 0, 120);
-                            break;
-                        case "spear":
-                            getTimer().schedule(hitAnimationTask, 0, 85);
-                            break;
-                        case "stick":
-                            getTimer().schedule(hitAnimationTask, 0, 80);
-                            break;
-                        case "nothing":
-                            getTimer().schedule(hitAnimationTask, 0, 70);
-                            break;
+                else if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
+                    if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
+                    if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
                     }
-                }
-                if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                bodyAnimation = "player_" + getWeapon().getAttackType() + "_up_0" + hitAnimationTime;
-                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_up_0" + hitAnimationTime;
-                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                beltAnimation = "BELT_" + getBeltTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                feetAnimation = "FEET_" + getFeetTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-            }
-            else if (isAttackDown) {
-                if (!hitAnimationTaskStarted) {
-                    hitAnimationTaskStarted = true;
-                    switch (weapon.getTexture()) {
-                        case "longsword":
-                            getTimer().schedule(hitAnimationTask, 0, 100);
-                            break;
-                        case "rapier":
-                            getTimer().schedule(hitAnimationTask, 0, 90);
-                            break;
-                        case "long_spear":
-                            getTimer().schedule(hitAnimationTask, 0, 120);
-                            break;
-                        case "spear":
-                            getTimer().schedule(hitAnimationTask, 0, 85);
-                            break;
-                        case "stick":
-                            getTimer().schedule(hitAnimationTask, 0, 80);
-                            break;
-                        case "nothing":
-                            getTimer().schedule(hitAnimationTask, 0, 70);
-                            break;
+                    bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_right_i++;
+                        player_animation_move_g = 0;
                     }
+                    player_animation_move_g++;
+                    moveUpRight();
                 }
-                if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                bodyAnimation = "player_" + getWeapon().getAttackType() + "_down_0" + hitAnimationTime;
-                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_down_0" + hitAnimationTime;
-                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                beltAnimation = "BELT_" + getBeltTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                feetAnimation = "FEET_" + getFeetTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-            }
+                else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
+                    if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
+                    if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
+                    }
+                    bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_left_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveDownLeft();
+                }
+                else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
+                    if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
+                    if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
+                    }
+                    bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_right_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveDownRight();
+                }
+                else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+                    if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
+                    if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
+                    }
+                    bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_left_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveLeft();
+                }
+                else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+                    if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
+                    if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
+                    }
+                    bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_right_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveRight();
+                }
+                else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+                    if (player_animation_move_up_i == 10) player_animation_move_up_i = 2;
+                    if (player_animation_move_up_i == 4 || player_animation_move_up_i == 8) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
+                    }
+                    bodyAnimation = "player_walk_up_0" + player_animation_move_up_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_up_move_0" + player_animation_move_up_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_up_move_0" + player_animation_move_up_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_up_move_0" + player_animation_move_up_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_up_move_0" + player_animation_move_up_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_up_move_0" + player_animation_move_up_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_up_move_0" + player_animation_move_up_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_up_move_0" + player_animation_move_up_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_up_move_0" + player_animation_move_up_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_up_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveUp();
+                }
+                else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+                    if (player_animation_move_down_i == 10) player_animation_move_down_i = 2;
+                    if (player_animation_move_down_i == 4 || player_animation_move_down_i == 8) {
+                        if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
+                        else stepSound.play(playerSounds.get("stepStone"));
+                    }
+                    bodyAnimation = "player_walk_down_0" + player_animation_move_down_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_down_move_0" + player_animation_move_down_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_down_move_0" + player_animation_move_down_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_down_move_0" + player_animation_move_down_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_down_move_0" + player_animation_move_down_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_down_move_0" + player_animation_move_down_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_down_move_0" + player_animation_move_down_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_down_move_0" + player_animation_move_down_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_down_move_0" + player_animation_move_down_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_down_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveDown();
+                }
+                if (isAttackLeft) {
+                    if (!hitAnimationTaskStarted) {
+                        hitAnimationTaskStarted = true;
+                        switch (weapon.getTexture()) {
+                            case "longsword":
+                                getTimer().schedule(hitAnimationTask, 0, 100);
+                                break;
+                            case "rapier":
+                                getTimer().schedule(hitAnimationTask, 0, 90);
+                                break;
+                            case "long_spear":
+                                getTimer().schedule(hitAnimationTask, 0, 120);
+                                break;
+                            case "spear":
+                                getTimer().schedule(hitAnimationTask, 0, 85);
+                                break;
+                            case "stick":
+                                getTimer().schedule(hitAnimationTask, 0, 80);
+                                break;
+                            case "nothing":
+                                getTimer().schedule(hitAnimationTask, 0, 70);
+                                break;
+                        }
+                    }
+                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_left_0" + hitAnimationTime;
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_left_0" + hitAnimationTime;
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                }
+                else if (isAttackRight) {
+                    if (!hitAnimationTaskStarted) {
+                        hitAnimationTaskStarted = true;
+                        switch (weapon.getTexture()) {
+                            case "longsword":
+                                getTimer().schedule(hitAnimationTask, 0, 100);
+                                break;
+                            case "rapier":
+                                getTimer().schedule(hitAnimationTask, 0, 90);
+                                break;
+                            case "long_spear":
+                                getTimer().schedule(hitAnimationTask, 0, 120);
+                                break;
+                            case "spear":
+                                getTimer().schedule(hitAnimationTask, 0, 85);
+                                break;
+                            case "stick":
+                                getTimer().schedule(hitAnimationTask, 0, 80);
+                                break;
+                            case "nothing":
+                                getTimer().schedule(hitAnimationTask, 0, 70);
+                                break;
+                        }
+                    }
+                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_right_0" + hitAnimationTime;
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_right_0" + hitAnimationTime;
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                }
+                else if (isAttackUp) {
+                    if (!hitAnimationTaskStarted) {
+                        hitAnimationTaskStarted = true;
+                        switch (weapon.getTexture()) {
+                            case "longsword":
+                                getTimer().schedule(hitAnimationTask, 0, 100);
+                                break;
+                            case "rapier":
+                                getTimer().schedule(hitAnimationTask, 0, 90);
+                                break;
+                            case "long_spear":
+                                getTimer().schedule(hitAnimationTask, 0, 120);
+                                break;
+                            case "spear":
+                                getTimer().schedule(hitAnimationTask, 0, 85);
+                                break;
+                            case "stick":
+                                getTimer().schedule(hitAnimationTask, 0, 80);
+                                break;
+                            case "nothing":
+                                getTimer().schedule(hitAnimationTask, 0, 70);
+                                break;
+                        }
+                    }
+                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_up_0" + hitAnimationTime;
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_up_0" + hitAnimationTime;
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                }
+                else if (isAttackDown) {
+                    if (!hitAnimationTaskStarted) {
+                        hitAnimationTaskStarted = true;
+                        switch (weapon.getTexture()) {
+                            case "longsword":
+                                getTimer().schedule(hitAnimationTask, 0, 100);
+                                break;
+                            case "rapier":
+                                getTimer().schedule(hitAnimationTask, 0, 90);
+                                break;
+                            case "long_spear":
+                                getTimer().schedule(hitAnimationTask, 0, 120);
+                                break;
+                            case "spear":
+                                getTimer().schedule(hitAnimationTask, 0, 85);
+                                break;
+                            case "stick":
+                                getTimer().schedule(hitAnimationTask, 0, 80);
+                                break;
+                            case "nothing":
+                                getTimer().schedule(hitAnimationTask, 0, 70);
+                                break;
+                        }
+                    }
+                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_down_0" + hitAnimationTime;
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_down_0" + hitAnimationTime;
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                }
 
-            if (getMoveDirection().equals("left")) getHitbox().update(getX() + 23, getY() + 15, getX() + 42, getY() + 59);
-            else if (getMoveDirection().equals("right")) getHitbox().update(getX() + 21, getY() + 15, getX() + 40, getY() + 59);
-            else if (getMoveDirection().equals("up")) getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 60);
-            else if (getMoveDirection().equals("down")) getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 61);
-            getCollisionBox().update(getX() + 17, getY() + 46, getX() + 46, getY() + 61);
-            reArmor();
+                if (getMoveDirection().equals("left")) getHitbox().update(getX() + 23, getY() + 15, getX() + 42, getY() + 59);
+                else if (getMoveDirection().equals("right")) getHitbox().update(getX() + 21, getY() + 15, getX() + 40, getY() + 59);
+                else if (getMoveDirection().equals("up")) getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 60);
+                else if (getMoveDirection().equals("down")) getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 61);
+                getCollisionBox().update(getX() + 17, getY() + 46, getX() + 46, getY() + 61);
+                reArmor();
+            }
+            else if (level.equals("Town")) {
+                bodyAnimation = "player_stand_" + getMoveDirection();
+                headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
+                shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";
+                overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_" + getMoveDirection() + "_move_01";
+                torsoAnimation = "TORSO_" + getTorsoTexture() + "_" + getMoveDirection() + "_move_01";
+                beltAnimation = "BELT_" + getBeltTexture() + "_" + getMoveDirection() + "_move_01";
+                handsAnimation = "HANDS_" + getHandsTexture() + "_" + getMoveDirection() + "_move_01";
+                legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
+                feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
+
+                if (!choiceBubble) {
+                    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+                        if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
+                        if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
+                        bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
+                        headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
+                        shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
+                        overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                        torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                        beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
+                        handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
+                        legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
+                        feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
+                        if (player_animation_move_g == 8) {
+                            player_animation_move_left_i++;
+                            player_animation_move_g = 0;
+                        }
+                        player_animation_move_g++;
+                        moveLeft();
+                        if (!(getX() <= 290) && !(getX() > 1186)) {
+                            glTranslated(1, 0, 0);
+                            forPlacingCamera--;
+                        }
+                        if (getX() + 40 > 1410 && getX() + 40 < 1503) {
+                            if (getY() != 192) setY(getY() + 1);
+                        }
+                    }
+                    else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+                        if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
+                        if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) stepSound.play(playerSounds.get("stepStone"));
+                        bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
+                        headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
+                        shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
+                        overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                        torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                        beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
+                        handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
+                        legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
+                        feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
+                        if (player_animation_move_g == 8) {
+                            player_animation_move_right_i++;
+                            player_animation_move_g = 0;
+                        }
+                        player_animation_move_g++;
+                        moveRight();
+                        if (!(getX() > 1186) && !(getX() <= 290)) {
+                            glTranslated(-1, 0, 0);
+                            forPlacingCamera++;
+                        }
+                        if (getX() + 40 > 1410 && getX() + 40 < 1503) {
+                            if (getY() != 100) setY(getY() - 1);
+                        }
+                    }
+                }
+            }
+            else if (level.equals("MainMenu")) {
+                if (mainMenuDirection) {
+                    if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
+                    bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
+                    headAnimation = "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
+                    shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_right_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveRight();
+                }
+                else if (!mainMenuDirection) {
+                    if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
+                    bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_move_0" + player_animation_move_left_i;
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
+                    beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
+                    feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
+                    if (player_animation_move_g == 8) {
+                        player_animation_move_left_i++;
+                        player_animation_move_g = 0;
+                    }
+                    player_animation_move_g++;
+                    moveLeft();
+                }
+            }
         }
         else {
             bodyAnimation = "player_hurt_0" + player_animation_death_i;
@@ -754,109 +899,8 @@ public class Player extends Mob {
         }
     }
 
-    public void updateForMainMenu(String direction) {
-        if (direction.equals("right")) {
-            if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
-            bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
-            headAnimation = "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
-            shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
-            torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
-            beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
-            handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
-            legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
-            feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
-            if (player_animation_move_g == 8) {
-                player_animation_move_right_i++;
-                player_animation_move_g = 0;
-            }
-            player_animation_move_g++;
-            moveRight();
-        }
-        else if (direction.equals("left")) {
-            if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
-            bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
-            headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
-            shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
-            torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
-            beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
-            handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
-            legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
-            feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
-            if (player_animation_move_g == 8) {
-                player_animation_move_left_i++;
-                player_animation_move_g = 0;
-            }
-            player_animation_move_g++;
-            moveLeft();
-        }
-    }
-
-    public void updateForTown(long window) {
-        bodyAnimation = "player_stand_" + getMoveDirection();
-        headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
-        shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";
-        torsoAnimation = "TORSO_" + getTorsoTexture() + "_" + getMoveDirection() + "_move_01";
-        beltAnimation = "BELT_" + getBeltTexture() + "_" + getMoveDirection() + "_move_01";
-        handsAnimation = "HANDS_" + getHandsTexture() + "_" + getMoveDirection() + "_move_01";
-        legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
-        feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
-
-        if (!choiceBubble) {
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-                if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
-                if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_left_0" + player_animation_move_left_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_left_move_0" + player_animation_move_left_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + player_animation_move_left_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_move_0" + player_animation_move_left_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_left_move_0" + player_animation_move_left_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + player_animation_move_left_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + player_animation_move_left_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + player_animation_move_left_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_left_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveLeft();
-                if (!(getX() <= 290) && !(getX() > 1186)) {
-                    glTranslated(1, 0, 0);
-                    forPlacingCamera--;
-                }
-                if (getX() + 40 > 1410 && getX() + 40 < 1503) {
-                    if (getY() != 192) setY(getY() + 1);
-                }
-            }
-            else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-                if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
-                if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) stepSound.play(playerSounds.get("stepStone"));
-                bodyAnimation = "player_walk_right_0" + player_animation_move_right_i;
-                headAnimation =  "HEAD_" + getHeadTexture() + "_right_move_0" + player_animation_move_right_i;
-                shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + player_animation_move_right_i;
-                torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_move_0" + player_animation_move_right_i;
-                beltAnimation = "BELT_" + getBeltTexture() + "_right_move_0" + player_animation_move_right_i;
-                handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + player_animation_move_right_i;
-                legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + player_animation_move_right_i;
-                feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + player_animation_move_right_i;
-                if (player_animation_move_g == 8) {
-                    player_animation_move_right_i++;
-                    player_animation_move_g = 0;
-                }
-                player_animation_move_g++;
-                moveRight();
-                if (!(getX() > 1186) && !(getX() <= 290)) {
-                    glTranslated(-1, 0, 0);
-                    forPlacingCamera++;
-                }
-                if (getX() + 40 > 1410 && getX() + 40 < 1503) {
-                    if (getY() != 100) setY(getY() - 1);
-                }
-            }
-        }
-    }
-
     public void reArmor() {
-        this.setArmor(head.getDefense() + shoulders.getDefense() + torso.getDefense() + belt.getDefense() +
+        this.setArmor(head.getDefense() + shoulders.getDefense() + overTorso.getDefense() + torso.getDefense() + belt.getDefense() +
                 hands.getDefense() + legs.getDefense() + feet.getDefense());
     }
 
@@ -864,6 +908,7 @@ public class Player extends Mob {
         switch (armor.getType()) {
             case "head": return head;
             case "shoulders": return shoulders;
+            case "overTorso": return overTorso;
             case "torso": return torso;
             case "belt": return belt;
             case "hands": return hands;
@@ -880,6 +925,9 @@ public class Player extends Mob {
                 break;
             case "shoulders":
                 shoulders = armor;
+                break;
+            case "overTorso":
+                overTorso = armor;
                 break;
             case "torso":
                 torso = armor;
@@ -919,6 +967,8 @@ public class Player extends Mob {
 
     public String getShouldersTexture() { return shoulders.getTexture(); }
 
+    public String getOverTorsoTexture() { return overTorso.getTexture(); }
+
     public String getTorsoTexture() { return torso.getTexture(); }
 
     public String getBeltTexture() { return belt.getTexture(); }
@@ -936,6 +986,8 @@ public class Player extends Mob {
     public String getHeadAnimation() { return headAnimation; }
 
     public String getShouldersAnimation() { return shouldersAnimation; }
+
+    public String getOverTorsoAnimation() { return overTorsoAnimation; }
 
     public String getTorsoAnimation() { return torsoAnimation; }
 
@@ -999,4 +1051,8 @@ public class Player extends Mob {
     public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
 
     public void setKnockbackTaskStarted(boolean knockbackTaskStarted) { this.knockbackTaskStarted = knockbackTaskStarted; }
+
+    public boolean isMainMenuDirection() { return mainMenuDirection; }
+
+    public void setMainMenuDirection(boolean mainMenuDirection) { this.mainMenuDirection = mainMenuDirection; }
 }

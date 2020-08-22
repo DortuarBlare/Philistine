@@ -65,7 +65,7 @@ public class Storage {
             382, 279, 383, 317, // wall0
             342, 277, 381, 278, // wall1
             340, 239, 341, 278, // wall2
-            342, 237, 451, 238, // wall3
+            342, 230, 451, 231, // wall3
             452, 239, 458, 276, // wall4
             418, 277, 451, 278, // wall5
             416, 279, 417, 317 // wall6
@@ -81,7 +81,7 @@ public class Storage {
     };
 
     public static final String[] playerSoundString = {
-            "stepStone", "swish", "selectionClick", "openMenu"
+            "stepStone", "stepWood", "swish", "selectionClick", "openMenu"
     };
 
     public static final String[] textureString = {

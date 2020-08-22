@@ -110,6 +110,13 @@ public abstract class Object {
 
     public void setMaxY(int maxY) { this.maxY = maxY; }
 
+    public void setSize(int minX, int minY, int maxX, int maxY) {
+        this.minX = minX;
+        this.maxX = maxX;
+        this.minY = minY;
+        this.maxY = maxY;
+    }
+
     public AABB getCollisionBox() { return collisionBox; }
 
     public String getTexture() { return texture; }

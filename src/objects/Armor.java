@@ -6,6 +6,7 @@ public class Armor extends Object {
     private String type;
     private int defense;
     private int price;
+    private int positionOnTradeTable;
 
     public Armor(String texture, String type, int defense, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, int price) {
         super(texture, isNoclip, isLying, minX, minY, maxX, maxY, new AABB());
@@ -19,6 +20,7 @@ public class Armor extends Object {
             case "shoulders":
                 getCollisionBox().update(getMinX() + 17, getMinY() + 32, getMinX() + 46, getMinY() + 45);
                 break;
+            case "overTorso":
             case "torso":
                 getCollisionBox().update(getMinX() + 17, getMinY() + 32, getMinX() + 46, getMinY() + 54);
                 break;
@@ -49,8 +51,9 @@ public class Armor extends Object {
                 getCollisionBox().update(getMinX() + 21, getMinY() + 13, getMinX() + 42, getMinY() + 36);
                 break;
             case "shoulders":
-                getCollisionBox().update(getMinX() + 17, getMinY() + 32, getMinX() + 46, getMinY() + 45);
+                getCollisionBox().update(getMinX() + 22, getMinY() + 32, getMinX() + 41, getMinY() + 45);
                 break;
+            case "overTorso":
             case "torso":
                 getCollisionBox().update(getMinX() + 17, getMinY() + 32, getMinX() + 46, getMinY() + 54);
                 break;
@@ -58,7 +61,7 @@ public class Armor extends Object {
                 getCollisionBox().update(getMinX() + 23, getMinY() + 43, getMinX() + 40, getMinY() + 48);
                 break;
             case "hands":
-                getCollisionBox().update(getMinX() + 17, getMinY() + 39, getMinX() + 46, getMinY() + 44);
+                getCollisionBox().update(getMinX() + 23, getMinY() + 42, getMinX() + 41, getMinY() + 50);
                 break;
             case "legs":
                 getCollisionBox().update(getMinX() + 22, getMinY() + 45, getMinX() + 41, getMinY() + 56);
@@ -82,4 +85,8 @@ public class Armor extends Object {
     public void setPrice(int price) {
         this.price = price;
     }
+
+    public int getPositionOnTradeTable() { return positionOnTradeTable; }
+
+    public void setPositionOnTradeTable(int positionOnTradeTable) { this.positionOnTradeTable = positionOnTradeTable; }
 }

@@ -156,7 +156,7 @@ public class Window {
         aabbMap.get("entranceFromForgeToTown").update(384,316,415,318);
 
         // Добавление всех объектов и мобов
-        firstLevelObjectList.add(new Container("chestClosed", false, false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
+        firstLevelObjectList.add(new Container("chest", false, false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
         firstLevelObjectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
         shop = new Container("ChestClosed", true, true, false, 0, 0, 0, 0, new AABB(0, 0, 0, 0));
@@ -347,12 +347,12 @@ public class Window {
                     if (forMainMenu) {
                         glTranslated(-1, 0, 0);
                         SingletonPlayer.player.setForPlacingCamera(SingletonPlayer.player.getForPlacingCamera() + 1);
-                        SingletonPlayer.player.updateForMainMenu("right");
+                        SingletonPlayer.player.setMainMenuDirection(true);
                     }
                     else {
                         glTranslated(1, 0, 0);
                         SingletonPlayer.player.setForPlacingCamera(SingletonPlayer.player.getForPlacingCamera() - 1);
-                        SingletonPlayer.player.updateForMainMenu("left");
+                        SingletonPlayer.player.setMainMenuDirection(false);
                     }
                     break;
                 }
@@ -419,8 +419,6 @@ public class Window {
                         }
                     }
                     key_E_Pressed = false;
-
-                    SingletonPlayer.player.updateForTown(window);
                     break;
                 }
                 case "tavern": {
@@ -456,8 +454,9 @@ public class Window {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("forge")); // Фон кузницы
                     createQuadTexture(0, 0, 640, 360);
 
+                    // Анимация печки
                     if (forgeFurnace_i == 4) forgeFurnace_i = 1;
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("furnace_burn_0" + forgeFurnace_i)); // Анимация печки
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("furnace_burn_0" + forgeFurnace_i));
                     createQuadTexture(223, 142, 259, 173);
                     if (forgeFurnace_g == 12) {
                         forgeFurnace_i++;
@@ -483,41 +482,30 @@ public class Window {
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall5")))
                         SingletonPlayer.player.stopDown();
 
+                    if (shop.loot.size() != 0) {
+                        shopObjectList.addAll(shop.loot);
+                        shop.loot.clear();
+                    }
+
                     for (Object object : shopObjectList) {
                         if (!object.isLying()) continue;
-                        if (object instanceof Coin) {
-                            Coin coin = (Coin) object;
-                            if (!coin.isAnimationTaskStarted())
-                                coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
-                            coin.setTexture("coin_0" + coin.getAnimationTime());
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
-                        }
                         else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
-                    for (int y = 0; y < shopObjectList.size(); y++) {
-                        if (!shopObjectList.get(y).isLying()) continue;
-                        if (shopObjectList.get(y) instanceof Armor && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), shopObjectList.get(y).getCollisionBox())) {
-                            Armor tempArmor = (Armor) shopObjectList.get(y);
+                    for (int i = 0; i < shopObjectList.size(); i++) {
+                        if (!shopObjectList.get(i).isLying()) continue;
+                        if (shopObjectList.get(i) instanceof Armor && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), shopObjectList.get(i).getCollisionBox())) {
+                            Armor tempArmor = (Armor) shopObjectList.get(i);
                             glBindTexture(GL_TEXTURE_2D, textureMap.get("price"));
+                            createQuadTexture(tempArmor.getMinX() + 15 ,tempArmor.getCollisionBox().getMin().y - 27, tempArmor.getMinX() + 45,  tempArmor.getCollisionBox().getMin().y);
                             int tempX0, tempX1, tempY0, tempY1;
-                            if (y == shopObjectList.size() - 1) {
-                                tempX0 = shopObjectList.get(shopObjectList.size() - 1).getMinX() + 30 + (getCountsOfDigits(tempArmor.getPrice()) * 7) - 7;
-                                tempX1 = shopObjectList.get(shopObjectList.size() - 1).getMinX() + 30 + (getCountsOfDigits(tempArmor.getPrice()) * 7);
-                                tempY0 = 240;
-                                tempY1 = 250;
-                                createQuadTexture(shopObjectList.get(y).getMinX() + 20, 228, shopObjectList.get(y).getMinX() + 50,  255);
-                            }
-                            else {
-                                createQuadTexture(shopObjectList.get(y).getMinX() + 20, 180, shopObjectList.get(y).getMinX() + 50,  207);
-                                tempX0 = shopObjectList.get(y).getMinX() + 30 + (getCountsOfDigits(tempArmor.getPrice()) * 7) - 7;
-                                tempX1 = shopObjectList.get(y).getMinX() + 30 + (getCountsOfDigits(tempArmor.getPrice()) * 7);
-                                tempY0 = 195;
-                                tempY1 = 205;
-                            }
+                            tempX0 = tempArmor.getMinX() + 37 - 7;
+                            tempX1 = tempArmor.getMinX() + 37;
+                            tempY0 = tempArmor.getCollisionBox().getMin().y - 13;
+                            tempY1 = tempArmor.getCollisionBox().getMin().y - 3;
                             int tempPrice = tempArmor.getPrice();
-                            for (int i = 0; i < getCountsOfDigits(tempArmor.getPrice()); i++) {
+                            for (int j = 0; j < getCountsOfDigits(tempArmor.getPrice()); j++) {
                                 switch (tempPrice % 10) {
                                     case 0:
                                         glBindTexture(GL_TEXTURE_2D, textureMap.get("number_0"));
@@ -567,47 +555,14 @@ public class Window {
                             }
                             if (key_E_Pressed && SingletonPlayer.player.getMoney() >= tempArmor.getPrice()) {
                                 SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() - tempArmor.getPrice());
-                                shopObjectList.get(y).setIsLying(false);
+                                SingletonPlayer.player.setArmor(tempArmor);
+                                shopObjectList.get(i).setIsLying(false);
+                                shopObjectList.remove(i);
+                                armorChange.play(soundMap.get("changingArmor"));
                                 key_E_Pressed = false;
                             }
                         }
                     }
-
-                    int shiftX = 0, shiftY = 0;
-                    for (int k = 0; k < shop.loot.size(); k++) {
-                        Armor tempArmor = (Armor) shop.loot.get(k);
-                        switch (tempArmor.getType()) {
-                            case "head":
-                                shiftY = 10;
-                                break;
-                            case "shoulders":
-                                shiftY = 5;
-                                break;
-                            case "torso":
-                                shiftY = -1;
-                                break;
-                            case "belt":
-                            case "legs":
-                                shiftY = -10;
-                                break;
-                            case "hands":
-                                break;
-                            case "feet":
-                                shiftY = -20;
-                                break;
-                        }
-                        if (k == shop.loot.size() - 1) {
-                            shop.loot.get(k).setMinX(295); shop.loot.get(k).setMinY(200); shop.loot.get(k).setMaxX(359); shop.loot.get(k).setMaxY(264);
-                            shop.loot.get(k).getCollisionBox().update(341, 250 + shiftY, 350, 270);
-                        }
-                        else {
-                            shop.loot.get(k).setMinX(330 + shiftX); shop.loot.get(k).setMinY(168 + shiftY); shop.loot.get(k).setMaxX(394 + shiftX); shop.loot.get(k).setMaxY(232 + shiftY);
-                            shop.loot.get(k).getCollisionBox().update(360 + shiftX, 168 + shiftY, 370 + shiftX, 242);
-                        }
-                        shopObjectList.add(shop.loot.get(k));
-                        shiftX += 32;
-                    }
-                    shop.loot.clear();
 
                     // Проверка выхода в город
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromForgeToTown"))) {
@@ -663,6 +618,10 @@ public class Window {
                             coin.setTexture("coin_0" + coin.getAnimationTime());
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
                         }
+                        else if (object instanceof Container) {
+                            Container container = (Container) object;
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
+                        }
                         else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
@@ -716,7 +675,7 @@ public class Window {
                             else if (firstLevelObjectList.get(i) instanceof Container && SingletonPlayer.player.getKeys() > 0) {
                                 Container change = (Container) firstLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
-                                    change.setTexture("chestOpened");
+                                    change.setState("Opened");
                                     SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
                                     for (int h = 0; h < change.loot.size(); h++) {
                                         firstLevelObjectList.add(change.loot.get(h));
@@ -1034,10 +993,9 @@ public class Window {
                 }
             }
 
-            // Метод для обработки игрока и отрисовка интерфейса
+            // Отрисовка интерфейса
             if (!level.equals("MainMenu") && !level.equals("Town")) {
-                SingletonPlayer.player.update(window);
-
+                // Интерфейс
                 // Полоска здоровья
                 int tempHealth = SingletonPlayer.player.getHealth() % 10 == 0 ? SingletonPlayer.player.getHealth() : SingletonPlayer.player.getHealth() - (SingletonPlayer.player.getHealth() % 10) + 10;
                 if (tempHealth >= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
@@ -1165,6 +1123,7 @@ public class Window {
             }
 
             // Отрисовка экипировки и анимации
+            SingletonPlayer.player.update(window, level);
             glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getBodyAnimation()));
             createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
             if (!SingletonPlayer.player.getFeetTexture().equals("nothing")) {
@@ -1177,6 +1136,10 @@ public class Window {
             }
             if (!SingletonPlayer.player.getTorsoTexture().equals("nothing")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getTorsoAnimation()));
+                createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
+            }
+            if (!SingletonPlayer.player.getOverTorsoTexture().equals("nothing")) {
+                glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getOverTorsoAnimation()));
                 createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
             }
             if (!SingletonPlayer.player.getShouldersTexture().equals("nothing")) {
