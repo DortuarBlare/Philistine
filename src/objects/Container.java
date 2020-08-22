@@ -11,7 +11,7 @@ public class Container extends Object {
 
     public Container(String texture, boolean isOnlyClothes, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
         super(texture, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
-        loot = new ArrayList<>();
+        loot = new ArrayList<Object>();
         for (int i = 0; i < 3; i++) {
             double b = random();
             if (!isOnlyClothes) {

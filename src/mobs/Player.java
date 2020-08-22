@@ -168,9 +168,7 @@ public class Player extends Mob {
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
                     }
-                    else if (isAttackDown) {
-
-                    }
+                    else if (isAttackDown) {}
                     break;
                 case "stick":
                     if (isAttackLeft) {
@@ -203,9 +201,7 @@ public class Player extends Mob {
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
                     }
-                    else if (isAttackDown) {
-
-                    }
+                    else if (isAttackDown) {}
                     break;
             }
         }
@@ -215,16 +211,16 @@ public class Player extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         setMoveDirection("down");
         attackBox = new AABB();
-        money = 30;
+        money = 10;
         keys = 1;
-        weapon = new Weapon("long_spear", "thrust", 10, new AABB());
+        weapon = new Weapon("nothing", "slash", 10, new AABB());
         head = new Armor("nothing", "head", 0, true);
-        shoulders = new Armor("plate_shoulderPads", "shoulders", 5, true);
-        torso = new Armor("plate_armor", "torso", 5, true);
-        belt = new Armor("leather", "belt", 2, true);
-        hands = new Armor("leather_bracers", "hands", 2, true);
-        legs = new Armor("plate_pants", "legs", 5, true);
-        feet = new Armor("plate_shoes", "feet", 5, true);
+        shoulders = new Armor("nothing", "shoulders", 0, true);
+        torso = new Armor("shirt_white", "torso", 1, true);
+        belt = new Armor("nothing", "belt", 0, true);
+        hands = new Armor("nothing", "hands", 0, true);
+        legs = new Armor("pants_greenish", "legs", 1, true);
+        feet = new Armor("nothing", "feet", 0, true);
         bodyAnimation = "player_stand_" + getMoveDirection();
         headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
         shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";
@@ -604,11 +600,15 @@ public class Player extends Mob {
                         case "stick":
                             getTimer().schedule(hitAnimationTask, 0, 80);
                             break;
+                        case "nothing":
+                            getTimer().schedule(hitAnimationTask, 0, 70);
+                            break;
                     }
                 }
                 if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
                 bodyAnimation = "player_" + getWeapon().getAttackType() + "_left_0" + hitAnimationTime;
-                weaponAnimation = "weapon_" + getWeapon().getTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_left_0" + hitAnimationTime;
+                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 headAnimation =  "HEAD_" + getHeadTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
@@ -636,11 +636,15 @@ public class Player extends Mob {
                         case "stick":
                             getTimer().schedule(hitAnimationTask, 0, 80);
                             break;
+                        case "nothing":
+                            getTimer().schedule(hitAnimationTask, 0, 70);
+                            break;
                     }
                 }
                 if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
                 bodyAnimation = "player_" + getWeapon().getAttackType() + "_right_0" + hitAnimationTime;
-                weaponAnimation = "weapon_" + getWeapon().getTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_right_0" + hitAnimationTime;
+                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 headAnimation =  "HEAD_" + getHeadTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
@@ -668,11 +672,15 @@ public class Player extends Mob {
                         case "stick":
                             getTimer().schedule(hitAnimationTask, 0, 80);
                             break;
+                        case "nothing":
+                            getTimer().schedule(hitAnimationTask, 0, 70);
+                            break;
                     }
                 }
                 if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
                 bodyAnimation = "player_" + getWeapon().getAttackType() + "_up_0" + hitAnimationTime;
-                weaponAnimation = "weapon_" + getWeapon().getTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_up_0" + hitAnimationTime;
+                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 headAnimation =  "HEAD_" + getHeadTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 torsoAnimation = "TORSO_" + getTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
@@ -700,11 +708,15 @@ public class Player extends Mob {
                         case "stick":
                             getTimer().schedule(hitAnimationTask, 0, 80);
                             break;
+                        case "nothing":
+                            getTimer().schedule(hitAnimationTask, 0, 70);
+                            break;
                     }
                 }
                 if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
                 bodyAnimation = "player_" + getWeapon().getAttackType() + "_down_0" + hitAnimationTime;
-                weaponAnimation = "weapon_" + getWeapon().getTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_down_0" + hitAnimationTime;
+                else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 headAnimation =  "HEAD_" + getHeadTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 torsoAnimation = "TORSO_" + getTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;

@@ -13,17 +13,14 @@ public class EnemyThread extends Thread {
     @Override
     public synchronized void run() {
         while (threadRunning) {
-            // Остановка, если игрок в меню
+            // Остановка мобов, если игрок в меню
             while (threadWaiting) {
-                try {
-                    wait();
-//                    threadRunning = false;
-                }
+                try { wait(); }
                 catch (InterruptedException e) { e.printStackTrace(); }
             }
             // Движение мобов
             for (Mob mob : SingletonMobs.mobList) mob.follow();
-            try { Thread.sleep(35); } // Скорость движения
+            try { Thread.sleep(30); } // Скорость движения
             catch (InterruptedException e) { e.printStackTrace(); }
         }
     }

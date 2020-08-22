@@ -85,11 +85,21 @@ public class Storage {
     };
 
     public static final String[] textureString = {
+            // Фон
+            "level0", "level1", "level2", "level3", "MainMenu",
+
+            // Интерфейс
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
-            "level0", "level1", "level2", "level3", "MainMenu", "Press_enter", "box",
-            "chestClosed", "chestOpened", "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
+            "0armor", "5armor", "10armor", "15armor", "20armor", "25armor", "30armor",
+            "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
+            "Press_enter", "emotion_question", "price", "price2",
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
-            "5armor", "10armor", "15armor", "20armor", "25armor", "30armor",
+            "coin_01", "coin_02", "coin_03", "coin_04", "coin_05", "coin_06", "coin_07", "coin_08",
+            "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
+            "scrollMenu_Resume", "scrollMenu_Options", "scrollMenu_Exit",
+
+            // Окружение
+            "chestClosed", "chestOpened",
             "leather_hat", "robe_hood", "chain_helmet", "chain_hood", "plate_helmet",
             "leather_shoulderPads", "plate_shoulderPads",
             "shirt_white", "plate_armor", "robe_shirt_brown", "leather_armor", "chain_jacket_purple", "chain_armor",
@@ -98,13 +108,7 @@ public class Storage {
             "pants_greenish", "plate_pants", "robe_skirt",
             "shoes_brown", "plate_shoes",
             "longsword", "rapier", "long_spear", "spear", "stick", "scroll5", "potionRed",
-            "coin_01", "coin_02", "coin_03", "coin_04", "coin_05", "coin_06", "coin_07", "coin_08",
-            "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
-            "scrollMenu_Resume", "scrollMenu_Options", "scrollMenu_Exit",
-
-            // Окружение
-            "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
-            "emotion_question", "price", "price2",
+            "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "guard_stand_01", "guard_stand_02", "guard_stand_03", "guard_stand_04", "guard_stand_05", "guard_stand_06", "guard_stand_07", "guard_stand_08", "guard_stand_09", "guard_stand_010",
             "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
             "blacksmith_left_move_01", "blacksmith_left_move_02", "blacksmith_left_move_03", "blacksmith_left_move_04", "blacksmith_left_move_05", "blacksmith_left_move_06", "blacksmith_left_move_07", "blacksmith_left_move_08", "blacksmith_left_move_09",

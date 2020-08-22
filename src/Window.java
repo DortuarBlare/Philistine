@@ -110,6 +110,8 @@ public class Window {
         glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
         glEnable(GL_TEXTURE_2D);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glEnable(GL_BLEND);
 
         // Инициализация всех коллекций
@@ -143,9 +145,7 @@ public class Window {
         for(int i = 0; i < Storage.aabbString.length; i++)
             aabbMap.put(Storage.aabbString[i], new AABB());
 
-        // Единичное установление хитбоксов стен первого уровня и переходов м/у уровнями
-        for(int i = 0, j = 0; i < 5; i++, j+=4)
-            aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
+        // Переходов м/у уровнями
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
         aabbMap.get("entranceToThirdLevel").update(197, 134, 237, 145);
@@ -189,6 +189,9 @@ public class Window {
                     SingletonPlayer.player.setY(150);
                     SingletonPlayer.player.setSpeed(2);
                 }
+                // Установление хитбоксов стен первого уровня
+                for(int i = 0, j = 0; i < 5; i++, j+=4)
+                    aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
             }
 
             // Нажатие Enter во второстепенном меню
@@ -630,6 +633,8 @@ public class Window {
                     }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
+
+                    //Анимация факела
                     if (torch_i == 10) torch_i = 1;
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
                     createQuadTexture(190, 63, 221, 126);
@@ -736,8 +741,6 @@ public class Window {
                                 slime.getHitbox().update(slime.getX() + 3, slime.getY() + 2, slime.getX() + 14, slime.getY() + 10);
                                 slime.getCollisionBox().update(slime.getX() + 1, slime.getY() + 1, slime.getX() + 16, slime.getY() + 11);
 
-                                // Преследование игрока слаймом
-//                                if (!AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox())) slime.follow(SingletonPlayer.player);
                                 // Игрок получает урона от слизня
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) && !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
                                     if (SingletonPlayer.player.getX() > slime.getX() && SingletonPlayer.player.getY() > slime.getY()) SingletonPlayer.player.setKnockbackDirection("right");
