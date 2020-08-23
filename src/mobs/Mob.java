@@ -72,6 +72,24 @@ public abstract class Mob {
         moveDirection = "left";
     }
 
+    public void moveSomewhere() {
+        int random = (int) (Math.random() * 4);
+        switch (random) {
+            case 0:
+                knockBackLeft();
+                break;
+            case 1:
+                knockBackRight();
+                break;
+            case 2:
+                knockBackUp();
+                break;
+            case 3:
+                knockBackDown();
+                break;
+        }
+    }
+
     public void knockBackLeft() { x -= speed; }
 
     public void knockBackRight() { x += speed; }

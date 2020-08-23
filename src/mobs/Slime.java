@@ -4,6 +4,7 @@ import content.AudioMaster;
 import content.Source;
 import content.Storage;
 import math.AABB;
+import math.CollisionMessage;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -139,6 +140,11 @@ public class Slime extends Mob {
 
             if (getHealth() <= 0) hurtSound.play(deathSoundId);
             else hurtSound.play(hurtSoundId);
+        }
+
+        for (Mob mob : SingletonMobs.mobList) {
+            if (!(mob instanceof Player) && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
+                stop(CollisionMessage.getMessage());
         }
 
         if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 300);

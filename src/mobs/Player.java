@@ -55,7 +55,6 @@ public class Player extends Mob {
                     break;
             }
             knockbackTime++;
-            if (knockbackTime >= 15) stopTimer();
         }
     };
     private TimerTask hitAnimationTask = new TimerTask() {
@@ -317,8 +316,6 @@ public class Player extends Mob {
     public void stopTimer() {
         knockbackTime = 0;
         hitAnimationTime = 1;
-        knockbackTaskStarted = false;
-        hitAnimationTaskStarted = false;
         isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
         setImmortal(false);
         getAttackBox().update(0,0,0,0);
@@ -345,7 +342,6 @@ public class Player extends Mob {
                         break;
                 }
                 knockbackTime++;
-                if (knockbackTime >= 15) stopTimer();
             }
         };
         hitAnimationTask = new TimerTask() {
@@ -571,11 +567,15 @@ public class Player extends Mob {
                 }
             }
         };
+        knockbackTaskStarted = false;
+        hitAnimationTaskStarted = false;
     }
 
     public void update(long window, String level) {
         if (!isDead()) {
             if (!level.equals("MainMenu") && !level.equals("Town")) {
+                if (knockbackTime >= 15) stopTimer();
+
                 bodyAnimation = "player_stand_" + getMoveDirection();
                 headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
                 shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";

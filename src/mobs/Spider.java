@@ -22,7 +22,6 @@ public class Spider extends Mob {
             else if (knockbackDirection.equals("up")) knockBackUp();
             else if (knockbackDirection.equals("down")) knockBackDown();
             knockbackTime++;
-            if (knockbackTime >= 25) stopTimer();
         }
     };
     private TimerTask animationTask = new TimerTask() {
@@ -76,7 +75,6 @@ public class Spider extends Mob {
                 else if (knockbackDirection.equals("up")) knockBackUp();
                 else if (knockbackDirection.equals("down")) knockBackDown();
                 knockbackTime++;
-                if (knockbackTime >= 25) stopTimer();
             }
         };
         animationTask = new TimerTask() {
@@ -132,6 +130,8 @@ public class Spider extends Mob {
     }
 
     public void update() {
+        if (knockbackTime >= 25) stopTimer();
+
         // Паук получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
             if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
@@ -141,6 +141,7 @@ public class Spider extends Mob {
             setHealth(getHealth() - SingletonPlayer.player.getDamage());
             if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
         }
+
         if (AABB.AABBvsAABB2(getHitbox(), SingletonPlayer.player.getHitbox())) {
             if (CollisionMessage.getMessage().equals("left")) {
                 isAttackLeft = true;
@@ -158,6 +159,11 @@ public class Spider extends Mob {
                 isAttackDown = true;
                 if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
             }
+        }
+
+        for (Mob mob : SingletonMobs.mobList) {
+            if (!(mob instanceof Player) && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
+                stop(CollisionMessage.getMessage());
         }
 
         if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 150);

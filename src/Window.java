@@ -52,7 +52,7 @@ public class Window {
             if (level.equals("FirstLevel")) SingletonMobs.mobList.add(new Slime(350, 300, 1, 50, 0, 5));
             else if (level.equals("SecondLevel")) SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
             time++;
-            if (time == 2) stopMobSpawn();
+            if (time == 6) stopMobSpawn();
         }
     };
 
@@ -698,7 +698,8 @@ public class Window {
                                 slime.update();
 
                                 // Игрок получает урона от слизня
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) && !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
+                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) &&
+                                        !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
                                     if (SingletonPlayer.player.getX() > slime.getX()) SingletonPlayer.player.setKnockbackDirection("right");
                                     else if (SingletonPlayer.player.getX() < slime.getX()) SingletonPlayer.player.setKnockbackDirection("left");
                                     else if (SingletonPlayer.player.getY() > slime.getY()) SingletonPlayer.player.setKnockbackDirection("down");
@@ -712,11 +713,11 @@ public class Window {
                                     slime.setDead(true);
                                     SingletonMobs.mobList.remove(slime);
                                 }
-                                else {
+                                /*else {
                                     int tempHealth = slime.getHealth() % 10 == 0 ? slime.getHealth() * 2 : (slime.getHealth() * 2) - ((slime.getHealth() * 2) % 10) + 10;
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
                                     createQuadTexture(slime.getX(), slime.getY() - 2, slime.getX() + 16, slime.getY());
-                                }
+                                }*/
                             }
                         }
                     }
@@ -733,15 +734,6 @@ public class Window {
                             mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
                             mob.stopDown();
-
-                        // Столкновение мобов с мобами
-                        for (int j1 = i1 + 1; j1 < SingletonMobs.mobList.size(); j1++) {
-                            Mob mob2 = SingletonMobs.mobList.get(j1);
-                            if (!(mob instanceof Player)) {
-                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
-                                    mob.stop(CollisionMessage.getMessage());
-                            }
-                        }
 
                         for (int i = 0; i < firstLevelObjectList.size(); i++) {
                             Object object = firstLevelObjectList.get(i);
@@ -837,7 +829,7 @@ public class Window {
                                     else if (spider.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
                                     else if (spider.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
                                     SingletonPlayer.player.takeDamage(spider.getDamage());
-                                    SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
                                 }
 
                                 // Отрисовка хелсбара
@@ -868,16 +860,6 @@ public class Window {
                             mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                             mob.stopDown();
-
-                        // Столкновение мобов с мобами
-                        for (int j1 = i1 + 1; j1 < SingletonMobs.mobList.size(); j1++) {
-                            Mob mob2 = SingletonMobs.mobList.get(j1);
-                            if (!(mob instanceof Player)) {
-                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
-                                    mob.stop(CollisionMessage.getMessage());
-                            }
-                        }
-
                     }
 
                     // Проверка перехода на первый уровень
@@ -1160,9 +1142,6 @@ public class Window {
                     createQuadTexture(0, 0, 640, 360);
                 }
             }
-
-//            if (SingletonPlayer.player.isScrollMenu()) enemyThread.setThreadWaiting(true);
-//            if (!SingletonPlayer.player.isScrollMenu() && enemyThread.getState() == Thread.State.WAITING) enemyThread.resumeThread();
 
             glfwPollEvents();
             glfwSwapBuffers(window);
