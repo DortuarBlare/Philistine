@@ -40,19 +40,21 @@ public class Player extends Mob {
         public void run() {
             setImmortal(true);
             knockbackTaskStarted = true;
-            switch (knockbackDirection) {
-                case "left":
-                    knockBackLeft();
-                    break;
-                case "right":
-                    knockBackRight();
-                    break;
-                case "up":
-                    knockBackUp();
-                    break;
-                case "down":
-                    knockBackDown();
-                    break;
+            if (knockbackTime <= 15) {
+                switch (knockbackDirection) {
+                    case "left":
+                        knockBackLeft();
+                        break;
+                    case "right":
+                        knockBackRight();
+                        break;
+                    case "up":
+                        knockBackUp();
+                        break;
+                    case "down":
+                        knockBackDown();
+                        break;
+                }
             }
             knockbackTime++;
         }
@@ -325,21 +327,22 @@ public class Player extends Mob {
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
-                setImmortal(true);
                 knockbackTaskStarted = true;
-                switch (knockbackDirection) {
-                    case "left":
-                        knockBackLeft();
-                        break;
-                    case "right":
-                        knockBackRight();
-                        break;
-                    case "up":
-                        knockBackUp();
-                        break;
-                    case "down":
-                        knockBackDown();
-                        break;
+                if (knockbackTime <= 15) {
+                    switch (knockbackDirection) {
+                        case "left":
+                            knockBackLeft();
+                            break;
+                        case "right":
+                            knockBackRight();
+                            break;
+                        case "up":
+                            knockBackUp();
+                            break;
+                        case "down":
+                            knockBackDown();
+                            break;
+                    }
                 }
                 knockbackTime++;
             }
@@ -574,7 +577,7 @@ public class Player extends Mob {
     public void update(long window, String level) {
         if (!isDead()) {
             if (!level.equals("MainMenu") && !level.equals("Town")) {
-                if (knockbackTime >= 15) stopTimer();
+                if (knockbackTime >= 50) stopTimer();
 
                 bodyAnimation = "player_stand_" + getMoveDirection();
                 headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
@@ -586,7 +589,7 @@ public class Player extends Mob {
                 legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
                 feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
 
-                if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
+                if ((glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
                     if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
                     if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) {
                         if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
@@ -608,7 +611,7 @@ public class Player extends Mob {
                     player_animation_move_g++;
                     moveUpLeft();
                 }
-                else if ( (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
+                else if ((glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)) {
                     if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
                     if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) {
                         if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
@@ -630,7 +633,7 @@ public class Player extends Mob {
                     player_animation_move_g++;
                     moveUpRight();
                 }
-                else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ) {
+                else if ((glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
                     if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
                     if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) {
                         if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));
@@ -652,7 +655,7 @@ public class Player extends Mob {
                     player_animation_move_g++;
                     moveDownLeft();
                 }
-                else if ( (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ) {
+                else if ((glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)) {
                     if (player_animation_move_right_i == 10) player_animation_move_right_i = 2;
                     if (player_animation_move_right_i == 3 || player_animation_move_right_i == 6) {
                         if (level.equals("tavern") || level.equals("forge")) stepSound.play(playerSounds.get("stepWood"));

@@ -96,7 +96,7 @@ public class Storage {
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
             "0armor", "5armor", "10armor", "15armor", "20armor", "25armor", "30armor",
             "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
-            "Press_enter", "emotion_question", "price", "price2",
+            "Press_enter", "Philistine", "emotion_question", "price", "price2",
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
             "coin_01", "coin_02", "coin_03", "coin_04", "coin_05", "coin_06", "coin_07", "coin_08",
             "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
@@ -115,10 +115,17 @@ public class Storage {
             "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "guard_stand_01", "guard_stand_02", "guard_stand_03", "guard_stand_04", "guard_stand_05", "guard_stand_06", "guard_stand_07", "guard_stand_08", "guard_stand_09", "guard_stand_010",
             "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
+
+            // NPC
             "blacksmith_left_move_01", "blacksmith_left_move_02", "blacksmith_left_move_03", "blacksmith_left_move_04", "blacksmith_left_move_05", "blacksmith_left_move_06", "blacksmith_left_move_07", "blacksmith_left_move_08", "blacksmith_left_move_09",
             "blacksmith_right_move_01", "blacksmith_right_move_02", "blacksmith_right_move_03", "blacksmith_right_move_04", "blacksmith_right_move_05", "blacksmith_right_move_06", "blacksmith_right_move_07", "blacksmith_right_move_08", "blacksmith_right_move_09",
             "blacksmith_up_move_01", "blacksmith_up_move_02", "blacksmith_up_move_03", "blacksmith_up_move_04", "blacksmith_up_move_05", "blacksmith_up_move_06", "blacksmith_up_move_07", "blacksmith_up_move_08", "blacksmith_up_move_09",
             "blacksmith_down_move_01", "blacksmith_down_move_02", "blacksmith_down_move_03", "blacksmith_down_move_04", "blacksmith_down_move_05", "blacksmith_down_move_06", "blacksmith_down_move_07", "blacksmith_down_move_08", "blacksmith_down_move_09",
+
+            "waiter_left_move_01", "waiter_left_move_02", "waiter_left_move_03", "waiter_left_move_04", "waiter_left_move_05", "waiter_left_move_06", "waiter_left_move_07", "waiter_left_move_08", "waiter_left_move_09",
+            "waiter_right_move_01", "waiter_right_move_02", "waiter_right_move_03", "waiter_right_move_04", "waiter_right_move_05", "waiter_right_move_06", "waiter_right_move_07", "waiter_right_move_08", "waiter_right_move_09",
+            "waiter_up_move_01", "waiter_up_move_02", "waiter_up_move_03", "waiter_up_move_04", "waiter_up_move_05", "waiter_up_move_06", "waiter_up_move_07", "waiter_up_move_08", "waiter_up_move_09",
+            "waiter_down_move_01", "waiter_down_move_02", "waiter_down_move_03", "waiter_down_move_04", "waiter_down_move_05", "waiter_down_move_06", "waiter_down_move_07", "waiter_down_move_08", "waiter_down_move_09",
 
             // Анимации игрока
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",

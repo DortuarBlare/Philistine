@@ -338,6 +338,8 @@ public class Window {
                     }
                     guard_g++;
 
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("Philistine"));
+                    createQuadTexture(SingletonPlayer.player.getX() - 68, SingletonPlayer.player.getY() - 156, SingletonPlayer.player.getX() + 64 + 68, SingletonPlayer.player.getY() - 100);
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("Press_enter"));
                     createQuadTexture(SingletonPlayer.player.getX() - 18, SingletonPlayer.player.getY() - 100, SingletonPlayer.player.getX() + 82, SingletonPlayer.player.getY() - 72);
                     if (SingletonPlayer.player.getX() == 1186) forMainMenu = false;
@@ -705,24 +707,22 @@ public class Window {
                                     else if (SingletonPlayer.player.getY() > slime.getY()) SingletonPlayer.player.setKnockbackDirection("down");
                                     else if (SingletonPlayer.player.getY() < slime.getY()) SingletonPlayer.player.setKnockbackDirection("up");
                                     SingletonPlayer.player.takeDamage(slime.getDamage());
-                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
+                                        SingletonPlayer.player.setImmortal(true);
+                                        SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                    }
                                 }
 
-                                // Отрисовка хелсбара
+                                // Смэрть
                                 if (slime.getHealth() <= 0) {
                                     slime.setDead(true);
                                     SingletonMobs.mobList.remove(slime);
                                 }
-                                /*else {
-                                    int tempHealth = slime.getHealth() % 10 == 0 ? slime.getHealth() * 2 : (slime.getHealth() * 2) - ((slime.getHealth() * 2) % 10) + 10;
-                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
-                                    createQuadTexture(slime.getX(), slime.getY() - 2, slime.getX() + 16, slime.getY());
-                                }*/
                             }
                         }
                     }
 
-                    // Проверка всех мобов на столкновение со стенами, объектами и другими мобами. Объекты с объектами
+                    // Проверка всех мобов на столкновение со стенами, объектами. Столкновения объектов с объектами
                     for (int i1 = 0; i1 < SingletonMobs.mobList.size(); i1++) {
                         Mob mob = SingletonMobs.mobList.get(i1);
 
@@ -829,21 +829,19 @@ public class Window {
                                     else if (spider.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
                                     else if (spider.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
                                     SingletonPlayer.player.takeDamage(spider.getDamage());
-                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
+                                        SingletonPlayer.player.setImmortal(true);
+                                        SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                    }
                                 }
 
-                                // Отрисовка хелсбара
+                                // Смэрть
                                 if (spider.getHealth() <= 0) {
                                     spider.setDead(true);
                                     /*spider.getTimer().cancel();
                                     spider.getTimer().purge();*/
                                     SingletonMobs.mobList.remove(spider);
                                 }
-                                /*else {
-                                    int tempHealth = spider.getHealth() % 10 == 0 ? spider.getHealth() * 2 : (spider.getHealth() * 2) - ((spider.getHealth() * 2) % 10) + 10;
-                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
-                                    createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 2);
-                                }*/
                             }
                         }
                     }
