@@ -162,7 +162,6 @@ public class Window {
         singletonPlayer = SingletonPlayer.getInstance();
         SingletonMobs.mobList.add(SingletonPlayer.player);
         blacksmith = new Blacksmith(176, 126, 1);
-//        enemyThread = new EnemyThread("Enemy");
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {

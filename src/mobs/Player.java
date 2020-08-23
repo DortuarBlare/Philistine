@@ -62,20 +62,6 @@ public class Player extends Mob {
         @Override
         public void run() {
             hitAnimationTime++;
-            /*switch (weapon.getAttackType()) {
-                case "slash": {
-
-                    break;
-                }
-                case "thrust": {
-                    if (hitAnimationTime == 9) {
-                        hitAnimationTime = 1;
-                        isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
-                        stopTimer();
-                    }
-                    break;
-                }
-            }*/
             switch (weapon.getTexture()) {
                 case "rapier":
                 case "longsword":
@@ -236,7 +222,6 @@ public class Player extends Mob {
                             stopTimer();
                         }
                     }
-//                    else if (isAttackDown) {}
                     break;
                 case "stick":
                     if (isAttackLeft) {
@@ -284,7 +269,14 @@ public class Player extends Mob {
                             stopTimer();
                         }
                     }
-//                    else if (isAttackDown) {}
+                    break;
+                case "nothing":
+                    if (hitAnimationTime == 7) {
+                        hitAnimationTime = 1;
+                        isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        getAttackBox().update(0,0,0,0);
+                        stopTimer();
+                    }
                     break;
             }
         }
@@ -520,7 +512,6 @@ public class Player extends Mob {
                                 stopTimer();
                             }
                         }
-//                    else if (isAttackDown) {}
                         break;
                     case "stick":
                         if (isAttackLeft) {
@@ -568,7 +559,14 @@ public class Player extends Mob {
                                 stopTimer();
                             }
                         }
-//                    else if (isAttackDown) {}
+                        break;
+                    case "nothing":
+                        if (hitAnimationTime == 7) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            getAttackBox().update(0,0,0,0);
+                            stopTimer();
+                        }
                         break;
                 }
             }
@@ -1039,6 +1037,7 @@ public class Player extends Mob {
             bodyAnimation = "player_hurt_0" + player_animation_death_i;
             headAnimation = "HEAD_" + getHeadTexture() + "_hurt_0" + player_animation_death_i;
             shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_hurt_0" + player_animation_death_i;
+            overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_hurt_0" + player_animation_death_i;
             torsoAnimation = "TORSO_" + getTorsoTexture() + "_hurt_0" + player_animation_death_i;
             beltAnimation = "BELT_" + getBeltTexture() + "_hurt_0" + player_animation_death_i;
             handsAnimation = "HANDS_" + getHandsTexture() + "_hurt_0" + player_animation_death_i;

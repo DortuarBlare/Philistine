@@ -85,7 +85,7 @@ public class Storage {
     };
 
     public static final String[] slimeSoundString = {
-            "slimeHurt",
+            "slimeHurt", "slimeDead"
     };
 
     public static final String[] textureString = {

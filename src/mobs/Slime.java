@@ -12,7 +12,7 @@ public class Slime extends Mob {
     private int knockbackTime = 0, animationTime = 1;
     private String knockbackDirection;
     private Source hurtSound;
-    private int hurtSoundId;
+    private int hurtSoundId, deathSoundId;
     private boolean animationTaskStarted = false, knockbackTaskStarted = false;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
@@ -53,6 +53,7 @@ public class Slime extends Mob {
         setMoveDirection("left");
         hurtSound = new Source(0);
         hurtSoundId = AudioMaster.loadSound("sounds/" + Storage.slimeSoundString[0]);
+        deathSoundId = AudioMaster.loadSound("sounds/" + Storage.slimeSoundString[1]);
     }
 
     public void stopTimer() {
@@ -135,7 +136,9 @@ public class Slime extends Mob {
             else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
             setHealth(getHealth() - SingletonPlayer.player.getDamage());
             if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
-            getHurtSound().play(getHurtSoundId());
+
+            if (getHealth() <= 0) hurtSound.play(deathSoundId);
+            else hurtSound.play(hurtSoundId);
         }
 
         if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 300);
