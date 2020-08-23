@@ -825,16 +825,18 @@ public class Window {
                         if (!SingletonMobs.mobList.get(i).isDead()) {
                             if (SingletonMobs.mobList.get(i) instanceof Spider) {
                                 Spider spider = (Spider) SingletonMobs.mobList.get(i);
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
+                                if (spider.isAttackLeft() || spider.isAttackRight() || spider.isAttackUp() || spider.isAttackDown()) glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_attack_0" + spider.getHitAnimationTime()));
+                                else glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
                                 createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 64);
                                 spider.update();
 
                                 // Игрок получает урона от паука
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getHitbox()) && !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                    if (SingletonPlayer.player.getX() > spider.getX() && SingletonPlayer.player.getY() > spider.getY()) SingletonPlayer.player.setKnockbackDirection("right");
-                                    else if (SingletonPlayer.player.getX() < spider.getX()) SingletonPlayer.player.setKnockbackDirection("left");
-                                    else if (SingletonPlayer.player.getY() > spider.getY()) SingletonPlayer.player.setKnockbackDirection("down");
-                                    else if (SingletonPlayer.player.getY() < spider.getY()) SingletonPlayer.player.setKnockbackDirection("up");
+                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getAttackBox()) &&
+                                        !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
+                                    if (spider.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
+                                    else if (spider.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
+                                    else if (spider.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
+                                    else if (spider.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
                                     SingletonPlayer.player.takeDamage(spider.getDamage());
                                     SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
                                 }
@@ -856,7 +858,9 @@ public class Window {
                     }
 
                     // Проверка всех мобов на столкновение со стенами
-                    for (Mob mob : SingletonMobs.mobList) {
+                    for (int i1 = 0; i1 < SingletonMobs.mobList.size(); i1++) {
+                        Mob mob = SingletonMobs.mobList.get(i1);
+
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
                             mob.stopRight();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
@@ -865,6 +869,16 @@ public class Window {
                             mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                             mob.stopDown();
+
+                        // Столкновение мобов с мобами
+                        for (int j1 = i1 + 1; j1 < SingletonMobs.mobList.size(); j1++) {
+                            Mob mob2 = SingletonMobs.mobList.get(j1);
+                            if (!(mob instanceof Player)) {
+                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), mob2.getCollisionBox()))
+                                    mob.stop(CollisionMessage.getMessage());
+                            }
+                        }
+
                     }
 
                     // Проверка перехода на первый уровень
