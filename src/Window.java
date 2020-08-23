@@ -35,7 +35,7 @@ public class Window {
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
     private Container shop;
-    Source backgroundMusic, mobHurtSound, armorChange, coinSound, doorSound;
+    Source backgroundMusic, armorChange, coinSound, doorSound;
     Coin coinGUI;
     Blacksmith blacksmith;
     private String level = "MainMenu";
@@ -72,7 +72,7 @@ public class Window {
         };
     }
 
-    public void run() throws InterruptedException {
+    public void run() {
         System.out.println("Игра запущена");
 
         init();
@@ -126,7 +126,6 @@ public class Window {
         AudioMaster.init();
         AudioMaster.setListenerData();
         backgroundMusic = new Source(1);
-        mobHurtSound = new Source(0);
         armorChange = new Source(0);
         coinSound = new Source(0);
         doorSound = new Source(0);
@@ -163,7 +162,7 @@ public class Window {
         singletonPlayer = SingletonPlayer.getInstance();
         SingletonMobs.mobList.add(SingletonPlayer.player);
         blacksmith = new Blacksmith(176, 126, 1);
-        enemyThread = new EnemyThread("Enemy");
+//        enemyThread = new EnemyThread("Enemy");
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -314,7 +313,7 @@ public class Window {
         });
     }
 
-    private void loop() throws InterruptedException {
+    private synchronized void loop() {
         int torch_i = 1, torch_g = 0, guard_i = 1, guard_g = 0, forgeFurnace_i = 1, forgeFurnace_g = 0;
 
         while (!glfwWindowShouldClose(window)) {
@@ -495,7 +494,8 @@ public class Window {
 
                     for (int i = 0; i < shopObjectList.size(); i++) {
                         if (!shopObjectList.get(i).isLying()) continue;
-                        if (shopObjectList.get(i) instanceof Armor && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), shopObjectList.get(i).getCollisionBox())) {
+                        if (shopObjectList.get(i) instanceof Armor && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(),
+                                shopObjectList.get(i).getCollisionBox())) {
                             Armor tempArmor = (Armor) shopObjectList.get(i);
                             glBindTexture(GL_TEXTURE_2D, textureMap.get("price"));
                             createQuadTexture(tempArmor.getMinX() + 15 ,tempArmor.getCollisionBox().getMin().y - 27, tempArmor.getMinX() + 45,  tempArmor.getCollisionBox().getMin().y);
@@ -694,37 +694,23 @@ public class Window {
                         if (!SingletonMobs.mobList.get(i).isDead()) {
                             if (SingletonMobs.mobList.get(i) instanceof Slime) {
                                 Slime slime = (Slime) SingletonMobs.mobList.get(i);
-                                if (!slime.isAnimationTaskStarted()) slime.getTimer().schedule(slime.getAnimationTask(), 0, 300);
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() + "_0" + slime.getAnimationTime()));
                                 createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
-                                slime.getHitbox().update(slime.getX() + 3, slime.getY() + 2, slime.getX() + 14, slime.getY() + 10);
-                                slime.getCollisionBox().update(slime.getX() + 1, slime.getY() + 1, slime.getX() + 16, slime.getY() + 11);
+                                slime.update();
 
                                 // Игрок получает урона от слизня
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) && !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                    if (SingletonPlayer.player.getX() > slime.getX() && SingletonPlayer.player.getY() > slime.getY()) SingletonPlayer.player.setKnockbackDirection("right");
+                                    if (SingletonPlayer.player.getX() > slime.getX()) SingletonPlayer.player.setKnockbackDirection("right");
                                     else if (SingletonPlayer.player.getX() < slime.getX()) SingletonPlayer.player.setKnockbackDirection("left");
                                     else if (SingletonPlayer.player.getY() > slime.getY()) SingletonPlayer.player.setKnockbackDirection("down");
                                     else if (SingletonPlayer.player.getY() < slime.getY()) SingletonPlayer.player.setKnockbackDirection("up");
                                     SingletonPlayer.player.takeDamage(slime.getDamage());
                                     if (!SingletonPlayer.player.isKnockbackTaskStarted()) SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
                                 }
-                                // Слизень получает урон от игрока
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), slime.getHitbox()) && !slime.isImmortal()) {
-                                    if (SingletonPlayer.player.isAttackLeft()) slime.setKnockbackDirection("left");
-                                    else if (SingletonPlayer.player.isAttackRight()) slime.setKnockbackDirection("right");
-                                    else if (SingletonPlayer.player.isAttackUp()) slime.setKnockbackDirection("up");
-                                    else if (SingletonPlayer.player.isAttackDown()) slime.setKnockbackDirection("down");
-                                    slime.setHealth(slime.getHealth() - SingletonPlayer.player.getDamage());
-                                    if (!slime.isKnockbackTaskStarted()) slime.getTimer().schedule(slime.getKnockbackTask(), 0, 10);
-                                    mobHurtSound.play(soundMap.get("slimeHurt"));
-                                }
 
                                 // Отрисовка хелсбара
                                 if (slime.getHealth() <= 0) {
                                     slime.setDead(true);
-//                                    slime.getTimer().cancel();
-//                                    slime.getTimer().purge();
                                     SingletonMobs.mobList.remove(slime);
                                 }
                                 else {
@@ -839,14 +825,10 @@ public class Window {
                         if (!SingletonMobs.mobList.get(i).isDead()) {
                             if (SingletonMobs.mobList.get(i) instanceof Spider) {
                                 Spider spider = (Spider) SingletonMobs.mobList.get(i);
-                                if (!spider.isAnimationTaskStarted()) spider.getTimer().schedule(spider.getAnimationTask(), 0, 150);
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
                                 createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 64);
-                                spider.getHitbox().update(spider.getX() + 10, spider.getY() + 15, spider.getX() + 51, spider.getY() + 49);
-                                spider.getCollisionBox().update(spider.getX() + 10, spider.getY() + 15, spider.getX() + 51, spider.getY() + 49);
+                                spider.update();
 
-                                // Преследование игрока пауком
-//                                if (!AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getHitbox())) spider.follow(SingletonPlayer.player);
                                 // Игрок получает урона от паука
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getHitbox()) && !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
                                     if (SingletonPlayer.player.getX() > spider.getX() && SingletonPlayer.player.getY() > spider.getY()) SingletonPlayer.player.setKnockbackDirection("right");
@@ -855,15 +837,6 @@ public class Window {
                                     else if (SingletonPlayer.player.getY() < spider.getY()) SingletonPlayer.player.setKnockbackDirection("up");
                                     SingletonPlayer.player.takeDamage(spider.getDamage());
                                     SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
-                                }
-                                // Паук получает урон от игрока
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), spider.getHitbox()) && !spider.isImmortal()) {
-                                    if (SingletonPlayer.player.isAttackLeft()) spider.setKnockbackDirection("left");
-                                    else if (SingletonPlayer.player.isAttackRight()) spider.setKnockbackDirection("right");
-                                    else if (SingletonPlayer.player.isAttackUp()) spider.setKnockbackDirection("up");
-                                    else if (SingletonPlayer.player.isAttackDown()) spider.setKnockbackDirection("down");
-                                    spider.setHealth(spider.getHealth() - SingletonPlayer.player.getDamage());
-                                    if (!spider.isKnockbackTaskStarted()) spider.getTimer().schedule(spider.getKnockbackTask(), 0, 10);
                                 }
 
                                 // Отрисовка хелсбара
@@ -995,7 +968,6 @@ public class Window {
 
             // Отрисовка интерфейса
             if (!level.equals("MainMenu") && !level.equals("Town")) {
-                // Интерфейс
                 // Полоска здоровья
                 int tempHealth = SingletonPlayer.player.getHealth() % 10 == 0 ? SingletonPlayer.player.getHealth() : SingletonPlayer.player.getHealth() - (SingletonPlayer.player.getHealth() % 10) + 10;
                 if (tempHealth >= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
@@ -1176,8 +1148,8 @@ public class Window {
                 }
             }
 
-            if (SingletonPlayer.player.isScrollMenu()) enemyThread.setThreadWaiting(true);
-            if (!SingletonPlayer.player.isScrollMenu() && enemyThread.getState() == Thread.State.WAITING) enemyThread.resumeThread();
+//            if (SingletonPlayer.player.isScrollMenu()) enemyThread.setThreadWaiting(true);
+//            if (!SingletonPlayer.player.isScrollMenu() && enemyThread.getState() == Thread.State.WAITING) enemyThread.resumeThread();
 
             glfwPollEvents();
             glfwSwapBuffers(window);

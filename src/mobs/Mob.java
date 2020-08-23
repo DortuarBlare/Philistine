@@ -95,7 +95,7 @@ public abstract class Mob {
 
     public void stopDown() { y -= speed; }
 
-    public void follow() {}
+    public void simulate() {}
 
     public int getX() { return x; };
 

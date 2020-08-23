@@ -1,5 +1,8 @@
 package mobs;
 
+import content.AudioMaster;
+import content.Source;
+import content.Storage;
 import math.AABB;
 
 import java.util.Timer;
@@ -8,16 +11,28 @@ import java.util.TimerTask;
 public class Slime extends Mob {
     private int knockbackTime = 0, animationTime = 1;
     private String knockbackDirection;
+    private Source hurtSound;
+    private int hurtSoundId;
     private boolean animationTaskStarted = false, knockbackTaskStarted = false;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             setImmortal(true);
             knockbackTaskStarted = true;
-            if (knockbackDirection.equals("left")) knockBackLeft();
-            else if (knockbackDirection.equals("right")) knockBackRight();
-            else if (knockbackDirection.equals("up")) knockBackUp();
-            else if (knockbackDirection.equals("down")) knockBackDown();
+            switch (knockbackDirection) {
+                case "left":
+                    knockBackLeft();
+                    break;
+                case "right":
+                    knockBackRight();
+                    break;
+                case "up":
+                    knockBackUp();
+                    break;
+                case "down":
+                    knockBackDown();
+                    break;
+            }
             knockbackTime++;
             if (knockbackTime >= 25) stopTimer();
         }
@@ -33,7 +48,11 @@ public class Slime extends Mob {
 
     public Slime(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
+        getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
+        getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
         setMoveDirection("left");
+        hurtSound = new Source(0);
+        hurtSoundId = AudioMaster.loadSound("sounds/" + Storage.slimeSoundString[0]);
     }
 
     public void stopTimer() {
@@ -47,10 +66,20 @@ public class Slime extends Mob {
             public void run() {
                 setImmortal(true);
                 knockbackTaskStarted = true;
-                if (knockbackDirection.equals("left")) knockBackLeft();
-                else if (knockbackDirection.equals("right")) knockBackRight();
-                else if (knockbackDirection.equals("up")) knockBackUp();
-                else if (knockbackDirection.equals("down")) knockBackDown();
+                switch (knockbackDirection) {
+                    case "left":
+                        knockBackLeft();
+                        break;
+                    case "right":
+                        knockBackRight();
+                        break;
+                    case "up":
+                        knockBackUp();
+                        break;
+                    case "down":
+                        knockBackDown();
+                        break;
+                }
                 knockbackTime++;
                 if (knockbackTime >= 25) stopTimer();
             }
@@ -63,10 +92,11 @@ public class Slime extends Mob {
                 if (animationTime == 4) animationTime = 1;
             }
         };
+        knockbackTaskStarted = false;
         animationTaskStarted = false;
     }
 
-    public void follow() {
+    public synchronized void simulate() {
         if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
                 SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
                 animationTime == 3) moveUpLeft();
@@ -88,6 +118,51 @@ public class Slime extends Mob {
 
         else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
                  animationTime == 3) moveRight();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                animationTime == 3) moveUp();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                animationTime == 3) moveDown();
+    }
+
+    public void update() {
+        // Слизень получает урон от игрока
+        if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
+            if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
+            else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
+            else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
+            else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
+            setHealth(getHealth() - SingletonPlayer.player.getDamage());
+            if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+            getHurtSound().play(getHurtSoundId());
+        }
+
+        if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 300);
+        getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
+        getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
+
+        if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                animationTime == 3) moveUpLeft();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                animationTime == 3) moveUpRight();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                animationTime == 3) moveDownLeft();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                animationTime == 3) moveDownRight();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                animationTime == 3) moveLeft();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                animationTime == 3) moveRight();
 
         else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
                 animationTime == 3) moveUp();
@@ -119,4 +194,8 @@ public class Slime extends Mob {
     public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
 
     public void setKnockbackTaskStarted(boolean knockbackTaskStarted) { this.knockbackTaskStarted = knockbackTaskStarted; }
+
+    public int getHurtSoundId() { return hurtSoundId; }
+
+    public Source getHurtSound() { return hurtSound; }
 }

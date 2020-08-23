@@ -19,7 +19,7 @@ public class EnemyThread extends Thread {
                 catch (InterruptedException e) { e.printStackTrace(); }
             }
             // Движение мобов
-            for (Mob mob : SingletonMobs.mobList) mob.follow();
+            for (Mob mob : SingletonMobs.mobList) mob.simulate();
             try { Thread.sleep(30); } // Скорость движения
             catch (InterruptedException e) { e.printStackTrace(); }
         }

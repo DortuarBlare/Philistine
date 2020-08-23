@@ -33,6 +33,8 @@ public class Spider extends Mob {
 
     public Spider(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
+        getHitbox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
+        getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
         setMoveDirection("left");
     }
 
@@ -66,8 +68,43 @@ public class Spider extends Mob {
         animationTaskStarted = false;
     }
 
-    @Override
-    public void follow() {
+    public void simulate() {
+        if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveUpRight();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveDownLeft();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveDownRight();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveLeft();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveRight();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y) moveUp();
+
+        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y) moveDown();
+    }
+
+    public void update() {
+        // Паук получает урон от игрока
+        if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
+            if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
+            else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
+            else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
+            else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
+            setHealth(getHealth() - SingletonPlayer.player.getDamage());
+            if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+        }
+
+        if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 150);
+        getHitbox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
+        getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
+
         if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
                 SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
 

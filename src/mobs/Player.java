@@ -40,10 +40,20 @@ public class Player extends Mob {
         public void run() {
             setImmortal(true);
             knockbackTaskStarted = true;
-            if (knockbackDirection.equals("left")) knockBackRight();
-            else if (knockbackDirection.equals("right")) knockBackLeft();
-            else if (knockbackDirection.equals("up")) knockBackDown();
-            else if (knockbackDirection.equals("down")) knockBackUp();
+            switch (knockbackDirection) {
+                case "left":
+                    knockBackLeft();
+                    break;
+                case "right":
+                    knockBackRight();
+                    break;
+                case "up":
+                    knockBackUp();
+                    break;
+                case "down":
+                    knockBackDown();
+                    break;
+            }
             knockbackTime++;
             if (knockbackTime >= 15) stopTimer();
         }
@@ -52,14 +62,9 @@ public class Player extends Mob {
         @Override
         public void run() {
             hitAnimationTime++;
-            switch (weapon.getAttackType()) {
+            /*switch (weapon.getAttackType()) {
                 case "slash": {
-                    if (hitAnimationTime == 7) {
-                        hitAnimationTime = 1;
-                        isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
-                        getAttackBox().update(0, 0, 0, 0);
-                        stopTimer();
-                    }
+
                     break;
                 }
                 case "thrust": {
@@ -70,30 +75,57 @@ public class Player extends Mob {
                     }
                     break;
                 }
-            }
+            }*/
             switch (weapon.getTexture()) {
                 case "rapier":
                 case "longsword":
                     if (isAttackLeft) {
                         if (hitAnimationTime == 5)
                             getAttackBox().update(getX() - 49, getY() + 21, getX() + 17, getY() + 45);
+                        if (hitAnimationTime == 6)
+                            getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 7) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            getAttackBox().update(0,0,0,0);
+                            stopTimer();
+                        }
                     }
                     else if (isAttackRight) {
                         if (hitAnimationTime == 5)
                             getAttackBox().update(getX() + 47, getY() + 21, getX() + 113, getY() + 45);
+                        if (hitAnimationTime == 6)
+                            getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 7) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            getAttackBox().update(0,0,0,0);
+                            stopTimer();
+                        }
                     }
                     else if (isAttackUp) {
                         if (hitAnimationTime == 5)
                             getAttackBox().update(getX() - 11, getY() - 4, getX() + 70, getY() + 33);
                         if (hitAnimationTime == 6)
                             getAttackBox().update(getX() + 27, getY() - 1, getX() + 95, getY() + 38);
-
+                        if (hitAnimationTime == 7) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            getAttackBox().update(0,0,0,0);
+                            stopTimer();
+                        }
                     }
                     else if (isAttackDown) {
                         if (hitAnimationTime == 5)
                             getAttackBox().update(getX() - 9, getY() + 44, getX() + 72, getY() + 81);
                         if (hitAnimationTime == 6)
                             getAttackBox().update(getX() + 28, getY() + 39, getX() + 96, getY() + 78);
+                        if (hitAnimationTime == 7) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            getAttackBox().update(0,0,0,0);
+                            stopTimer();
+                        }
                     }
                     break;
                 case "long_spear":
@@ -106,6 +138,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     else if (isAttackRight) {
                         if (hitAnimationTime == 5)
@@ -116,6 +153,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     else if (isAttackUp) {
                         if (hitAnimationTime == 5)
@@ -126,6 +168,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     else if (isAttackDown) {
                         if (hitAnimationTime == 5)
@@ -136,6 +183,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     break;
                 case "spear":
@@ -148,6 +200,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 3, getY() + 42, getX() + 15, getY() + 45);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     else if (isAttackRight) {
                         if (hitAnimationTime == 5)
@@ -158,6 +215,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 48, getY() + 42, getX() + 60, getY() + 46);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     else if (isAttackUp) {
                         if (hitAnimationTime == 5)
@@ -168,8 +230,13 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 38, getY() + 5, getX() + 42, getY() + 19);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
-                    else if (isAttackDown) {}
+//                    else if (isAttackDown) {}
                     break;
                 case "stick":
                     if (isAttackLeft) {
@@ -181,6 +248,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     else if (isAttackRight) {
                         if (hitAnimationTime == 5)
@@ -191,6 +263,11 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
                     else if (isAttackUp) {
                         if (hitAnimationTime == 5)
@@ -201,8 +278,13 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
                         if (hitAnimationTime == 8)
                             getAttackBox().update(0,0,0,0);
+                        if (hitAnimationTime == 9) {
+                            hitAnimationTime = 1;
+                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            stopTimer();
+                        }
                     }
-                    else if (isAttackDown) {}
+//                    else if (isAttackDown) {}
                     break;
             }
         }
@@ -211,7 +293,7 @@ public class Player extends Mob {
     public Player(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         setMoveDirection("down");
-        attackBox = new AABB();
+        attackBox = new AABB(0,0,0,0);
         money = 10;
         keys = 1;
         weapon = new Weapon("nothing", "slash", 10, new AABB());
@@ -243,6 +325,7 @@ public class Player extends Mob {
     public void stopTimer() {
         knockbackTime = 0;
         hitAnimationTime = 1;
+        knockbackTaskStarted = false;
         hitAnimationTaskStarted = false;
         isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
         setImmortal(false);
@@ -255,10 +338,20 @@ public class Player extends Mob {
             public void run() {
                 setImmortal(true);
                 knockbackTaskStarted = true;
-                if (knockbackDirection.equals("left")) moveLeft();
-                else if (knockbackDirection.equals("right")) moveRight();
-                else if (knockbackDirection.equals("up")) moveUp();
-                else if (knockbackDirection.equals("down")) moveDown();
+                switch (knockbackDirection) {
+                    case "left":
+                        knockBackLeft();
+                        break;
+                    case "right":
+                        knockBackRight();
+                        break;
+                    case "up":
+                        knockBackUp();
+                        break;
+                    case "down":
+                        knockBackDown();
+                        break;
+                }
                 knockbackTime++;
                 if (knockbackTime >= 15) stopTimer();
             }
@@ -267,48 +360,56 @@ public class Player extends Mob {
             @Override
             public void run() {
                 hitAnimationTime++;
-                switch (weapon.getAttackType()) {
-                    case "slash": {
-                        if (hitAnimationTime == 7) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
-                            getAttackBox().update(0, 0, 0, 0);
-                            stopTimer();
-                        }
-                        break;
-                    }
-                    case "thrust": {
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
-                            stopTimer();
-                        }
-                        break;
-                    }
-                }
                 switch (weapon.getTexture()) {
                     case "rapier":
                     case "longsword":
                         if (isAttackLeft) {
                             if (hitAnimationTime == 5)
                                 getAttackBox().update(getX() - 49, getY() + 21, getX() + 17, getY() + 45);
+                            if (hitAnimationTime == 6)
+                                getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 7) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                getAttackBox().update(0,0,0,0);
+                                stopTimer();
+                            }
                         }
                         else if (isAttackRight) {
                             if (hitAnimationTime == 5)
                                 getAttackBox().update(getX() + 47, getY() + 21, getX() + 113, getY() + 45);
+                            if (hitAnimationTime == 6)
+                                getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 7) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                getAttackBox().update(0,0,0,0);
+                                stopTimer();
+                            }
                         }
                         else if (isAttackUp) {
                             if (hitAnimationTime == 5)
                                 getAttackBox().update(getX() - 11, getY() - 4, getX() + 70, getY() + 33);
                             if (hitAnimationTime == 6)
                                 getAttackBox().update(getX() + 27, getY() - 1, getX() + 95, getY() + 38);
-
+                            if (hitAnimationTime == 7) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                getAttackBox().update(0,0,0,0);
+                                stopTimer();
+                            }
                         }
                         else if (isAttackDown) {
                             if (hitAnimationTime == 5)
                                 getAttackBox().update(getX() - 9, getY() + 44, getX() + 72, getY() + 81);
                             if (hitAnimationTime == 6)
                                 getAttackBox().update(getX() + 28, getY() + 39, getX() + 96, getY() + 78);
+                            if (hitAnimationTime == 7) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                getAttackBox().update(0,0,0,0);
+                                stopTimer();
+                            }
                         }
                         break;
                     case "long_spear":
@@ -321,6 +422,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         else if (isAttackRight) {
                             if (hitAnimationTime == 5)
@@ -331,6 +437,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         else if (isAttackUp) {
                             if (hitAnimationTime == 5)
@@ -341,6 +452,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         else if (isAttackDown) {
                             if (hitAnimationTime == 5)
@@ -351,6 +467,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         break;
                     case "spear":
@@ -363,6 +484,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 3, getY() + 42, getX() + 15, getY() + 45);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         else if (isAttackRight) {
                             if (hitAnimationTime == 5)
@@ -373,6 +499,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 48, getY() + 42, getX() + 60, getY() + 46);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         else if (isAttackUp) {
                             if (hitAnimationTime == 5)
@@ -383,10 +514,13 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 38, getY() + 5, getX() + 42, getY() + 19);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
-                        else if (isAttackDown) {
-
-                        }
+//                    else if (isAttackDown) {}
                         break;
                     case "stick":
                         if (isAttackLeft) {
@@ -398,6 +532,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         else if (isAttackRight) {
                             if (hitAnimationTime == 5)
@@ -408,6 +547,11 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
                         else if (isAttackUp) {
                             if (hitAnimationTime == 5)
@@ -418,10 +562,13 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
                             if (hitAnimationTime == 8)
                                 getAttackBox().update(0,0,0,0);
+                            if (hitAnimationTime == 9) {
+                                hitAnimationTime = 1;
+                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                                stopTimer();
+                            }
                         }
-                        else if (isAttackDown) {
-
-                        }
+//                    else if (isAttackDown) {}
                         break;
                 }
             }
@@ -766,10 +913,20 @@ public class Player extends Mob {
                     feetAnimation = "FEET_" + getFeetTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
                 }
 
-                if (getMoveDirection().equals("left")) getHitbox().update(getX() + 23, getY() + 15, getX() + 42, getY() + 59);
-                else if (getMoveDirection().equals("right")) getHitbox().update(getX() + 21, getY() + 15, getX() + 40, getY() + 59);
-                else if (getMoveDirection().equals("up")) getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 60);
-                else if (getMoveDirection().equals("down")) getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 61);
+                switch (getMoveDirection()) {
+                    case "left":
+                        getHitbox().update(getX() + 23, getY() + 15, getX() + 42, getY() + 59);
+                        break;
+                    case "right":
+                        getHitbox().update(getX() + 21, getY() + 15, getX() + 40, getY() + 59);
+                        break;
+                    case "up":
+                        getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 60);
+                        break;
+                    case "down":
+                        getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 61);
+                        break;
+                }
                 getCollisionBox().update(getX() + 17, getY() + 46, getX() + 46, getY() + 61);
                 reArmor();
             }

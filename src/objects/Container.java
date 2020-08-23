@@ -422,6 +422,10 @@ public class Container extends Object {
                                     break;
                                 case "rope":
                                 case "leather":
+                                    armorForShop.setSize(374, 167, 374 + 64, 167 + 64);
+                                    armorForShop.correctCollisionBox();
+                                    armorForShop.getCollisionBox().update(armorForShop.getCollisionBox().getMin().x, armorForShop.getCollisionBox().getMin().y, armorForShop.getCollisionBox().getMax().x, armorForShop.getCollisionBox().getMax().y + 20);
+                                    break;
                                 case "leather_bracers":
                                 case "plate_gloves":
                                     armorForShop.setSize(374, 162, 374 + 64, 162 + 64);
