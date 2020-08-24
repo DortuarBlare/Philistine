@@ -163,6 +163,7 @@ public class Window {
         firstLevelObjectList.add(new Chest("chest", false, false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
         firstLevelObjectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
+        firstLevelObjectList.add(new Lever("lever", 500, 241));
         shop = new Shop("ChestClosed", true, true, false, 0, 0, 0, 0, new AABB(0, 0, 0, 0));
         singletonPlayer = SingletonPlayer.getInstance();
         SingletonMobs.mobList.add(SingletonPlayer.player);
@@ -693,6 +694,10 @@ public class Window {
                             Container container = (Container) object;
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
                         }
+                        else if (object instanceof Lever) {
+                            Lever lever = (Lever) object;
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(lever.getTexture() + lever.getState()));
+                        }
                         else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
@@ -753,6 +758,13 @@ public class Window {
                                         change.loot.remove(h);
                                         h--;
                                     }
+                                    break;
+                                }
+                            }
+                            else if (firstLevelObjectList.get(i) instanceof Lever) {
+                                Lever change = (Lever) firstLevelObjectList.get(i);
+                                if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
+                                    change.setState("On");
                                     break;
                                 }
                             }

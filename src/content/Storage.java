@@ -106,6 +106,7 @@ public class Storage {
 
             // Окружение
             "chestClosed", "chestOpened",
+            "leverOff", "leverOn",
             "leather_hat", "robe_hood", "chain_helmet", "chain_hood", "plate_helmet",
             "leather_shoulderPads", "plate_shoulderPads",
             "shirt_white", "plate_armor", "robe_shirt_brown", "leather_armor", "chain_jacket_purple", "chain_armor",
