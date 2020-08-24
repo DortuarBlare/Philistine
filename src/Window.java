@@ -172,8 +172,25 @@ public class Window {
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             // Нажатие Escape для открытия/закрытия второстепенного меню
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS && !level.equals("MainMenu"))
-                SingletonPlayer.player.setScrollMenu(!SingletonPlayer.player.isScrollMenu());
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS && !level.equals("MainMenu")) {
+                switch (SingletonPlayer.player.getMenuChoice()) {
+                    case "Resume":
+                    case "Options":
+                    case "Exit": {
+                        SingletonPlayer.player.setScrollMenu(!SingletonPlayer.player.isScrollMenu());
+                        break;
+                    }
+                    case "Options_Sounds":
+                    case "Options_Controls": {
+                        SingletonPlayer.player.setMenuChoice("Options");
+                        break;
+                    }
+                    case "Controls": {
+                        SingletonPlayer.player.setMenuChoice("Options_Controls");
+                        break;
+                    }
+                }
+            }
 
             // Нажатие Enter на выход из главного меню
             if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("MainMenu")) {
@@ -207,6 +224,11 @@ public class Window {
                         break;
                     }
                     case "Options": {
+                        SingletonPlayer.player.setMenuChoice("Options_Controls");
+                        break;
+                    }
+                    case "Options_Controls": {
+                        SingletonPlayer.player.setMenuChoice("Controls");
                         break;
                     }
                     case "Exit": {
@@ -274,6 +296,14 @@ public class Window {
                         SingletonPlayer.player.setMenuChoice("Options");
                         break;
                     }
+                    case "Options_Controls": {
+                        SingletonPlayer.player.setMenuChoice("Options_Sounds");
+                        break;
+                    }
+                    case "Options_Sounds": {
+                        SingletonPlayer.player.setMenuChoice("Options_Controls");
+                        break;
+                    }
                 }
             }
 
@@ -300,6 +330,14 @@ public class Window {
                     }
                     case "Exit": {
                         SingletonPlayer.player.setMenuChoice("Resume");
+                        break;
+                    }
+                    case "Options_Controls": {
+                        SingletonPlayer.player.setMenuChoice("Options_Sounds");
+                        break;
+                    }
+                    case "Options_Sounds": {
+                        SingletonPlayer.player.setMenuChoice("Options_Controls");
                         break;
                     }
                 }

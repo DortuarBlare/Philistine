@@ -102,7 +102,7 @@ public class Storage {
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
             "coin_01", "coin_02", "coin_03", "coin_04", "coin_05", "coin_06", "coin_07", "coin_08",
             "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
-            "scrollMenu_Resume", "scrollMenu_Options", "scrollMenu_Exit",
+            "scrollMenu_Resume", "scrollMenu_Options", "scrollMenu_Options_Controls", "scrollMenu_Options_Sounds", "scrollMenu_Controls", "scrollMenu_Exit",
 
             // Окружение
             "chestClosed", "chestOpened",
@@ -113,7 +113,7 @@ public class Storage {
             "plate_gloves", "leather_bracers",
             "pants_greenish", "plate_pants", "robe_skirt",
             "shoes_brown", "plate_shoes",
-            "longsword", "rapier", "long_spear", "spear", "stick", "scroll5", "potionRed",
+            "longsword", "rapier", "long_spear", "spear", "stick", "potionRed",
             "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "guard_stand_01", "guard_stand_02", "guard_stand_03", "guard_stand_04", "guard_stand_05", "guard_stand_06", "guard_stand_07", "guard_stand_08", "guard_stand_09", "guard_stand_010",
             "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
