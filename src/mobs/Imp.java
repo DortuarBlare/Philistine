@@ -22,6 +22,7 @@ public class Imp extends Mob {
             else if (knockbackDirection.equals("up")) knockBackUp();
             else if (knockbackDirection.equals("down")) knockBackDown();
             knockbackTime++;
+            if (knockbackTime >= 25) stopTimer();
         }
     };
     private TimerTask animationTask = new TimerTask() {
@@ -29,7 +30,7 @@ public class Imp extends Mob {
         public void run() {
             animationTaskStarted = true;
             animationTime++;
-            if (animationTime == 8) animationTime = 2;
+            if (animationTime == 5) animationTime = 2;
         }
     };
     private TimerTask hitAnimationTask = new TimerTask() {
@@ -43,7 +44,7 @@ public class Imp extends Mob {
                 else if (isAttackUp) attackBox.update(getX() + 16, getY() + 11, getX() + 45, getY() + 19);
                 else if (isAttackDown) attackBox.update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
             }
-            if (hitAnimationTime == 4) {
+            if (hitAnimationTime == 5) {
                 hitAnimationTime = 1;
                 isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
                 stopTimer();
@@ -53,7 +54,7 @@ public class Imp extends Mob {
 
 
 
-    public Imp(int x, int y, int speed, int health, int armor, int damage/*, AABB hitBox, AABB collisionBox*/) {
+    public Imp(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
         getHitbox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
@@ -77,6 +78,7 @@ public class Imp extends Mob {
                 else if (knockbackDirection.equals("up")) knockBackUp();
                 else if (knockbackDirection.equals("down")) knockBackDown();
                 knockbackTime++;
+                if (knockbackTime >= 25) stopTimer();
             }
         };
         animationTask = new TimerTask() {
@@ -84,7 +86,7 @@ public class Imp extends Mob {
             public void run() {
                 animationTaskStarted = true;
                 animationTime++;
-                if (animationTime == 8) animationTime = 2;
+                if (animationTime == 5) animationTime = 2;
             }
         };
         hitAnimationTask = new TimerTask() {
@@ -98,7 +100,7 @@ public class Imp extends Mob {
                     else if (isAttackUp) attackBox.update(getX() + 16, getY() + 11, getX() + 45, getY() + 19);
                     else if (isAttackDown) attackBox.update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
                 }
-                if (hitAnimationTime == 4) {
+                if (hitAnimationTime == 5) {
                     isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
                     hitAnimationTime = 1;
                     stopTimer();
@@ -107,6 +109,7 @@ public class Imp extends Mob {
         };
         animationTaskStarted = false;
         hitAnimationTaskStarted = false;
+        knockbackTaskStarted = false;
     }
 
     public void simulate() {
@@ -132,8 +135,6 @@ public class Imp extends Mob {
     }
 
     public void update() {
-        if (knockbackTime >= 25) stopTimer();
-
         // Паук получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
             if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");

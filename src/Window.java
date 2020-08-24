@@ -54,7 +54,7 @@ public class Window {
             else if (level.equals("SecondLevel")) SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
             else if (level.equals("ForthLevel")) SingletonMobs.mobList.add(new Imp(477, 284, 1, 60, 0, 30));
             time++;
-            if (time == 6) stopMobSpawn();
+            if (time == 1) stopMobSpawn();
         }
     };
 
@@ -68,9 +68,9 @@ public class Window {
             public void run() {
                 if (level.equals("FirstLevel")) SingletonMobs.mobList.add(new Slime(350, 300, 1, 50, 0, 5));
                 else if (level.equals("SecondLevel")) SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
-                else if (level.equals("ForthLevel")) SingletonMobs.mobList.add(new Imp(477, 284, 1, 60, 0, 30));
+                else if (level.equals("ForthLevel")) SingletonMobs.mobList.add(new Imp(477, 284, 1, 400, 0, 50));
                 time++;
-                if (time == 2) stopMobSpawn();
+                if (time == 1) stopMobSpawn();
             }
         };
     }
@@ -189,9 +189,10 @@ public class Window {
                 if (SingletonPlayer.player.isYes()) {
                     level = "FirstLevel";
                     glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
-                    SingletonPlayer.player.setX(150);
-                    SingletonPlayer.player.setY(150);
+                    SingletonPlayer.player.setX(199);
+                    SingletonPlayer.player.setY(273);
                     SingletonPlayer.player.setSpeed(2);
+                    SingletonPlayer.player.setMoveDirection("up");
                 }
                 // Установление хитбоксов стен первого уровня
                 for(int i = 0, j = 0; i < 5; i++, j+=4)
@@ -919,6 +920,7 @@ public class Window {
                     // Проверка перехода на 4 уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToForthLevel"))) {
                         level = "ForthLevel";
+                        mobSpawnStarted = false;
                         // Обновление хитбоксов стен для 4 уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.fourthLevelWalls[j], Storage.fourthLevelWalls[j + 1],
@@ -980,12 +982,13 @@ public class Window {
                     }
 
                     // Все операции с мобами
-                    for (int i = 1; i < SingletonMobs.mobList.size(); i++) {
+                    for (int i = 0; i < SingletonMobs.mobList.size(); i++) {
                         if (!SingletonMobs.mobList.get(i).isDead()) {
                             if (SingletonMobs.mobList.get(i) instanceof Imp) {
                                 Imp imp = (Imp) SingletonMobs.mobList.get(i);
-                                if (imp.isAttackLeft() || imp.isAttackRight() || imp.isAttackUp() || imp.isAttackDown()) glBindTexture(GL_TEXTURE_2D, textureMap.get("imp" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
-                                else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
+                                if (imp.isAttackLeft() || imp.isAttackRight() ||imp.isAttackUp() || imp.isAttackDown())
+                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
+                                else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
                                 createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
                                 imp.update();
 

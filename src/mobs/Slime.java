@@ -98,36 +98,6 @@ public class Slime extends Mob {
         animationTaskStarted = false;
     }
 
-    public synchronized void simulate() {
-        if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                animationTime == 3) moveUpLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                animationTime == 3) moveUpRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                animationTime == 3) moveDownLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                animationTime == 3) moveDownRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                animationTime == 3) moveLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                 animationTime == 3) moveRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                animationTime == 3) moveUp();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                animationTime == 3) moveDown();
-    }
-
     public void update() {
         // Слизень получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
