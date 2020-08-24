@@ -34,7 +34,7 @@ public class Window {
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
-    private Container shop;
+    private Shop shop;
     Source backgroundMusic, armorChange, coinSound, doorSound, beerSound;
     Coin coinGUI;
     Blacksmith blacksmith;
@@ -160,10 +160,10 @@ public class Window {
         aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
 
         // Добавление всех объектов и мобов
-        firstLevelObjectList.add(new Container("chest", false, false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
+        firstLevelObjectList.add(new Chest("chest", false, false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
         firstLevelObjectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
-        shop = new Container("ChestClosed", true, true, false, 0, 0, 0, 0, new AABB(0, 0, 0, 0));
+        shop = new Shop("ChestClosed", true, true, false, 0, 0, 0, 0, new AABB(0, 0, 0, 0));
         singletonPlayer = SingletonPlayer.getInstance();
         SingletonMobs.mobList.add(SingletonPlayer.player);
         blacksmith = new Blacksmith(176, 126, 1);
