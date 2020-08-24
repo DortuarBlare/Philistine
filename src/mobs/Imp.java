@@ -112,28 +112,6 @@ public class Imp extends Mob {
         knockbackTaskStarted = false;
     }
 
-    public void simulate() {
-        if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveUpRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveDownLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveDownRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y) moveUp();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y) moveDown();
-    }
-
     public void update() {
         // Паук получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
