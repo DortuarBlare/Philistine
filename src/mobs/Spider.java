@@ -15,12 +15,14 @@ public class Spider extends Mob {
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
+            setImmortal(true);
             knockbackTaskStarted = true;
             if (knockbackDirection.equals("left")) knockBackLeft();
             else if (knockbackDirection.equals("right")) knockBackRight();
             else if (knockbackDirection.equals("up")) knockBackUp();
             else if (knockbackDirection.equals("down")) knockBackDown();
             knockbackTime++;
+            if (knockbackTime >= 25) stopTimer();
         }
     };
     private TimerTask animationTask = new TimerTask() {
@@ -67,12 +69,14 @@ public class Spider extends Mob {
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
+                setImmortal(true);
                 knockbackTaskStarted = true;
                 if (knockbackDirection.equals("left")) knockBackLeft();
                 else if (knockbackDirection.equals("right")) knockBackRight();
                 else if (knockbackDirection.equals("up")) knockBackUp();
                 else if (knockbackDirection.equals("down")) knockBackDown();
                 knockbackTime++;
+                if (knockbackTime >= 25) stopTimer();
             }
         };
         animationTask = new TimerTask() {
@@ -103,33 +107,10 @@ public class Spider extends Mob {
         };
         animationTaskStarted = false;
         hitAnimationTaskStarted = false;
-    }
-
-    public void simulate() {
-        if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveUpRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveDownLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveDownRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveLeft();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x) moveRight();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y) moveUp();
-
-        else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y) moveDown();
+        knockbackTaskStarted = false;
     }
 
     public void update() {
-        if (knockbackTime >= 25) stopTimer();
-
         // Паук получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
             if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
@@ -137,10 +118,7 @@ public class Spider extends Mob {
             else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
             else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
             setHealth(getHealth() - SingletonPlayer.player.getDamage());
-            if (!isKnockbackTaskStarted()) {
-                setImmortal(true);
-                getTimer().schedule(getKnockbackTask(), 0, 10);
-            }
+            if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
         }
 
         // Паук наносит удар при соприкосновении с игроком
