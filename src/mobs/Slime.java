@@ -142,6 +142,7 @@ public class Slime extends Mob {
             else hurtSound.play(hurtSoundId);
         }
 
+        // Столкновение с другими мобами
         for (Mob mob : SingletonMobs.mobList) {
             if (!(mob instanceof Player) && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
                 stop(CollisionMessage.getMessage());
@@ -151,7 +152,8 @@ public class Slime extends Mob {
         getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
         getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
 
-        if (!SingletonPlayer.player.isScrollMenu()) {
+        // Преследование игрока
+        if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted) {
             if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
                     SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
                     animationTime == 3) moveUpLeft();

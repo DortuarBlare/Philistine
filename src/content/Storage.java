@@ -73,11 +73,12 @@ public class Storage {
 
     public static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel", "entranceFromTavernToTown", "entranceFromForgeToTown"
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel", "entranceFromTavernToTown", "entranceFromForgeToTown",
+            "toBuyBeer"
     };
 
     public static final String[] soundString = {
-            "mainMenuTheme", "dungeonAmbient1", "changingArmor", "pickedCoin", "doorOpen"
+            "mainMenuTheme", "dungeonAmbient1", "changingArmor", "pickedCoin", "doorOpen", "drinkBeer"
     };
 
     public static final String[] playerSoundString = {
@@ -96,7 +97,8 @@ public class Storage {
             "0hp", "10hp", "20hp", "30hp", "40hp", "50hp", "60hp", "70hp", "80hp", "90hp", "100hp",
             "0armor", "5armor", "10armor", "15armor", "20armor", "25armor", "30armor",
             "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
-            "Press_enter", "Philistine", "emotion_question", "price", "price2",
+            "Press_enter", "Philistine", "price", "price2",
+            "emotion_question", "emotion_health",
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
             "coin_01", "coin_02", "coin_03", "coin_04", "coin_05", "coin_06", "coin_07", "coin_08",
             "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
@@ -126,6 +128,8 @@ public class Storage {
             "waiter_right_move_01", "waiter_right_move_02", "waiter_right_move_03", "waiter_right_move_04", "waiter_right_move_05", "waiter_right_move_06", "waiter_right_move_07", "waiter_right_move_08", "waiter_right_move_09",
             "waiter_up_move_01", "waiter_up_move_02", "waiter_up_move_03", "waiter_up_move_04", "waiter_up_move_05", "waiter_up_move_06", "waiter_up_move_07", "waiter_up_move_08", "waiter_up_move_09",
             "waiter_down_move_01", "waiter_down_move_02", "waiter_down_move_03", "waiter_down_move_04", "waiter_down_move_05", "waiter_down_move_06", "waiter_down_move_07", "waiter_down_move_08", "waiter_down_move_09",
+
+            "gentleman_brown",
 
             // Анимации игрока
             "player_stand_left", "player_stand_right", "player_stand_up", "player_stand_down",

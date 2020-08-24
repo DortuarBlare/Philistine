@@ -35,9 +35,10 @@ public class Window {
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
     private Container shop;
-    Source backgroundMusic, armorChange, coinSound, doorSound;
+    Source backgroundMusic, armorChange, coinSound, doorSound, beerSound;
     Coin coinGUI;
     Blacksmith blacksmith;
+    Waiter waiter;
     private String level = "MainMenu";
     private boolean forScale = true;
     boolean key_E_Pressed = false;
@@ -109,10 +110,10 @@ public class Window {
         glOrtho(0, 640, 360, 0, 1, -1); // Камера на место окна
         glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
         glEnable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Инициализация всех коллекций
         singletonMobs = SingletonMobs.getInstance();
@@ -129,6 +130,7 @@ public class Window {
         armorChange = new Source(0);
         coinSound = new Source(0);
         doorSound = new Source(0);
+        beerSound = new Source(0);
         coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
         coinGUI.getTimer().schedule(coinGUI.getAnimationTask(), 0, 120);
 
@@ -153,6 +155,7 @@ public class Window {
         aabbMap.get("entranceFromForthToSecondLevel").update(199, 132, 236, 141);
         aabbMap.get("entranceFromTavernToTown").update(224,316,255,318);
         aabbMap.get("entranceFromForgeToTown").update(384,316,415,318);
+        aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
 
         // Добавление всех объектов и мобов
         firstLevelObjectList.add(new Container("chest", false, false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
@@ -162,6 +165,7 @@ public class Window {
         singletonPlayer = SingletonPlayer.getInstance();
         SingletonMobs.mobList.add(SingletonPlayer.player);
         blacksmith = new Blacksmith(176, 126, 1);
+        waiter = new Waiter(168, 136, 1);
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -424,6 +428,31 @@ public class Window {
                 case "tavern": {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("tavern")); // Фон таверны
                     createQuadTexture(0, 0, 640, 360);
+
+                    // Отрисовка оффицианта и остановка около прилавка
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("waiter_" + waiter.getMoveDirection() + "_move_0" + waiter.getAnimationTime()));
+                    createQuadTexture(waiter.getX(), waiter.getY(), waiter.getX() + 64, waiter.getY() + 64);
+                    waiter.simulateBehavior();
+                    if (waiter.isWaitingTaskStarted()) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_question"));
+                        createQuadTexture(waiter.getX() + 31, waiter.getY(), waiter.getX() + 51, waiter.getY() + 20);
+
+                        // Восстановить здоровье
+                        if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("toBuyBeer"))) {
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_health")); // Фон таверны
+                            createQuadTexture(SingletonPlayer.player.getX() + 32, SingletonPlayer.player.getY(),
+                                    SingletonPlayer.player.getX() + 52, SingletonPlayer.player.getY() + 20);
+                            if (key_E_Pressed && SingletonPlayer.player.getHealth() < 100 && SingletonPlayer.player.getMoney() >= 10) {
+                                SingletonPlayer.player.setHealth(100);
+                                SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() - 10);
+                                beerSound.play(soundMap.get("drinkBeer"));
+                            }
+                        }
+                    }
+                    key_E_Pressed = false;
+
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("gentleman_brown"));
+                    createQuadTexture(350, 190, 350 + 64, 190 + 64);
 
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall5")))
                         SingletonPlayer.player.stopRight();
