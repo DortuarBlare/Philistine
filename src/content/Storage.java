@@ -590,5 +590,17 @@ public class Storage {
             "spider_down_attack_01", "spider_down_attack_02", "spider_down_attack_03",
 
             "spider_death_01", "spider_death_02", "spider_death_03", "spider_death_04",
+
+            "imp_left_move_01", "imp_left_move_02", "imp_left_move_03", "imp_left_move_04",
+            "imp_right_move_01", "imp_right_move_02", "imp_right_move_03", "imp_right_move_04",
+            "imp_up_move_01", "imp_up_move_02",  "imp_up_move_03", "imp_up_move_04",
+            "imp_down_move_01", "imp_down_move_02", "imp_down_move_03", "imp_down_move_04",
+
+            "imp_left_attack_01", "imp_left_attack_02", "imp_left_attack_03", "imp_left_attack_04",
+            "imp_right_attack_01", "imp_right_attack_02", "imp_right_attack_03", "imp_right_attack_04",
+            "imp_up_attack_01", "imp_up_attack_02", "imp_up_attack_03", "imp_up_attack_04",
+            "imp_down_attack_01", "imp_down_attack_02", "imp_down_attack_03", "imp_down_attack_04",
+
+            "imp_death_01", "imp_death_02", "imp_death_03", "imp_death_04", "imp_death_05", "imp_death_06", "imp_death_07"
     };
 }

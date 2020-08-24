@@ -52,6 +52,7 @@ public class Window {
         public void run() {
             if (level.equals("FirstLevel")) SingletonMobs.mobList.add(new Slime(350, 300, 1, 50, 0, 5));
             else if (level.equals("SecondLevel")) SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
+            else if (level.equals("ForthLevel")) SingletonMobs.mobList.add(new Imp(477, 284, 1, 60, 0, 30));
             time++;
             if (time == 6) stopMobSpawn();
         }
@@ -67,6 +68,7 @@ public class Window {
             public void run() {
                 if (level.equals("FirstLevel")) SingletonMobs.mobList.add(new Slime(350, 300, 1, 50, 0, 5));
                 else if (level.equals("SecondLevel")) SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
+                else if (level.equals("ForthLevel")) SingletonMobs.mobList.add(new Imp(477, 284, 1, 60, 0, 30));
                 time++;
                 if (time == 2) stopMobSpawn();
             }
@@ -970,6 +972,46 @@ public class Window {
                             mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
                             mob.stopDown();
+                    }
+
+                    if (!mobSpawnStarted) {
+                        mobSpawnStarted = true;
+                        mobTimer.schedule(mobSpawnTask, 3000, 10000);
+                    }
+
+                    // Все операции с мобами
+                    for (int i = 1; i < SingletonMobs.mobList.size(); i++) {
+                        if (!SingletonMobs.mobList.get(i).isDead()) {
+                            if (SingletonMobs.mobList.get(i) instanceof Imp) {
+                                Imp imp = (Imp) SingletonMobs.mobList.get(i);
+                                if (imp.isAttackLeft() || imp.isAttackRight() || imp.isAttackUp() || imp.isAttackDown()) glBindTexture(GL_TEXTURE_2D, textureMap.get("imp" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
+                                else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
+                                createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
+                                imp.update();
+
+                                // Игрок получает урона от паука
+                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), imp.getAttackBox()) &&
+                                        !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
+                                    if (imp.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
+                                    else if (imp.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
+                                    else if (imp.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
+                                    else if (imp.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
+                                    SingletonPlayer.player.takeDamage(imp.getDamage());
+                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
+                                        SingletonPlayer.player.setImmortal(true);
+                                        SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                    }
+                                }
+
+                                // Смэрть
+                                if (imp.getHealth() <= 0) {
+                                    imp.setDead(true);
+                                    /*imp.getTimer().cancel();
+                                    imp.getTimer().purge();*/
+                                    SingletonMobs.mobList.remove(imp);
+                                }
+                            }
+                        }
                     }
 
                     // Проверка перехода на второй уровень
