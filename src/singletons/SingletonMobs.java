@@ -1,4 +1,6 @@
-package mobs;
+package singletons;
+
+import mobs.Mob;
 
 import java.util.ArrayList;
 

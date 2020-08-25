@@ -1,4 +1,6 @@
-package mobs;
+package singletons;
+
+import mobs.Player;
 
 public class SingletonPlayer {
     public static Player player;

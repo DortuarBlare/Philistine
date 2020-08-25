@@ -10,6 +10,7 @@ public abstract class Mob {
     private int health, armor;
     private int damage;
     private AABB hitBox, collisionBox;
+    private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private String moveDirection;
     private boolean dead;
     private boolean immortal;
@@ -162,4 +163,20 @@ public abstract class Mob {
     public void setTimer(Timer timer) { this.timer = timer; }
 
     public void takeDamage(int Damage) {this.health = this.health - (int)(Damage * ((double)(100 - (armor * 2)) / 100));}
+
+    public boolean isAttackRight() { return isAttackRight; }
+
+    public void setAttackRight(boolean attackRight) { isAttackRight = attackRight; }
+
+    public boolean isAttackLeft() { return isAttackLeft; }
+
+    public void setAttackLeft(boolean attackLeft) { isAttackLeft = attackLeft; }
+
+    public boolean isAttackUp() { return isAttackUp; }
+
+    public void setAttackUp(boolean attackUp) { isAttackUp = attackUp; }
+
+    public boolean isAttackDown() { return isAttackDown; }
+
+    public void setAttackDown(boolean attackDown) { isAttackDown = attackDown; }
 }

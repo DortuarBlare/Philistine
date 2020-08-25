@@ -10,6 +10,8 @@ import objects.Object;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
+import singletons.SingletonMobs;
+import singletons.SingletonPlayer;
 
 import java.nio.*;
 import java.util.ArrayList;
@@ -160,7 +162,16 @@ public class Window {
         aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
 
         // Добавление всех объектов и мобов
-        firstLevelObjectList.add(new Chest("chest", false, false, true,250, 200, 282, 232, new AABB(250, 200, 282, 232)));
+        firstLevelObjectList.add(new Furniture("barrelOpened", 118, 135));
+        firstLevelObjectList.add(new Furniture("bagMedium", 137, 134));
+        firstLevelObjectList.add(new Furniture("bones", 113, 173));
+        firstLevelObjectList.add(new Furniture("boxOpened", 308, 129));
+        firstLevelObjectList.add(new Furniture("chair1", 400, 173));
+        firstLevelObjectList.add(new Furniture("chair3", 432, 227));
+        firstLevelObjectList.add(new Furniture("table1", 426, 163));
+        firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
+        firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
+        firstLevelObjectList.add(new Furniture("trash", 462, 173));
         firstLevelObjectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
         firstLevelObjectList.add(new Lever("lever", 500, 241));
@@ -784,10 +795,10 @@ public class Window {
                                 // Игрок получает урона от слизня
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) &&
                                         !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                    if (SingletonPlayer.player.getX() > slime.getX()) SingletonPlayer.player.setKnockbackDirection("right");
-                                    else if (SingletonPlayer.player.getX() < slime.getX()) SingletonPlayer.player.setKnockbackDirection("left");
-                                    else if (SingletonPlayer.player.getY() > slime.getY()) SingletonPlayer.player.setKnockbackDirection("down");
-                                    else if (SingletonPlayer.player.getY() < slime.getY()) SingletonPlayer.player.setKnockbackDirection("up");
+                                    if (slime.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
+                                    else if (slime.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
+                                    else if (slime.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
+                                    else if (slime.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
                                     SingletonPlayer.player.takeDamage(slime.getDamage());
                                     if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
                                         SingletonPlayer.player.setImmortal(true);

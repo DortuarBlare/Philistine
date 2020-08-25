@@ -106,7 +106,16 @@ public class Storage {
 
             // Окружение
             "chestClosed", "chestOpened",
+            "boxClosed", "boxOpened",
+            "barrelClosed", "barrelOpened",
+            "bones", "trash",
+            "bookBlue", "bookGreen", "bookPink", "bookRed",
+            "chair0", "chair1", "chair2", "chair3",
+            "table0", "table1",
+            "bagSmall", "bagMedium", "bagBig", "littleBag",
             "leverOff", "leverOn",
+            "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
+            "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "leather_hat", "robe_hood", "chain_helmet", "chain_hood", "plate_helmet",
             "leather_shoulderPads", "plate_shoulderPads",
             "shirt_white", "plate_armor", "robe_shirt_brown", "leather_armor", "chain_jacket_purple", "chain_armor",
@@ -115,9 +124,7 @@ public class Storage {
             "pants_greenish", "plate_pants", "robe_skirt",
             "shoes_brown", "plate_shoes",
             "longsword", "rapier", "long_spear", "spear", "stick", "potionRed",
-            "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "guard_stand_01", "guard_stand_02", "guard_stand_03", "guard_stand_04", "guard_stand_05", "guard_stand_06", "guard_stand_07", "guard_stand_08", "guard_stand_09", "guard_stand_010",
-            "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
 
             // NPC
             "blacksmith_left_move_01", "blacksmith_left_move_02", "blacksmith_left_move_03", "blacksmith_left_move_04", "blacksmith_left_move_05", "blacksmith_left_move_06", "blacksmith_left_move_07", "blacksmith_left_move_08", "blacksmith_left_move_09",

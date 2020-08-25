@@ -5,6 +5,8 @@ import content.Source;
 import content.Storage;
 import math.AABB;
 import math.CollisionMessage;
+import singletons.SingletonMobs;
+import singletons.SingletonPlayer;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -154,11 +156,79 @@ public class Slime extends Mob {
         }
     }
 
-    @Override
-    public void moveUp() { setY(getY() - getSpeed()); }
+    public void moveLeft() {
+        setAttackLeft(true);
+        setAttackRight(false);
+        setAttackUp(false);
+        setAttackDown(false);
+        setX(getX() - getSpeed());
+        setMoveDirection("left");
+    }
 
-    @Override
-    public void moveDown() { setY(getY() + getSpeed()); }
+    public void moveRight() {
+        setAttackLeft(false);
+        setAttackRight(true);
+        setAttackUp(false);
+        setAttackDown(false);
+        setX(getX() + getSpeed());
+        setMoveDirection("right");
+    }
+
+    public void moveUp() {
+        setAttackLeft(false);
+        setAttackRight(false);
+        setAttackUp(true);
+        setAttackDown(false);
+        setY(getY() - getSpeed());
+    }
+
+    public void moveUpRight() {
+        setAttackLeft(false);
+        setAttackRight(true);
+        setAttackUp(false);
+        setAttackDown(false);
+        setY(getY() - getSpeed());
+        setX(getX() + getSpeed());
+        setMoveDirection("right");
+    }
+
+    public void moveUpLeft() {
+        setAttackLeft(true);
+        setAttackRight(false);
+        setAttackUp(false);
+        setAttackDown(false);
+        setY(getY() - getSpeed());
+        setX(getX() - getSpeed());
+        setMoveDirection("left");
+    }
+
+    public void moveDown() {
+        setAttackLeft(false);
+        setAttackRight(false);
+        setAttackUp(false);
+        setAttackDown(true);
+        setY(getY() + getSpeed());
+    }
+
+    public void moveDownRight() {
+        setAttackLeft(false);
+        setAttackRight(true);
+        setAttackUp(false);
+        setAttackDown(false);
+        setY(getY() + getSpeed());
+        setX(getX() + getSpeed());
+        setMoveDirection("right");
+    }
+
+    public void moveDownLeft() {
+        setAttackLeft(true);
+        setAttackRight(false);
+        setAttackUp(false);
+        setAttackDown(false);
+        setY(getY() + getSpeed());
+        setX(getX() - getSpeed());
+        setMoveDirection("left");
+    }
 
     public TimerTask getKnockbackTask() { return knockbackTask; }
 

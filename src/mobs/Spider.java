@@ -2,6 +2,8 @@ package mobs;
 
 import math.AABB;
 import math.CollisionMessage;
+import singletons.SingletonMobs;
+import singletons.SingletonPlayer;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,7 +12,6 @@ public class Spider extends Mob {
     private int knockbackTime = 0, animationTime = 2, hitAnimationTime = 0;
     private String knockbackDirection;
     private boolean animationTaskStarted = false, knockbackTaskStarted = false, hitAnimationTaskStarted = false;
-    private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private AABB attackBox;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
@@ -39,14 +40,17 @@ public class Spider extends Mob {
             hitAnimationTaskStarted = true;
             hitAnimationTime++;
             if (hitAnimationTime == 2) {
-                if (isAttackLeft) attackBox.update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
-                else if (isAttackRight) attackBox.update(getX() + 49, getY() + 24, getX() + 59, getY() + 48);
-                else if (isAttackUp) attackBox.update(getX() + 16, getY() + 11, getX() + 45, getY() + 19);
-                else if (isAttackDown) attackBox.update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
+                if (isAttackLeft()) attackBox.update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
+                else if (isAttackRight()) attackBox.update(getX() + 49, getY() + 24, getX() + 59, getY() + 48);
+                else if (isAttackUp()) attackBox.update(getX() + 16, getY() + 11, getX() + 45, getY() + 19);
+                else if (isAttackDown()) attackBox.update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
             }
             if (hitAnimationTime == 4) {
                 hitAnimationTime = 0;
-                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                setAttackLeft(false);
+                setAttackRight(false);
+                setAttackUp(false);
+                setAttackDown(false);
                 stopTimer();
             }
         }
@@ -93,13 +97,16 @@ public class Spider extends Mob {
                 hitAnimationTaskStarted = true;
                 hitAnimationTime++;
                 if (hitAnimationTime == 2) {
-                    if (isAttackLeft) attackBox.update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
-                    else if (isAttackRight) attackBox.update(getX() + 49, getY() + 24, getX() + 59, getY() + 48);
-                    else if (isAttackUp) attackBox.update(getX() + 16, getY() + 11, getX() + 45, getY() + 19);
-                    else if (isAttackDown) attackBox.update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
+                    if (isAttackLeft()) attackBox.update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
+                    else if (isAttackRight()) attackBox.update(getX() + 49, getY() + 24, getX() + 59, getY() + 48);
+                    else if (isAttackUp()) attackBox.update(getX() + 16, getY() + 11, getX() + 45, getY() + 19);
+                    else if (isAttackDown()) attackBox.update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
                 }
                 if (hitAnimationTime == 4) {
-                    isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                    setAttackLeft(false);
+                    setAttackRight(false);
+                    setAttackUp(false);
+                    setAttackDown(false);
                     hitAnimationTime = 0;
                     stopTimer();
                 }
@@ -125,19 +132,19 @@ public class Spider extends Mob {
         if (AABB.AABBvsAABB2(getHitbox(), SingletonPlayer.player.getHitbox())) {
             switch (CollisionMessage.getMessage()) {
                 case "left":
-                    isAttackLeft = true;
+                    setAttackLeft(true);
                     if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
                     break;
                 case "right":
-                    isAttackRight = true;
+                    setAttackRight(true);
                     if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
                     break;
                 case "up":
-                    isAttackUp = true;
+                    setAttackUp(true);
                     if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
                     break;
                 case "down":
-                    isAttackDown = true;
+                    setAttackDown(true);
                     if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
                     break;
             }
@@ -153,7 +160,7 @@ public class Spider extends Mob {
         getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
 
         // Преследование игрока
-        if (!SingletonPlayer.player.isScrollMenu() && (!isAttackLeft || !isAttackRight || !isAttackUp || !isAttackDown) &&
+        if (!SingletonPlayer.player.isScrollMenu() && (!isAttackLeft() || !isAttackRight() || !isAttackUp() || !isAttackDown()) &&
                 !knockbackTaskStarted) {
             if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
                     SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x) moveUpLeft();
@@ -196,14 +203,6 @@ public class Spider extends Mob {
     public boolean isHitAnimationTaskStarted() { return hitAnimationTaskStarted; }
 
     public void setHitAnimationTaskStarted(boolean hitAnimationTaskStarted) { this.hitAnimationTaskStarted = hitAnimationTaskStarted; }
-
-    public boolean isAttackRight() { return isAttackRight; }
-
-    public boolean isAttackLeft() { return isAttackLeft; }
-
-    public boolean isAttackUp() { return isAttackUp; }
-
-    public boolean isAttackDown() { return isAttackDown; }
 
     public AABB getAttackBox() { return attackBox; }
 }

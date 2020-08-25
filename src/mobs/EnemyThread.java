@@ -1,5 +1,7 @@
 package mobs;
 
+import singletons.SingletonMobs;
+
 public class EnemyThread extends Thread {
     private boolean threadRunning, threadWaiting;
 
