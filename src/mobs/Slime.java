@@ -12,7 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Slime extends Mob {
-    private int knockbackTime = 0, animationTime = 1;
+    private int knockbackTime = 0, animationTime = 1, deathAnimationTime = 0;
     private String knockbackDirection;
     private Source hurtSound;
     private int hurtSoundId, deathSoundId;
@@ -48,6 +48,14 @@ public class Slime extends Mob {
             if (animationTime == 4) animationTime = 1;
         }
     };
+    private TimerTask deathTask = new TimerTask() {
+        @Override
+        public void run() {
+            deathAnimationTime++;
+            if (deathAnimationTime == 2) deathTask.cancel();
+        }
+    };
+
 
     public Slime(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
@@ -101,58 +109,65 @@ public class Slime extends Mob {
     }
 
     public void update() {
-        // Слизень получает урон от игрока
-        if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
-            if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
-            else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
-            else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
-            else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
-            setHealth(getHealth() - SingletonPlayer.player.getDamage());
-            if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+        if (!isDead()) {
+            // Слизень получает урон от игрока
+            if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
+                if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
+                else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
+                else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
+                else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
 
-            if (getHealth() <= 0) hurtSound.play(deathSoundId);
-            else hurtSound.play(hurtSoundId);
-        }
+                setHealth(getHealth() - SingletonPlayer.player.getDamage());
+                if (getHealth() <= 0) {
+                    setImmortal(false);
+                    hurtSound.play(deathSoundId);
+                }
+                else {
+                    if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+                    hurtSound.play(hurtSoundId);
+                }
+            }
 
-        // Столкновение с другими мобами
-        for (Mob mob : SingletonMobs.mobList) {
-            if (!(mob instanceof Player) && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
-                stop(CollisionMessage.getMessage());
-        }
+            // Столкновение с другими мобами
+            for (Mob mob : SingletonMobs.mobList) {
+                if (!(mob instanceof Player) && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
+                    stop(CollisionMessage.getMessage());
+            }
 
-        if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 300);
-        getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
-        getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
+            if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 300);
+            getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
+            getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
 
-        // Преследование игрока
-        if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted) {
-            if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                    SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                    animationTime == 3) moveUpLeft();
+            // Преследование игрока
+            if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted) {
+                if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                        SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                        animationTime == 3) moveUpLeft();
 
-            else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                    SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                    animationTime == 3) moveUpRight();
+                else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                        SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                        animationTime == 3) moveUpRight();
 
-            else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                    SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                    animationTime == 3) moveDownLeft();
+                else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                        SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                        animationTime == 3) moveDownLeft();
 
-            else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                    SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                    animationTime == 3) moveDownRight();
+                else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                        SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                        animationTime == 3) moveDownRight();
 
-            else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
-                    animationTime == 3) moveLeft();
+                else if (SingletonPlayer.player.getHitbox().getMin().x < getHitbox().getMin().x &&
+                        animationTime == 3) moveLeft();
 
-            else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
-                    animationTime == 3) moveRight();
+                else if (SingletonPlayer.player.getHitbox().getMin().x > getHitbox().getMin().x &&
+                        animationTime == 3) moveRight();
 
-            else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
-                    animationTime == 3) moveUp();
+                else if (SingletonPlayer.player.getHitbox().getMin().y < getHitbox().getMin().y &&
+                        animationTime == 3) moveUp();
 
-            else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
-                    animationTime == 3) moveDown();
+                else if (SingletonPlayer.player.getHitbox().getMin().y > getHitbox().getMin().y &&
+                        animationTime == 3) moveDown();
+            }
         }
     }
 
@@ -234,9 +249,13 @@ public class Slime extends Mob {
 
     public TimerTask getAnimationTask() { return animationTask; }
 
+    public TimerTask getDeathTask() { return deathTask; }
+
     public int getKnockbackTime() { return knockbackTime; }
 
     public int getAnimationTime() { return animationTime; }
+
+    public int getDeathAnimationTime() { return deathAnimationTime; }
 
     public boolean isAnimationTaskStarted() { return animationTaskStarted; }
 

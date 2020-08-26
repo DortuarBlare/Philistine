@@ -582,6 +582,8 @@ public class Storage {
             "slime_left_01", "slime_left_02", "slime_left_03",
             "slime_right_01", "slime_right_02", "slime_right_03",
 
+            "slime_death_01", "slime_death_02",
+
             "skeleton_left_move_01", "skeleton_left_move_02", "skeleton_left_move_03", "skeleton_left_move_04", "skeleton_left_move_05", "skeleton_left_move_06", "skeleton_left_move_07", "skeleton_left_move_08", "skeleton_left_move_09",
             "skeleton_right_move_01", "skeleton_right_move_02", "skeleton_right_move_03", "skeleton_right_move_04", "skeleton_right_move_05", "skeleton_right_move_06", "skeleton_right_move_07", "skeleton_right_move_08", "skeleton_right_move_09",
             "skeleton_up_move_01", "skeleton_up_move_02", "skeleton_up_move_03", "skeleton_up_move_04", "skeleton_up_move_05", "skeleton_up_move_06", "skeleton_up_move_07", "skeleton_up_move_08", "skeleton_up_move_09",
