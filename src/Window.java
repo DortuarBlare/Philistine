@@ -32,6 +32,7 @@ public class Window {
     SingletonPlayer singletonPlayer;
     private ArrayList<Object> firstLevelObjectList;
     private ArrayList<Object> secondLevelObjectList;
+    private ArrayList<Object> thirdLevelObjectList;
     private ArrayList<Object> shopObjectList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
@@ -126,6 +127,7 @@ public class Window {
         aabbMap = new HashMap<String, AABB>();
         firstLevelObjectList = new ArrayList<Object>();
         secondLevelObjectList = new ArrayList<Object>();
+        thirdLevelObjectList = new ArrayList<>();
         shopObjectList = new ArrayList<>();
 
         AudioMaster.init();
@@ -180,6 +182,21 @@ public class Window {
         SingletonMobs.mobList.add(SingletonPlayer.player);
         blacksmith = new Blacksmith(176, 126, 1);
         waiter = new Waiter(168, 136, 1);
+
+        // вехний этаж
+        thirdLevelObjectList.add(new Box("box", false, false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
+        thirdLevelObjectList.add(new Box("box", false, false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
+        thirdLevelObjectList.add(new Box("box", false, false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, false, true, 150, 234, 150 + 20, 234 + 30, new AABB(150, 234, 150 + 20, 234 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, false, true, 111, 241, 111 + 20, 241 + 30, new AABB(111, 241, 111 + 20, 241 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, false, true, 120, 278, 120 + 20, 278 + 30, new AABB(120, 278, 120 + 20, 278 + 30)));
+        thirdLevelObjectList.add(new Furniture("bagBig", 171, 131));
+        thirdLevelObjectList.add(new Furniture("bagMedium", 199, 133));
+        thirdLevelObjectList.add(new Furniture("bagSmall", 113, 208));
+        thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
+        thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
+        thirdLevelObjectList.add(new Chest("chest", false, false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
+
 
         // Клашива ESC на выход(закрытие приложения)
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -642,8 +659,8 @@ public class Window {
                                 shopObjectList.get(i).setIsLying(false);
                                 shopObjectList.remove(i);
                                 armorChange.play(soundMap.get("changingArmor"));
-                                key_E_Pressed = false;
                             }
+                            key_E_Pressed = false;
                         }
                     }
 
@@ -997,7 +1014,7 @@ public class Window {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level2"));
                     createQuadTexture(0, 0, 640, 360);
 
-                    for (Mob mob : SingletonMobs.mobList) {
+                    /*for (Mob mob : SingletonMobs.mobList) {
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                             mob.stopRight();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
@@ -1006,7 +1023,159 @@ public class Window {
                             mob.stopUp();
                         if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
                             mob.stopDown();
+                    }*/
+
+                    ///asasd
+                    for (int i1 = 0; i1 < SingletonMobs.mobList.size(); i1++) {
+                        Mob mob = SingletonMobs.mobList.get(i1);
+
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                            mob.stopRight();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
+                            mob.stopLeft();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")))
+                            mob.stopUp();
+                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                            mob.stopDown();
+
+                        for (int i = 0; i < thirdLevelObjectList.size(); i++) {
+                            Object object = thirdLevelObjectList.get(i);
+                            if (!(object instanceof Furniture) && !(object instanceof Container)) {
+                                // Столкновение объектов со стенами
+                                if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                                    mob.stopRight();
+                                if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                                    mob.stopLeft();
+                                if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                                    mob.stopUp();
+                                if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
+                                    mob.stopDown();
+
+                                // Столкновение объектов с объектами
+                                for (int j = i + 1; j < thirdLevelObjectList.size(); j++) {
+                                    Object object2 = thirdLevelObjectList.get(j);
+                                    if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
+                                        if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox()))
+                                            object.moveLeft();
+                                    }
+                                }
+                            }
+
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), object.getCollisionBox())) {
+                                if ((mob instanceof Player) && (object instanceof Coin)) {
+                                    object.getTimer().cancel();
+                                    object.getTimer().purge();
+                                    thirdLevelObjectList.remove(object);
+                                    SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() + 10);
+                                    coinSound.play(soundMap.get("pickedCoin"));
+                                    break;
+                                }
+                            }
+
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), object.getCollisionBox())) {
+                                if ((mob instanceof Player) && (object instanceof Potion)) {
+                                    object.getTimer().cancel();
+                                    object.getTimer().purge();
+                                    thirdLevelObjectList.remove(object);
+                                    if (SingletonPlayer.player.getHealth() > 90)
+                                        SingletonPlayer.player.setHealth(100);
+                                    else
+                                        SingletonPlayer.player.setHealth(SingletonPlayer.player.getHealth() + 10);
+                                    break;
+                                }
+                            }
+
+                            if (object.isNoclip()) continue;
+                            if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
+                                mob.stop(CollisionMessage.getMessage());
+                        }
                     }
+                    ///asd
+                    for (Object object : thirdLevelObjectList) {
+                        if (!object.isLying()) continue;
+                        if (object instanceof Coin) {
+                            Coin coin = (Coin) object;
+                            if (!coin.isAnimationTaskStarted())
+                                coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
+                            coin.setTexture("coin_0" + coin.getAnimationTime());
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
+                        }
+                        else if (object instanceof Container) {
+                            Container container = (Container) object;
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
+                        }
+                        else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
+                    }
+
+                    // Подбор всех возможных предметов с клавишей Е
+                    if (key_E_Pressed) {
+                        for (int i = 0; i < thirdLevelObjectList.size(); i++) {
+                            if (thirdLevelObjectList.get(i) instanceof Armor) {
+                                Armor changingArmor = (Armor) thirdLevelObjectList.get(i);
+                                if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), changingArmor.getCollisionBox())) {
+                                    Armor playerArmor = SingletonPlayer.player.getArmorType(changingArmor);
+                                    changingArmor.setIsLying(false);
+                                    SingletonPlayer.player.setArmor(changingArmor);
+                                    armorChange.play(soundMap.get("changingArmor"));
+                                    changingArmor = playerArmor;
+                                    if (changingArmor.getTexture().equals("nothing")) thirdLevelObjectList.remove(i);
+                                    else {
+                                        changingArmor.setMinX(SingletonPlayer.player.getCollisionBox().getMin().x - 20);
+                                        changingArmor.setMinY(SingletonPlayer.player.getCollisionBox().getMin().y - 30);
+                                        changingArmor.setMaxX(SingletonPlayer.player.getCollisionBox().getMin().x + 44);
+                                        changingArmor.setMaxY(SingletonPlayer.player.getCollisionBox().getMin().y + 34);
+                                        changingArmor.setIsLying(true);
+                                        changingArmor.correctCollisionBox();
+                                        thirdLevelObjectList.set(i, changingArmor);
+                                    }
+                                    break;
+                                }
+                            }
+                            else if (thirdLevelObjectList.get(i) instanceof Weapon) {
+                                Weapon changingWeapon = (Weapon) thirdLevelObjectList.get(i);
+                                if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), changingWeapon.getCollisionBox())) {
+                                    Weapon playerWeapon = SingletonPlayer.player.getWeapon();
+                                    changingWeapon.setIsLying(false);
+                                    changingWeapon.resize();
+                                    SingletonPlayer.player.setWeapon(changingWeapon);
+                                    armorChange.play(soundMap.get("changingArmor"));
+                                    changingWeapon = playerWeapon;
+                                    if (changingWeapon.getTexture().equals("nothing")) thirdLevelObjectList.remove(i);
+                                    else {
+                                        changingWeapon.setMinX(SingletonPlayer.player.getCollisionBox().getMin().x - 64);
+                                        changingWeapon.setMinY(SingletonPlayer.player.getCollisionBox().getMin().y - 64);
+                                        changingWeapon.setMaxX(SingletonPlayer.player.getCollisionBox().getMin().x + 128);
+                                        changingWeapon.setMaxY(SingletonPlayer.player.getCollisionBox().getMin().y + 128);
+                                        changingWeapon.setIsLying(true);
+                                        changingWeapon.correctCollisionBox();
+                                        thirdLevelObjectList.set(i, changingWeapon);
+                                    }
+                                    break;
+                                }
+                            }
+                            else if (thirdLevelObjectList.get(i) instanceof Container) {
+                                Container change = (Container) thirdLevelObjectList.get(i);
+                                if (change.getIsNeedKey()){
+                                    if (SingletonPlayer.player.getKeys() > 0){
+                                        SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
+                                    change.setState("Opened");
+                                    for (int h = 0; h < change.loot.size(); h++) {
+                                        thirdLevelObjectList.add(change.loot.get(h));
+                                        change.loot.remove(h);
+                                        h--;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    key_E_Pressed = false;
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromThirdToSecondLevel"))) {
