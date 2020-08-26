@@ -169,20 +169,10 @@ public class Storage {
             "weapon_rapier_down_slash_01", "weapon_rapier_down_slash_02", "weapon_rapier_down_slash_03", "weapon_rapier_down_slash_04", "weapon_rapier_down_slash_05", "weapon_rapier_down_slash_06",
             "weapon_rapier_left_slash_01", "weapon_rapier_left_slash_02", "weapon_rapier_left_slash_03", "weapon_rapier_left_slash_04", "weapon_rapier_left_slash_05", "weapon_rapier_left_slash_06",
 
-            "weapon_dagger_left_slash_01", "weapon_dagger_left_slash_02", "weapon_dagger_left_slash_03", "weapon_dagger_left_slash_04", "weapon_dagger_left_slash_05", "weapon_dagger_left_slash_06",
-            "weapon_dagger_right_slash_01", "weapon_dagger_right_slash_02", "weapon_dagger_right_slash_03", "weapon_dagger_right_slash_04", "weapon_dagger_right_slash_05", "weapon_dagger_right_slash_06",
-            "weapon_dagger_up_slash_01", "weapon_dagger_up_slash_02", "weapon_dagger_up_slash_03", "weapon_dagger_up_slash_04", "weapon_dagger_up_slash_05", "weapon_dagger_up_slash_06",
-            "weapon_dagger_down_slash_01", "weapon_dagger_down_slash_02", "weapon_dagger_down_slash_03", "weapon_dagger_down_slash_04", "weapon_dagger_down_slash_05", "weapon_dagger_down_slash_06",
-
             "weapon_long_spear_left_thrust_01", "weapon_long_spear_left_thrust_02", "weapon_long_spear_left_thrust_03", "weapon_long_spear_left_thrust_04", "weapon_long_spear_left_thrust_05", "weapon_long_spear_left_thrust_06", "weapon_long_spear_left_thrust_07", "weapon_long_spear_left_thrust_08",
             "weapon_long_spear_right_thrust_01", "weapon_long_spear_right_thrust_02", "weapon_long_spear_right_thrust_03", "weapon_long_spear_right_thrust_04", "weapon_long_spear_right_thrust_05", "weapon_long_spear_right_thrust_06", "weapon_long_spear_right_thrust_07", "weapon_long_spear_right_thrust_08",
             "weapon_long_spear_up_thrust_01", "weapon_long_spear_up_thrust_02", "weapon_long_spear_up_thrust_03", "weapon_long_spear_up_thrust_04", "weapon_long_spear_up_thrust_05", "weapon_long_spear_up_thrust_06", "weapon_long_spear_up_thrust_07", "weapon_long_spear_up_thrust_08",
             "weapon_long_spear_down_thrust_01", "weapon_long_spear_down_thrust_02", "weapon_long_spear_down_thrust_03", "weapon_long_spear_down_thrust_04", "weapon_long_spear_down_thrust_05", "weapon_long_spear_down_thrust_06", "weapon_long_spear_down_thrust_07", "weapon_long_spear_down_thrust_08",
-
-            "weapon_spear_left_thrust_01", "weapon_spear_left_thrust_02", "weapon_spear_left_thrust_03", "weapon_spear_left_thrust_04", "weapon_spear_left_thrust_05", "weapon_spear_left_thrust_06", "weapon_spear_left_thrust_07", "weapon_spear_left_thrust_08",
-            "weapon_spear_right_thrust_01", "weapon_spear_right_thrust_02", "weapon_spear_right_thrust_03", "weapon_spear_right_thrust_04", "weapon_spear_right_thrust_05", "weapon_spear_right_thrust_06", "weapon_spear_right_thrust_07", "weapon_spear_right_thrust_08",
-            "weapon_spear_up_thrust_01", "weapon_spear_up_thrust_02", "weapon_spear_up_thrust_03", "weapon_spear_up_thrust_04", "weapon_spear_up_thrust_05", "weapon_spear_up_thrust_06", "weapon_spear_up_thrust_07", "weapon_spear_up_thrust_08",
-            "weapon_spear_down_thrust_01", "weapon_spear_down_thrust_02", "weapon_spear_down_thrust_03", "weapon_spear_down_thrust_04", "weapon_spear_down_thrust_05", "weapon_spear_down_thrust_06", "weapon_spear_down_thrust_07", "weapon_spear_down_thrust_08",
 
             "weapon_stick_left_thrust_01", "weapon_stick_left_thrust_02", "weapon_stick_left_thrust_03", "weapon_stick_left_thrust_04", "weapon_stick_left_thrust_05", "weapon_stick_left_thrust_06", "weapon_stick_left_thrust_07", "weapon_stick_left_thrust_08",
             "weapon_stick_right_thrust_01", "weapon_stick_right_thrust_02", "weapon_stick_right_thrust_03", "weapon_stick_right_thrust_04", "weapon_stick_right_thrust_05", "weapon_stick_right_thrust_06", "weapon_stick_right_thrust_07", "weapon_stick_right_thrust_08",

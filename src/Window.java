@@ -48,16 +48,14 @@ public class Window {
     boolean forMainMenu = true;
     boolean forMainTheme = true;
     private int time = 0;
-    private boolean firstLevelMobSpawning, secondLevelMobSpawning, thirdLevelMobSpawning = false;
+    private boolean firstLevelMobSpawning, secondLevelMobSpawning, fourthLevelMobSpawning = false;
     private Timer mobTimer = new Timer();
     private TimerTask mobSpawnTask = new TimerTask() {
         @Override
         public void run() {
-            if (level.equals("FirstLevel")) SingletonMobs.mobList.add(new Slime(470, 288, 1, 50, 0, 5));
-            else if (level.equals("SecondLevel")) SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
-            else if (level.equals("ForthLevel")) SingletonMobs.mobList.add(new Imp(477, 284, 1, 60, 0, 30));
             time++;
             if (time == 5) stopMobSpawn();
+            SingletonMobs.mobList.add(new Slime(470, 288, 1, 50, 0, 5));
         }
     };
 
@@ -69,11 +67,15 @@ public class Window {
         mobSpawnTask = new TimerTask() {
             @Override
             public void run() {
-                if (level.equals("FirstLevel")) SingletonMobs.mobList.add(new Slime(350, 300, 1, 50, 0, 5));
-                else if (level.equals("SecondLevel")) SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
-                else if (level.equals("ForthLevel")) SingletonMobs.mobList.add(new Imp(477, 284, 1, 400, 0, 50));
                 time++;
-                if (time == 1) stopMobSpawn();
+                if (level.equals("SecondLevel")) {
+                    SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
+                    if (time == 3) stopMobSpawn();
+                }
+                else if (level.equals("ForthLevel")) {
+                    SingletonMobs.mobList.add(new Imp(477, 284, 1, 400, 0, 50));
+                    if (time == 1) stopMobSpawn();
+                }
             }
         };
     }
@@ -174,7 +176,7 @@ public class Window {
         firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
         firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
         firstLevelObjectList.add(new Furniture("trash", 462, 173));
-        firstLevelObjectList.add(new Weapon("longsword", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        firstLevelObjectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
         firstLevelObjectList.add(new Lever("lever", 500, 241));
         shop = new Shop("ChestClosed", true, true, false, 0, 0, 0, 0, new AABB(0, 0, 0, 0));
@@ -796,27 +798,23 @@ public class Window {
                                 createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
                                 slime.update();
 
-                                // Игрок получает урона от слизня
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) &&
-                                        !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                    if (slime.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
-                                    else if (slime.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
-                                    else if (slime.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
-                                    else if (slime.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
-                                    SingletonPlayer.player.takeDamage(slime.getDamage());
-                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
-                                        SingletonPlayer.player.setImmortal(true);
-                                        SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
-                                    }
-                                }
-
                                 // Смэрть
-                                if (slime.getHealth() <= 0) {
-                                    System.out.println("Убил");
-                                    slime.setDead(true);
-                                    slime.getCollisionBox().clear();
-                                    slime.getHitbox().clear();
-                                    slime.getTimer().schedule(slime.getDeathTask(), 0, 120);
+                                if (slime.getHealth() <= 0) slime.getTimer().schedule(slime.getDeathTask(), 0, 120);
+
+                                if (!slime.isDead()) {
+                                    // Игрок получает урона от слизня
+                                    if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) &&
+                                            !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
+                                        if (slime.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
+                                        else if (slime.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
+                                        else if (slime.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
+                                        else if (slime.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
+                                        SingletonPlayer.player.takeDamage(slime.getDamage());
+                                        if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
+                                            SingletonPlayer.player.setImmortal(true);
+                                            SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                        }
+                                    }
                                 }
                             }
                             else {
@@ -864,7 +862,7 @@ public class Window {
                                 }
                             }
 
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), object.getCollisionBox())) {
+                            if (!mob.isDead() && AABB.AABBvsAABB(mob.getCollisionBox(), object.getCollisionBox())) {
                                 if ((mob instanceof Player) && (object instanceof Coin)) {
                                     object.getTimer().cancel();
                                     object.getTimer().purge();
@@ -873,10 +871,7 @@ public class Window {
                                     coinSound.play(soundMap.get("pickedCoin"));
                                     break;
                                 }
-                            }
-
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), object.getCollisionBox())) {
-                                if ((mob instanceof Player) && (object instanceof Potion)) {
+                                else if ((mob instanceof Player) && (object instanceof Potion)) {
                                     object.getTimer().cancel();
                                     object.getTimer().purge();
                                     firstLevelObjectList.remove(object);
@@ -889,31 +884,25 @@ public class Window {
                             }
 
                             if (object.isNoclip()) continue;
-                            if (!mob.isDead()) {
-                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
-                                    mob.stop(CollisionMessage.getMessage());
-                            }
+                            if (!mob.isDead() && AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()))
+                                mob.stop(CollisionMessage.getMessage());
                         }
                     }
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
-                        level = "SecondLevel";
-                        firstLevelMobSpawning = false;
-
-                        // Удаление трупов
-                        if (SingletonMobs.mobList.size() != 1) {
-                            for (int i = 1; i < SingletonMobs.mobList.size(); i++)
-                                SingletonMobs.mobList.remove(i);
-                        }
+                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
                         // Обновление хитбоксов стен для второго уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
                                     Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
                         }
+
                         SingletonPlayer.player.setX(2 - 14);
                         SingletonPlayer.player.setY(225);
+                        firstLevelMobSpawning = false;
+                        level = "SecondLevel";
                     }
                     break;
                 }
@@ -931,33 +920,29 @@ public class Window {
                         if (SingletonMobs.mobList.get(i) instanceof Spider) {
                             Spider spider = (Spider) SingletonMobs.mobList.get(i);
                             if (!spider.isDead()) {
+                                spider.update();
                                 if (spider.isAttackLeft() || spider.isAttackRight() || spider.isAttackUp() || spider.isAttackDown())
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_attack_0" + spider.getHitAnimationTime()));
-                                else
-                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
+                                else glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
                                 createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 64);
-                                spider.update();
-
-                                // Игрок получает урона от паука
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getAttackBox()) &&
-                                        !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                    if (spider.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
-                                    else if (spider.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
-                                    else if (spider.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
-                                    else if (spider.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
-                                    SingletonPlayer.player.takeDamage(spider.getDamage());
-                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
-                                        SingletonPlayer.player.setImmortal(true);
-                                        SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
-                                    }
-                                }
 
                                 // Смэрть
-                                if (spider.getHealth() <= 0) {
-                                    spider.setDead(true);
-                                    spider.getCollisionBox().clear();
-                                    spider.getHitbox().clear();
-                                    spider.getTimer().schedule(spider.getDeathTask(), 0, 120);
+                                if (spider.getHealth() <= 0) spider.getTimer().schedule(spider.getDeathTask(), 0, 120);
+
+                                if (!spider.isDead()) {
+                                    // Игрок получает урона от паука
+                                    if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getAttackBox()) &&
+                                            !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
+                                        if (spider.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
+                                        else if (spider.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
+                                        else if (spider.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
+                                        else if (spider.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
+                                        SingletonPlayer.player.takeDamage(spider.getDamage());
+                                        if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
+                                            SingletonPlayer.player.setImmortal(true);
+                                            SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                        }
+                                    }
                                 }
                             }
                             else {
@@ -970,32 +955,36 @@ public class Window {
                     // Проверка всех мобов на столкновение со стенами
                     for (int i1 = 0; i1 < SingletonMobs.mobList.size(); i1++) {
                         Mob mob = SingletonMobs.mobList.get(i1);
-
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
-                            mob.stopRight();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
-                            mob.stopLeft();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
-                            mob.stopUp();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
-                            mob.stopDown();
+                        if (!mob.isDead()) {
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
+                                mob.stopRight();
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                                mob.stopLeft();
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                                mob.stopUp();
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
+                                mob.stopDown();
+                        }
                     }
 
                     // Проверка перехода на первый уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
-                        level = "FirstLevel";
+                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
+
                         // Обновление хитбоксов стен для первого уровня
                         for(int i = 0, j = 0; i < 5; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1],
                                     Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
                         }
-                        SingletonPlayer.player.setX(638 - 64 + 15);
+                        SingletonPlayer.player.setX(589);
                         SingletonPlayer.player.setY(281);
+                        level = "FirstLevel";
                     }
 
                     // Проверка перехода на 3 уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToThirdLevel"))) {
-                        level = "ThirdLevel";
+                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
+
                         // Обновление хитбоксов стен для 3 уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.thirdLevelWalls[j], Storage.thirdLevelWalls[j + 1],
@@ -1004,12 +993,13 @@ public class Window {
                         SingletonPlayer.player.setX(240);
                         SingletonPlayer.player.setY(120);
                         SingletonPlayer.player.setMoveDirection("down");
+                        level = "ThirdLevel";
                     }
 
                     // Проверка перехода на 4 уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToForthLevel"))) {
-                        level = "ForthLevel";
-                        firstLevelMobSpawning = false;
+                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
+
                         // Обновление хитбоксов стен для 4 уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.fourthLevelWalls[j], Storage.fourthLevelWalls[j + 1],
@@ -1018,6 +1008,7 @@ public class Window {
                         SingletonPlayer.player.setX(180);
                         SingletonPlayer.player.setY(120);
                         SingletonPlayer.player.setMoveDirection("down");
+                        level = "ForthLevel";
                     }
                     break;
                 }
@@ -1186,8 +1177,8 @@ public class Window {
                             mob.stopDown();
                     }
 
-                    if (!firstLevelMobSpawning) {
-                        firstLevelMobSpawning = true;
+                    if (!fourthLevelMobSpawning) {
+                        fourthLevelMobSpawning = true;
                         mobTimer.schedule(mobSpawnTask, 3000, 10000);
                     }
 

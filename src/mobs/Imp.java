@@ -9,7 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Imp extends Mob {
-    private int knockbackTime = 0, animationTime = 2, hitAnimationTime = 1;
+    private int knockbackTime = 0, animationTime = 1, hitAnimationTime = 1;
     private String knockbackDirection;
     private boolean animationTaskStarted = false, knockbackTaskStarted = false, hitAnimationTaskStarted = false;
     private AABB attackBox;
@@ -31,7 +31,7 @@ public class Imp extends Mob {
         public void run() {
             animationTaskStarted = true;
             animationTime++;
-            if (animationTime == 5) animationTime = 2;
+            if (animationTime == 5) animationTime = 1;
         }
     };
     private TimerTask hitAnimationTask = new TimerTask() {
@@ -90,7 +90,7 @@ public class Imp extends Mob {
             public void run() {
                 animationTaskStarted = true;
                 animationTime++;
-                if (animationTime == 5) animationTime = 2;
+                if (animationTime == 5) animationTime = 1;
             }
         };
         hitAnimationTask = new TimerTask() {

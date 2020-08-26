@@ -11,10 +11,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Spider extends Mob {
-    private int knockbackTime = 0, animationTime = 2, hitAnimationTime = 0, deathAnimationTime = 0;
+    private int knockbackTime = 0, animationTime = 2, hitAnimationTime = 1, deathAnimationTime = 0;
     private String knockbackDirection;
-    private Source hurtSound;
-    private int hurtSoundId, deathSoundId;
+    private Source hurtSound, hitSound;
+    private int hurtSoundId, hitSoundId, deathSoundId;
     private boolean animationTaskStarted = false, knockbackTaskStarted = false, hitAnimationTaskStarted = false;
     private AABB attackBox;
     private TimerTask knockbackTask = new TimerTask() {
@@ -50,11 +50,12 @@ public class Spider extends Mob {
                 else if (isAttackDown()) attackBox.update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
             }
             if (hitAnimationTime == 4) {
-                hitAnimationTime = 0;
                 setAttackLeft(false);
                 setAttackRight(false);
                 setAttackUp(false);
                 setAttackDown(false);
+                attackBox.update(0,0,0,0);
+                hitAnimationTime = 1;
                 stopTimer();
             }
         }
@@ -71,7 +72,9 @@ public class Spider extends Mob {
         super(x, y, speed, health, armor, damage, new AABB(), new AABB());
         attackBox = new AABB();
         hurtSound = new Source(0);
+        hitSound = new Source(0);
         hurtSoundId = AudioMaster.loadSound("sounds/spiderHurt");
+        hitSoundId = AudioMaster.loadSound("sounds/spiderAttack");
         deathSoundId = AudioMaster.loadSound("sounds/spiderDeath");
         getHitbox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
         getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
@@ -121,7 +124,8 @@ public class Spider extends Mob {
                     setAttackRight(false);
                     setAttackUp(false);
                     setAttackDown(false);
-                    hitAnimationTime = 0;
+                    attackBox.update(0,0,0,0);
+                    hitAnimationTime = 1;
                     stopTimer();
                 }
             }
@@ -132,50 +136,65 @@ public class Spider extends Mob {
     }
 
     public void update() {
-        if (!isDead()) {
-            // Паук получает урон от игрока
-            if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
-                if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
-                else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
-                else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
-                else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
-                setHealth(getHealth() - SingletonPlayer.player.getDamage());
+        // Паук получает урон от игрока
+        if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
+            if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
+            else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
+            else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
+            else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
+            setHealth(getHealth() - SingletonPlayer.player.getDamage());
 
-                if (getHealth() <= 0) {
-                    hurtSound.stop(hurtSoundId);
-                    hurtSound.play(deathSoundId);
-                    attackBox.update(0,0,0,0);
-                }
-                else {
-                    hurtSound.play(hurtSoundId);
-                    if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
-                }
+            if (getHealth() <= 0) {
+                setDead(true);
+                getCollisionBox().clear();
+                getHitbox().clear();
+                attackBox.clear();
+                hurtSound.stop(hurtSoundId);
+                hurtSound.play(deathSoundId);
             }
+            else {
+                hurtSound.play(hurtSoundId);
+                if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+            }
+        }
 
+        if (!isDead()) {
             // Паук наносит удар при соприкосновении с игроком
             if (AABB.AABBvsAABB2(getHitbox(), SingletonPlayer.player.getHitbox())) {
                 switch (CollisionMessage.getMessage()) {
                     case "left":
                         setAttackLeft(true);
-                        if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
+                        if (!hitAnimationTaskStarted) {
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
                         break;
                     case "right":
                         setAttackRight(true);
-                        if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
+                        if (!hitAnimationTaskStarted) {
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
                         break;
                     case "up":
                         setAttackUp(true);
-                        if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
+                        if (!hitAnimationTaskStarted) {
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
                         break;
                     case "down":
                         setAttackDown(true);
-                        if (!hitAnimationTaskStarted) getTimer().schedule(hitAnimationTask, 0, 300);
+                        if (!hitAnimationTaskStarted) {
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
                         break;
                 }
             }
 
             for (Mob mob : SingletonMobs.mobList) {
-                if (!(mob instanceof Player) && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
+                if (!(mob instanceof Player) && !mob.isDead() && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
                     stop(CollisionMessage.getMessage());
             }
 

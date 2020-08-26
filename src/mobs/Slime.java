@@ -109,28 +109,30 @@ public class Slime extends Mob {
     }
 
     public void update() {
-        if (!isDead()) {
-            // Слизень получает урон от игрока
-            if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
-                if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
-                else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
-                else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
-                else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
+        // Слизень получает урон от игрока
+        if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
+            if (SingletonPlayer.player.isAttackLeft()) setKnockbackDirection("left");
+            else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
+            else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
+            else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
 
-                setHealth(getHealth() - SingletonPlayer.player.getDamage());
-                if (getHealth() <= 0) {
-                    setImmortal(false);
-                    hurtSound.play(deathSoundId);
-                }
-                else {
-                    if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
-                    hurtSound.play(hurtSoundId);
-                }
+            setHealth(getHealth() - SingletonPlayer.player.getDamage());
+            if (getHealth() <= 0) {
+                setDead(true);
+                getCollisionBox().clear();
+                getHitbox().clear();
+                hurtSound.play(deathSoundId);
             }
+            else if (!isKnockbackTaskStarted()) {
+                getTimer().schedule(getKnockbackTask(), 0, 10);
+                hurtSound.play(hurtSoundId);
+            }
+        }
 
+        if (!isDead()) {
             // Столкновение с другими мобами
             for (Mob mob : SingletonMobs.mobList) {
-                if (!(mob instanceof Player) && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
+                if (!(mob instanceof Player) && !mob.isDead() && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
                     stop(CollisionMessage.getMessage());
             }
 

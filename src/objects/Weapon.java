@@ -17,22 +17,14 @@ public class Weapon extends Object {
         this.damage = damage;
         this.attackType = attackType;
         switch (texture) {
-            case "longsword":
+            case "stick":
             case "long_spear":
+            case "longsword":
             case "rapier": {
                 setMinX(64);
                 setMinY(64);
                 setMaxX(128);
                 setMaxY(128);
-                break;
-            }
-            case "dagger":
-            case "stick":
-            case "spear": {
-                setMinX(0);
-                setMinY(0);
-                setMaxX(64);
-                setMaxY(64);
                 break;
             }
         }
@@ -40,22 +32,14 @@ public class Weapon extends Object {
 
     public void resize() {
         switch (getTexture()) {
-            case "longsword":
+            case "stick":
             case "long_spear":
+            case "longsword":
             case "rapier": {
                 setMinX(64);
                 setMinY(64);
                 setMaxX(128);
                 setMaxY(128);
-                break;
-            }
-            case "dagger":
-            case "stick":
-            case "spear": {
-                setMinX(0);
-                setMinY(0);
-                setMaxX(64);
-                setMaxY(64);
                 break;
             }
         }
@@ -71,9 +55,6 @@ public class Weapon extends Object {
                 break;
             case "long_spear":
                 getCollisionBox().update(getMinX() + 77, getMinY() + 63, getMinX() + 137, getMinY() + 122);
-                break;
-            case "spear":
-                getCollisionBox().update(getMinX() + 77, getMinY() + 84, getMinX() + 116, getMinY() + 122);
                 break;
             case "stick":
                 getCollisionBox().update(getMinX() + 76, getMinY() + 83, getMinX() + 116, getMinY() + 123);
