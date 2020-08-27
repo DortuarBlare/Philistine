@@ -31,7 +31,7 @@ public class Blacksmith extends Mob {
     };
 
     public Blacksmith(int x, int y, int speed) {
-        super(x, y, speed, 100, 0, 0, new AABB(), new AABB());
+        super(x, y, speed, 100, 0, 0);
         getTimer().schedule(animationTask, 0, 120);
         setMoveDirection("right");
     }

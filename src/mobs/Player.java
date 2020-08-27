@@ -6,6 +6,7 @@ import content.Storage;
 import math.AABB;
 import objects.Armor;
 import objects.Weapon;
+import singletons.SingletonMobs;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -17,31 +18,27 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 
 public class Player extends Mob {
     private HashMap<String, Integer> playerSounds;
-    private Source stepSound, hitSound, choiceSound, menuSound;
+    private Source stepSound, hitSound, selectionMenuSound, openMenuSound;
     private Armor head, shoulders, overTorso, torso, belt, hands, legs, feet;
     private Weapon weapon;
-    private AABB attackBox;
     private int money, keys;
     private String bodyAnimation, weaponAnimation, headAnimation, shouldersAnimation, overTorsoAnimation, torsoAnimation, beltAnimation, handsAnimation, legsAnimation, feetAnimation;
-    private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private int player_animation_move_left_i = 2, player_animation_move_right_i = 2, player_animation_move_up_i = 2, player_animation_move_down_i = 2;
-    private int player_animation_move_g = 0, player_animation_death_i = 1, player_animation_death_g = 0;
+    private int player_animation_move_g = 0;
     private int forPlacingCamera = 0;
-    private boolean choiceBubble = false;
+    private boolean dialogBubble = false;
     private boolean scrollMenu = false;
-    private boolean yes = false;
+    private boolean dialogBubbleChoice = false;
     private boolean mainMenuDirection = true;
     private String menuChoice = "Resume";
-    private int knockbackTime = 0, hitAnimationTime = 1;
     private boolean hitAnimationTaskStarted = false, knockbackTaskStarted = false;
-    private String knockbackDirection;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             setImmortal(true);
             knockbackTaskStarted = true;
-            if (knockbackTime <= 15) {
-                switch (knockbackDirection) {
+            if (getKnockBackTime() <= 15) {
+                switch (getKnockBackDirection()) {
                     case "left":
                         knockBackLeft();
                         break;
@@ -56,185 +53,224 @@ public class Player extends Mob {
                         break;
                 }
             }
-            knockbackTime++;
+            incrementKnockBackTime();
         }
     };
     private TimerTask hitAnimationTask = new TimerTask() {
         @Override
         public void run() {
-            hitAnimationTime++;
+            incrementHitAnimationTime();
             switch (weapon.getTexture()) {
                 case "rapier":
                 case "longsword":
-                    if (isAttackLeft) {
-                        if (hitAnimationTime == 5)
+                    if (isAttackLeft()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() - 49, getY() + 21, getX() + 17, getY() + 45);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 7) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 7) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
                     }
-                    else if (isAttackRight) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackRight()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() + 47, getY() + 21, getX() + 113, getY() + 45);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 7) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 7) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
                     }
-                    else if (isAttackUp) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackUp()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() - 11, getY() - 4, getX() + 70, getY() + 33);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 27, getY() - 1, getX() + 95, getY() + 38);
-                        if (hitAnimationTime == 7) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 7) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
                     }
-                    else if (isAttackDown) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackDown()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() - 9, getY() + 44, getX() + 72, getY() + 81);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 28, getY() + 39, getX() + 96, getY() + 78);
-                        if (hitAnimationTime == 7) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 7) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
                     }
                     break;
                 case "long_spear":
-                    if (isAttackLeft) {
-                        if (hitAnimationTime == 5)
+                    if (isAttackLeft()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() - 39, getY() + 42, getX() + 12, getY() + 46);
-                        if (hitAnimationTime == 7)
+                        if (getHitAnimationTime() == 7)
                             getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
-                        if (hitAnimationTime == 8)
+                        if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
-                    else if (isAttackRight) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackRight()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 51, getY() + 43, getX() + 103, getY() + 46);
-                        if (hitAnimationTime == 7)
+                        if (getHitAnimationTime() == 7)
                             getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
-                        if (hitAnimationTime == 8)
+                        if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
-                    else if (isAttackUp) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackUp()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 38, getY() - 37, getX() + 42, getY() + 18);
-                        if (hitAnimationTime == 7)
+                        if (getHitAnimationTime() == 7)
                             getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
-                        if (hitAnimationTime == 8)
+                        if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
-                    else if (isAttackDown) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackDown()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 27, getY() + 51, getX() + 31, getY() + 103);
-                        if (hitAnimationTime == 7)
+                        if (getHitAnimationTime() == 7)
                             getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
-                        if (hitAnimationTime == 8)
+                        if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
                     break;
                 case "stick":
-                    if (isAttackLeft) {
-                        if (hitAnimationTime == 5)
+                    if (isAttackLeft()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 1, getY() + 43, getX() + 12, getY() + 45);
-                        if (hitAnimationTime == 7)
+                        if (getHitAnimationTime() == 7)
                             getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
-                        if (hitAnimationTime == 8)
+                        if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
-                    else if (isAttackRight) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackRight()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 52, getY() + 43, getX() + 62, getY() + 45);
-                        if (hitAnimationTime == 7)
+                        if (getHitAnimationTime() == 7)
                             getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
-                        if (hitAnimationTime == 8)
+                        if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
-                    else if (isAttackUp) {
-                        if (hitAnimationTime == 5)
+                    else if (isAttackUp()) {
+                        if (getHitAnimationTime() == 5)
                             getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
-                        if (hitAnimationTime == 6)
+                        if (getHitAnimationTime() == 6)
                             getAttackBox().update(getX() + 39, getY(), getX() + 42, getY() + 19);
-                        if (hitAnimationTime == 7)
+                        if (getHitAnimationTime() == 7)
                             getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
-                        if (hitAnimationTime == 8)
+                        if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
-                    else if (isAttackDown) {
-                        if (hitAnimationTime == 9) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                    else if (isAttackDown()) {
+                        if (getHitAnimationTime() == 9) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             stopTimer();
                         }
                     }
                     break;
                 case "nothing":
-                    if (hitAnimationTime == 7) {
-                        hitAnimationTime = 1;
-                        isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                    if (getHitAnimationTime() == 7) {
+                        setHitAnimationTime(1);
+                        setAttackLeft(false);
+                        setAttackRight(false);
+                        setAttackUp(false);
+                        setAttackDown(false);
                         getAttackBox().update(0,0,0,0);
                         stopTimer();
                     }
@@ -242,11 +278,23 @@ public class Player extends Mob {
             }
         }
     };
+    private final TimerTask deathAnimationTask = new TimerTask() {
+        @Override
+        public void run() {
+            incrementDeathAnimationTime();
+            if (getDeathAnimationTime() == 6) {
+                getTimer().cancel();
+                getTimer().purge();
+            }
+        }
+    };
 
     public Player(int x, int y, int speed, int health, int armor, int damage) {
-        super(x, y, speed, health, armor, damage, new AABB(), new AABB());
+        super(x, y, speed, health, armor, damage);
         setMoveDirection("down");
-        attackBox = new AABB(0,0,0,0);
+        setHitAnimationTime(1);
+        setDeathAnimationTime(0);
+        setKnockBackTime(0);
         money = 10;
         keys = 1;
         weapon = new Weapon("nothing", "slash", 10, new AABB());
@@ -269,16 +317,19 @@ public class Player extends Mob {
         playerSounds = new HashMap<String, Integer>();
         stepSound = new Source(0);
         hitSound = new Source(0);
-        choiceSound = new Source(0);
-        menuSound = new Source(0);
+        selectionMenuSound = new Source(0);
+        openMenuSound = new Source(0);
         for (int i = 0, id = 0; i < Storage.playerSoundString.length; i++)
             playerSounds.put(Storage.playerSoundString[i], id = AudioMaster.loadSound("sounds/" + Storage.playerSoundString[i]));
     }
 
     public void stopTimer() {
-        knockbackTime = 0;
-        hitAnimationTime = 1;
-        isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+        setKnockBackTime(0);
+        setHitAnimationTime(1);
+        setAttackLeft(false);
+        setAttackRight(false);
+        setAttackUp(false);
+        setAttackDown(false);
         setImmortal(false);
         getAttackBox().update(0,0,0,0);
         getTimer().cancel();
@@ -287,9 +338,10 @@ public class Player extends Mob {
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
+                incrementKnockBackTime();
                 knockbackTaskStarted = true;
-                if (knockbackTime <= 15) {
-                    switch (knockbackDirection) {
+                if (getKnockBackTime() <= 15) {
+                    switch (getKnockBackDirection()) {
                         case "left":
                             knockBackLeft();
                             break;
@@ -304,193 +356,223 @@ public class Player extends Mob {
                             break;
                     }
                 }
-                knockbackTime++;
             }
         };
         hitAnimationTask = new TimerTask() {
             @Override
             public void run() {
-                hitAnimationTime++;
+                incrementHitAnimationTime();
                 switch (weapon.getTexture()) {
                     case "rapier":
                     case "longsword":
-                        if (isAttackLeft) {
-                            if (hitAnimationTime == 5)
+                        if (isAttackLeft()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() - 49, getY() + 21, getX() + 17, getY() + 45);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 7) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 7) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackRight) {
-                            if (hitAnimationTime == 5)
+                        else if (isAttackRight()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() + 47, getY() + 21, getX() + 113, getY() + 45);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 7) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 7) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackUp) {
-                            if (hitAnimationTime == 5)
+                        else if (isAttackUp()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() - 11, getY() - 4, getX() + 70, getY() + 33);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(getX() + 27, getY() - 1, getX() + 95, getY() + 38);
-                            if (hitAnimationTime == 7) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 7) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackDown) {
-                            if (hitAnimationTime == 5)
+                        else if (isAttackDown()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() - 9, getY() + 44, getX() + 72, getY() + 81);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(getX() + 28, getY() + 39, getX() + 96, getY() + 78);
-                            if (hitAnimationTime == 7) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 7) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
                         }
                         break;
                     case "long_spear":
-                        if (isAttackLeft) {
-                            if (hitAnimationTime == 5)
+                        if (isAttackLeft()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(getX() - 39, getY() + 42, getX() + 12, getY() + 46);
-                            if (hitAnimationTime == 7)
+                            if (getHitAnimationTime() == 7)
                                 getAttackBox().update(getX() - 27, getY() + 42, getX() + 15, getY() + 46);
-                            if (hitAnimationTime == 8)
+                            if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackRight) {
-                            if (hitAnimationTime == 5)
+                        else if (isAttackRight()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(getX() + 51, getY() + 43, getX() + 103, getY() + 46);
-                            if (hitAnimationTime == 7)
+                            if (getHitAnimationTime() == 7)
                                 getAttackBox().update(getX() + 49, getY() + 42, getX() + 101, getY() + 46);
-                            if (hitAnimationTime == 8)
+                            if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackUp) {
-                            if (hitAnimationTime == 5)
+                        else if (isAttackUp()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(getX() + 38, getY() - 37, getX() + 42, getY() + 18);
-                            if (hitAnimationTime == 7)
+                            if (getHitAnimationTime() == 7)
                                 getAttackBox().update(getX() + 38, getY() - 29, getX() + 42, getY() + 18);
-                            if (hitAnimationTime == 8)
+                            if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackDown) {
-                            if (hitAnimationTime == 5)
+                        else if (isAttackDown()) {
+                            if (getHitAnimationTime() == 5)
                                 getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
-                            if (hitAnimationTime == 6)
+                            if (getHitAnimationTime() == 6)
                                 getAttackBox().update(getX() + 27, getY() + 51, getX() + 31, getY() + 103);
-                            if (hitAnimationTime == 7)
+                            if (getHitAnimationTime() == 7)
                                 getAttackBox().update(getX() + 26, getY() + 49, getX() + 30, getY() + 95);
-                            if (hitAnimationTime == 8)
+                            if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
                         break;
                     case "stick":
-                        if (isAttackLeft) {
-                            if (hitAnimationTime == 5)
-                                getAttackBox().update(getX() - 17, getY() + 43, getX() + 14, getY() + 45);
-                            if (hitAnimationTime == 6)
-                                getAttackBox().update(getX() - 19, getY() + 43, getX() + 11, getY() + 45);
-                            if (hitAnimationTime == 7)
-                                getAttackBox().update(getX() - 17, getY() + 43, getX() + 14, getY() + 45);
-                            if (hitAnimationTime == 8)
+                        if (isAttackLeft()) {
+                            if (getHitAnimationTime() == 5)
+                                getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
+                            if (getHitAnimationTime() == 6)
+                                getAttackBox().update(getX() + 1, getY() + 43, getX() + 12, getY() + 45);
+                            if (getHitAnimationTime() == 7)
+                                getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
+                            if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackRight) {
-                            if (hitAnimationTime == 5)
-                                getAttackBox().update(getX() + 50, getY() + 43, getX() + 81, getY() + 45);
-                            if (hitAnimationTime == 6)
-                                getAttackBox().update(getX() + 52, getY() + 43, getX() + 83, getY() + 45);
-                            if (hitAnimationTime == 7)
-                                getAttackBox().update(getX() + 50, getY() + 43, getX() + 81, getY() + 45);
-                            if (hitAnimationTime == 8)
+                        else if (isAttackRight()) {
+                            if (getHitAnimationTime() == 5)
+                                getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
+                            if (getHitAnimationTime() == 6)
+                                getAttackBox().update(getX() + 52, getY() + 43, getX() + 62, getY() + 45);
+                            if (getHitAnimationTime() == 7)
+                                getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
+                            if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackUp) {
-                            if (hitAnimationTime == 5)
-                                getAttackBox().update(getX() + 39, getY() - 9, getX() + 42, getY() + 17);
-                            if (hitAnimationTime == 6)
-                                getAttackBox().update(getX() + 39, getY() - 17, getX() + 42, getY() + 17);
-                            if (hitAnimationTime == 7)
-                                getAttackBox().update(getX() + 39, getY() - 9, getX() + 42, getY() + 17);
-                            if (hitAnimationTime == 8)
+                        else if (isAttackUp()) {
+                            if (getHitAnimationTime() == 5)
+                                getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
+                            if (getHitAnimationTime() == 6)
+                                getAttackBox().update(getX() + 39, getY(), getX() + 42, getY() + 19);
+                            if (getHitAnimationTime() == 7)
+                                getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
+                            if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
-                        else if (isAttackDown) {
-                            if (hitAnimationTime == 5)
-                                getAttackBox().update(getX() + 27, getY() + 49, getX() + 30, getY() + 75);
-                            if (hitAnimationTime == 6)
-                                getAttackBox().update(getX() + 27, getY() + 51, getX() + 30, getY() + 83);
-                            if (hitAnimationTime == 7)
-                                getAttackBox().update(getX() + 27, getY() + 49, getX() + 30, getY() + 75);
-                            if (hitAnimationTime == 8)
-                                getAttackBox().update(0,0,0,0);
-                            if (hitAnimationTime == 9) {
-                                hitAnimationTime = 1;
-                                isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        else if (isAttackDown()) {
+                            if (getHitAnimationTime() == 9) {
+                                setHitAnimationTime(1);
+                                setAttackLeft(false);
+                                setAttackRight(false);
+                                setAttackUp(false);
+                                setAttackDown(false);
                                 stopTimer();
                             }
                         }
                         break;
                     case "nothing":
-                        if (hitAnimationTime == 7) {
-                            hitAnimationTime = 1;
-                            isAttackLeft = isAttackRight = isAttackUp = isAttackDown = false;
+                        if (getHitAnimationTime() == 7) {
+                            setHitAnimationTime(1);
+                            setAttackLeft(false);
+                            setAttackRight(false);
+                            setAttackUp(false);
+                            setAttackDown(false);
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
@@ -505,7 +587,28 @@ public class Player extends Mob {
     public void update(long window, String level) {
         if (!isDead()) {
             if (!level.equals("MainMenu") && !level.equals("Town")) {
-                if (knockbackTime >= 50) stopTimer();
+                if (getKnockBackTime() >= 50) stopTimer();
+
+                // Получение урона от мобов
+                for (Mob mob : SingletonMobs.mobList) {
+                    if (!(mob instanceof Player) && !mob.isDead() && AABB.AABBvsAABB(getHitbox(), mob.getAttackBox()) &&
+                            !isDead() && !isImmortal()) {
+                        if (mob.isAttackLeft()) setKnockBackDirection("left");
+                        else if (mob.isAttackRight()) setKnockBackDirection("right");
+                        else if (mob.isAttackUp()) setKnockBackDirection("up");
+                        else if (mob.isAttackDown()) setKnockBackDirection("down");
+
+                        takeDamage(mob.getDamage());
+                        if (getHealth() <= 0) {
+                            setDead(true);
+                            getTimer().schedule(deathAnimationTask, 0, 120);
+                        }
+                        else if (!isKnockbackTaskStarted()) {
+                            setImmortal(true);
+                            getTimer().schedule(knockbackTask, 0, 10);
+                        }
+                    }
+                }
 
                 bodyAnimation = "player_stand_" + getMoveDirection();
                 headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
@@ -693,7 +796,7 @@ public class Player extends Mob {
                     player_animation_move_g++;
                     moveDown();
                 }
-                if (isAttackLeft) {
+                if (isAttackLeft()) {
                     if (!hitAnimationTaskStarted) {
                         hitAnimationTaskStarted = true;
                         switch (weapon.getTexture()) {
@@ -717,20 +820,20 @@ public class Player extends Mob {
                                 break;
                         }
                     }
-                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_left_0" + hitAnimationTime;
-                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_left_0" + hitAnimationTime;
-                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    headAnimation =  "HEAD_" + getHeadTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    beltAnimation = "BELT_" + getBeltTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    handsAnimation = "HANDS_" + getHandsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    legsAnimation = "LEGS_" + getLegsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    feetAnimation = "FEET_" + getFeetTexture() + "_left_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_left_0" + getHitAnimationTime();
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_left_0" + getHitAnimationTime();
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    beltAnimation = "BELT_" + getBeltTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    feetAnimation = "FEET_" + getFeetTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
                 }
-                else if (isAttackRight) {
+                else if (isAttackRight()) {
                     if (!hitAnimationTaskStarted) {
                         hitAnimationTaskStarted = true;
                         switch (weapon.getTexture()) {
@@ -754,20 +857,20 @@ public class Player extends Mob {
                                 break;
                         }
                     }
-                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_right_0" + hitAnimationTime;
-                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_right_0" + hitAnimationTime;
-                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    headAnimation =  "HEAD_" + getHeadTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    beltAnimation = "BELT_" + getBeltTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    handsAnimation = "HANDS_" + getHandsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    legsAnimation = "LEGS_" + getLegsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    feetAnimation = "FEET_" + getFeetTexture() + "_right_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_right_0" + getHitAnimationTime();
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_right_0" + getHitAnimationTime();
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    beltAnimation = "BELT_" + getBeltTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    feetAnimation = "FEET_" + getFeetTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
                 }
-                else if (isAttackUp) {
+                else if (isAttackUp()) {
                     if (!hitAnimationTaskStarted) {
                         hitAnimationTaskStarted = true;
                         switch (weapon.getTexture()) {
@@ -791,20 +894,20 @@ public class Player extends Mob {
                                 break;
                         }
                     }
-                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_up_0" + hitAnimationTime;
-                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_up_0" + hitAnimationTime;
-                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    headAnimation =  "HEAD_" + getHeadTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    beltAnimation = "BELT_" + getBeltTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    handsAnimation = "HANDS_" + getHandsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    legsAnimation = "LEGS_" + getLegsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    feetAnimation = "FEET_" + getFeetTexture() + "_up_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_up_0" + getHitAnimationTime();
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_up_0" + getHitAnimationTime();
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    beltAnimation = "BELT_" + getBeltTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    feetAnimation = "FEET_" + getFeetTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
                 }
-                else if (isAttackDown) {
+                else if (isAttackDown()) {
                     if (!hitAnimationTaskStarted) {
                         hitAnimationTaskStarted = true;
                         switch (weapon.getTexture()) {
@@ -828,18 +931,18 @@ public class Player extends Mob {
                                 break;
                         }
                     }
-                    if (hitAnimationTime == 4) hitSound.play(playerSounds.get("swish"));
-                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_down_0" + hitAnimationTime;
-                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_down_0" + hitAnimationTime;
-                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    headAnimation =  "HEAD_" + getHeadTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    beltAnimation = "BELT_" + getBeltTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    handsAnimation = "HANDS_" + getHandsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    legsAnimation = "LEGS_" + getLegsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
-                    feetAnimation = "FEET_" + getFeetTexture() + "_down_" + getWeapon().getAttackType() + "_0" + hitAnimationTime;
+                    if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                    bodyAnimation = "player_" + getWeapon().getAttackType() + "_down_0" + getHitAnimationTime();
+                    if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_down_0" + getHitAnimationTime();
+                    else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    headAnimation =  "HEAD_" + getHeadTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    shouldersAnimation =  "SHOULDERS_" + getShouldersTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    torsoAnimation = "TORSO_" + getTorsoTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    beltAnimation = "BELT_" + getBeltTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    handsAnimation = "HANDS_" + getHandsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    legsAnimation = "LEGS_" + getLegsTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
+                    feetAnimation = "FEET_" + getFeetTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
                 }
 
                 switch (getMoveDirection()) {
@@ -870,7 +973,7 @@ public class Player extends Mob {
                 legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
                 feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
 
-                if (!choiceBubble && !scrollMenu) {
+                if (!dialogBubble && !scrollMenu) {
                     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
                         if (player_animation_move_left_i == 10) player_animation_move_left_i = 2;
                         if (player_animation_move_left_i == 3 || player_animation_move_left_i == 6) stepSound.play(playerSounds.get("stepStone"));
@@ -965,24 +1068,15 @@ public class Player extends Mob {
             }
         }
         else {
-            bodyAnimation = "player_hurt_0" + player_animation_death_i;
-            headAnimation = "HEAD_" + getHeadTexture() + "_hurt_0" + player_animation_death_i;
-            shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_hurt_0" + player_animation_death_i;
-            overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_hurt_0" + player_animation_death_i;
-            torsoAnimation = "TORSO_" + getTorsoTexture() + "_hurt_0" + player_animation_death_i;
-            beltAnimation = "BELT_" + getBeltTexture() + "_hurt_0" + player_animation_death_i;
-            handsAnimation = "HANDS_" + getHandsTexture() + "_hurt_0" + player_animation_death_i;
-            legsAnimation = "LEGS_" + getLegsTexture() + "_hurt_0" + player_animation_death_i;
-            feetAnimation = "FEET_" + getFeetTexture() + "_hurt_0" + player_animation_death_i;
-            if (player_animation_death_i != 6) {
-                if (player_animation_death_g == 8) {
-                    player_animation_death_i++;
-                    player_animation_death_g = 0;
-                }
-                player_animation_death_g++;
-            }
-            getTimer().cancel();
-            getTimer().purge();
+            bodyAnimation = "player_hurt_0" + getDeathAnimationTime();
+            headAnimation = "HEAD_" + getHeadTexture() + "_hurt_0" + getDeathAnimationTime();
+            shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_hurt_0" + getDeathAnimationTime();
+            overTorsoAnimation = "TORSO_" + getOverTorsoTexture() + "_hurt_0" + getDeathAnimationTime();
+            torsoAnimation = "TORSO_" + getTorsoTexture() + "_hurt_0" + getDeathAnimationTime();
+            beltAnimation = "BELT_" + getBeltTexture() + "_hurt_0" + getDeathAnimationTime();
+            handsAnimation = "HANDS_" + getHandsTexture() + "_hurt_0" + getDeathAnimationTime();
+            legsAnimation = "LEGS_" + getLegsTexture() + "_hurt_0" + getDeathAnimationTime();
+            feetAnimation = "FEET_" + getFeetTexture() + "_hurt_0" + getDeathAnimationTime();
         }
     }
 
@@ -1042,14 +1136,6 @@ public class Player extends Mob {
 
     public void setForPlacingCamera(int forPlacingCamera) { this.forPlacingCamera = forPlacingCamera; }
 
-    public TimerTask getKnockbackTask() { return knockbackTask; }
-
-    public AABB getAttackBox() { return attackBox; }
-
-    public int getKnockbackTime() { return knockbackTime; }
-
-    public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
-
     public String getHeadTexture() { return head.getTexture(); }
 
     public String getShouldersTexture() { return shoulders.getTexture(); }
@@ -1086,22 +1172,6 @@ public class Player extends Mob {
 
     public String getFeetAnimation() { return feetAnimation; }
 
-    public boolean isAttackLeft() { return isAttackLeft; }
-
-    public void setAttackLeft(boolean isAttackLeft) { this.isAttackLeft = isAttackLeft; }
-
-    public boolean isAttackRight() { return isAttackRight; }
-
-    public void setAttackRight(boolean isAttackRight) { this.isAttackRight = isAttackRight; }
-
-    public boolean isAttackUp() { return isAttackUp; }
-
-    public void setAttackUp(boolean isAttackUp) { this.isAttackUp = isAttackUp; }
-
-    public boolean isAttackDown() { return isAttackDown; }
-
-    public void setAttackDown(boolean isAttackDown) { this.isAttackDown = isAttackDown; }
-
     public int getMoney() { return money; }
 
     public void setMoney(int money) { this.money = money; }
@@ -1110,36 +1180,32 @@ public class Player extends Mob {
 
     public void setKeys(int keys) { this.keys = keys; }
 
-    public boolean isYes() { return yes; }
+    public boolean isDialogBubbleChoice() { return dialogBubbleChoice; }
 
-    public void setYes(boolean yes) {
-        this.yes = yes;
-        choiceSound.play(playerSounds.get("selectionClick"));
+    public void setDialogBubbleChoice(boolean dialogBubbleChoice) {
+        this.dialogBubbleChoice = dialogBubbleChoice;
+        selectionMenuSound.play(playerSounds.get("selectionClick"));
     }
 
-    public boolean isChoiceBubble() { return choiceBubble; }
+    public boolean isDialogBubble() { return dialogBubble; }
 
-    public void setChoiceBubble(boolean choiceBubble) { this.choiceBubble = choiceBubble; }
+    public void setDialogBubble(boolean dialogBubble) { this.dialogBubble = dialogBubble; }
 
     public boolean isScrollMenu() { return scrollMenu; }
 
     public void setScrollMenu(boolean scrollMenu) {
         this.scrollMenu = scrollMenu;
-        menuSound.play(playerSounds.get("openMenu"));
+        openMenuSound.play(playerSounds.get("openMenu"));
     }
 
     public String getMenuChoice() { return menuChoice; }
 
     public void setMenuChoice(String menuChoice) {
         this.menuChoice = menuChoice;
-        choiceSound.play(playerSounds.get("selectionClick"));
+        selectionMenuSound.play(playerSounds.get("selectionClick"));
     }
 
     public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
-
-    public void setKnockbackTaskStarted(boolean knockbackTaskStarted) { this.knockbackTaskStarted = knockbackTaskStarted; }
-
-    public boolean isMainMenuDirection() { return mainMenuDirection; }
 
     public void setMainMenuDirection(boolean mainMenuDirection) { this.mainMenuDirection = mainMenuDirection; }
 }

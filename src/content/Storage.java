@@ -78,11 +78,13 @@ public class Storage {
     };
 
     public static final String[] soundString = {
-            "mainMenuTheme", "dungeonAmbient1", "changingArmor", "pickedCoin", "doorOpen", "drinkBeer"
+            "mainMenuTheme", "dungeonAmbient1", "doorOpen",
+            "changingArmor", "pickedCoin", "pickedPotion", "drinkBeer",
     };
 
     public static final String[] playerSoundString = {
-            "stepStone", "stepWood", "swish", "selectionClick", "openMenu"
+            "stepStone", "stepWood", "swish",
+            "selectionClick", "openMenu"
     };
 
     public static final String[] slimeSoundString = {
@@ -601,7 +603,7 @@ public class Storage {
             "imp_up_attack_01", "imp_up_attack_02", "imp_up_attack_03", "imp_up_attack_04",
             "imp_down_attack_01", "imp_down_attack_02", "imp_down_attack_03", "imp_down_attack_04",
 
-            "imp_death_01", "imp_death_02", "imp_death_03", "imp_death_04", "imp_death_05", "imp_death_06", "imp_death_07",
+            "imp_death_01", "imp_death_02", "imp_death_03", "imp_death_04", "imp_death_05", "imp_death_06", "imp_death_07", "imp_death_08",
 
             "boxClosed", "boxOpened", "barrelClosed", "barrelOpened", "bagBig", "bagMedium", "bagSmall", "altar0", "altar1"
 

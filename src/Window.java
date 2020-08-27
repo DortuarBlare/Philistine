@@ -28,7 +28,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
     private long window;
     SingletonMobs singletonMobs;
-    EnemyThread enemyThread;
     SingletonPlayer singletonPlayer;
     private ArrayList<Object> firstLevelObjectList;
     private ArrayList<Object> secondLevelObjectList;
@@ -37,16 +36,15 @@ public class Window {
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
+    private Source backgroundMusic, armorChange, coinSound, potionSound, doorSound, beerSound;
+    private Coin coinGUI;
     private Shop shop;
-    Source backgroundMusic, armorChange, coinSound, doorSound, beerSound;
-    Coin coinGUI;
-    Blacksmith blacksmith;
-    Waiter waiter;
+    private Blacksmith blacksmith;
+    private Waiter waiter;
     private String level = "MainMenu";
     private boolean forScale = true;
     boolean key_E_Pressed = false;
     boolean forMainMenu = true;
-    boolean forMainTheme = true;
     private int time = 0;
     private boolean firstLevelMobSpawning, secondLevelMobSpawning, fourthLevelMobSpawning = false;
     private Timer mobTimer = new Timer();
@@ -137,6 +135,7 @@ public class Window {
         backgroundMusic = new Source(1);
         armorChange = new Source(0);
         coinSound = new Source(0);
+        potionSound = new Source(0);
         doorSound = new Source(0);
         beerSound = new Source(0);
         coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
@@ -231,20 +230,23 @@ public class Window {
 
             // Нажатие Enter в диалоговом окне(Войти в данж?)
             else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("Town") &&
-                    SingletonPlayer.player.isChoiceBubble()) {
+                    SingletonPlayer.player.isDialogBubble()) {
                 SingletonPlayer.player.setX(SingletonPlayer.player.getX() - 1);
-                SingletonPlayer.player.setChoiceBubble(false);
-                if (SingletonPlayer.player.isYes()) {
-                    level = "FirstLevel";
+                SingletonPlayer.player.setDialogBubble(false);
+                if (SingletonPlayer.player.isDialogBubbleChoice()) {
+                    backgroundMusic.changeVolume(0.1f);
+                    backgroundMusic.play(soundMap.get("dungeonAmbient1"));
                     glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
+
+                    // Установление хитбоксов стен первого уровня
+                    for (int i = 0, j = 0; i < 5; i++, j+=4)
+                        aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
                     SingletonPlayer.player.setX(199);
                     SingletonPlayer.player.setY(273);
                     SingletonPlayer.player.setSpeed(2);
                     SingletonPlayer.player.setMoveDirection("up");
+                    level = "FirstLevel";
                 }
-                // Установление хитбоксов стен первого уровня
-                for(int i = 0, j = 0; i < 5; i++, j+=4)
-                    aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
             }
 
             // Нажатие Enter во второстепенном меню
@@ -294,7 +296,7 @@ public class Window {
 
             // Выбор в диалоговом окне
             else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && level.equals("Town")) {
-                if (SingletonPlayer.player.isChoiceBubble()) SingletonPlayer.player.setYes(!SingletonPlayer.player.isYes());
+                if (SingletonPlayer.player.isDialogBubble()) SingletonPlayer.player.setDialogBubbleChoice(!SingletonPlayer.player.isDialogBubbleChoice());
             }
 
             // Атака
@@ -309,7 +311,7 @@ public class Window {
 
             // Выбор в диалоговом окне
             else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && level.equals("Town")) {
-                if (SingletonPlayer.player.isChoiceBubble()) SingletonPlayer.player.setYes(!SingletonPlayer.player.isYes());
+                if (SingletonPlayer.player.isDialogBubble()) SingletonPlayer.player.setDialogBubbleChoice(!SingletonPlayer.player.isDialogBubbleChoice());
             }
 
             // Нажатие стрелки вверх во второстепенном меню
@@ -390,6 +392,7 @@ public class Window {
 
     private synchronized void loop() {
         int torch_i = 1, torch_g = 0, guard_i = 1, guard_g = 0, forgeFurnace_i = 1, forgeFurnace_g = 0;
+        backgroundMusic.play(soundMap.get("mainMenuTheme"));
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -397,10 +400,6 @@ public class Window {
             // Переключение уровня
             switch (level) {
                 case "MainMenu": {
-                    if (forMainTheme) {
-                        backgroundMusic.play(soundMap.get("mainMenuTheme"));
-                        forMainTheme = false;
-                    }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("MainMenu")); // Фон главного меню
                     createQuadTexture(0, 0, 1536, 360);
 
@@ -452,11 +451,12 @@ public class Window {
                         glBindTexture(GL_TEXTURE_2D, textureMap.get("you_Shall_Not_Pass"));
                         createQuadTexture(34, 136, 94, 195);
                     }
+
                     // Переход в данж
                     if (SingletonPlayer.player.getX() + 32 == 1519) {
-                        SingletonPlayer.player.setChoiceBubble(true);
-                        if (SingletonPlayer.player.isYes()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_Yes"));
-                        else if (!SingletonPlayer.player.isYes()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_No"));
+                        SingletonPlayer.player.setDialogBubble(true);
+                        if (SingletonPlayer.player.isDialogBubbleChoice()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_Yes"));
+                        else if (!SingletonPlayer.player.isDialogBubbleChoice()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_No"));
                         createQuadTexture(SingletonPlayer.player.getX() - 20, SingletonPlayer.player.getY() - 55, SingletonPlayer.player.getX() + 40, SingletonPlayer.player.getY());
                     }
 
@@ -683,11 +683,6 @@ public class Window {
                     break;
                 }
                 case "FirstLevel": {
-                    if (!forMainTheme) {
-                        backgroundMusic.changeVolume(0.1f);
-                        backgroundMusic.play(soundMap.get("dungeonAmbient1"));
-                        forMainTheme = true;
-                    }
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
 
@@ -794,33 +789,11 @@ public class Window {
                         if (SingletonMobs.mobList.get(i) instanceof Slime) {
                             Slime slime = (Slime) SingletonMobs.mobList.get(i);
                             if (!slime.isDead()) {
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() + "_0" + slime.getAnimationTime()));
-                                createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
                                 slime.update();
-
-                                // Смэрть
-                                if (slime.getHealth() <= 0) slime.getTimer().schedule(slime.getDeathTask(), 0, 120);
-
-                                if (!slime.isDead()) {
-                                    // Игрок получает урона от слизня
-                                    if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), slime.getHitbox()) &&
-                                            !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                        if (slime.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
-                                        else if (slime.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
-                                        else if (slime.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
-                                        else if (slime.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
-                                        SingletonPlayer.player.takeDamage(slime.getDamage());
-                                        if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
-                                            SingletonPlayer.player.setImmortal(true);
-                                            SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
-                                        }
-                                    }
-                                }
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() + "_0" + slime.getAnimationTime()));
                             }
-                            else {
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_death_0" + slime.getDeathAnimationTime()));
-                                createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
-                            }
+                            else glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_death_0" + slime.getDeathAnimationTime()));
+                            createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
                         }
                     }
 
@@ -875,10 +848,9 @@ public class Window {
                                     object.getTimer().cancel();
                                     object.getTimer().purge();
                                     firstLevelObjectList.remove(object);
-                                    if (SingletonPlayer.player.getHealth() > 90)
-                                        SingletonPlayer.player.setHealth(100);
-                                    else
-                                        SingletonPlayer.player.setHealth(SingletonPlayer.player.getHealth() + 10);
+                                    if (SingletonPlayer.player.getHealth() > 90) SingletonPlayer.player.setHealth(100);
+                                    else SingletonPlayer.player.setHealth(SingletonPlayer.player.getHealth() + 10);
+                                    potionSound.play(soundMap.get("pickedPotion"));
                                     break;
                                 }
                             }
@@ -901,7 +873,6 @@ public class Window {
 
                         SingletonPlayer.player.setX(2 - 14);
                         SingletonPlayer.player.setY(225);
-                        firstLevelMobSpawning = false;
                         level = "SecondLevel";
                     }
                     break;
@@ -924,31 +895,9 @@ public class Window {
                                 if (spider.isAttackLeft() || spider.isAttackRight() || spider.isAttackUp() || spider.isAttackDown())
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_attack_0" + spider.getHitAnimationTime()));
                                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
-                                createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 64);
-
-                                // Смэрть
-                                if (spider.getHealth() <= 0) spider.getTimer().schedule(spider.getDeathTask(), 0, 120);
-
-                                // Игрок получает урона от паука
-                                if (!spider.isDead()) {
-                                    if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getAttackBox()) &&
-                                            !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                        if (spider.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
-                                        else if (spider.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
-                                        else if (spider.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
-                                        else if (spider.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
-                                        SingletonPlayer.player.takeDamage(spider.getDamage());
-                                        if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
-                                            SingletonPlayer.player.setImmortal(true);
-                                            SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
-                                        }
-                                    }
-                                }
                             }
-                            else {
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_death_0" + spider.getDeathAnimationTime()));
-                                createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 64);
-                            }
+                            else glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_death_0" + spider.getDeathAnimationTime()));
+                            createQuadTexture(spider.getX(), spider.getY(), spider.getX() + 64, spider.getY() + 64);
                         }
                     }
 
@@ -1025,10 +974,12 @@ public class Window {
                                 coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
                             coin.setTexture("coin_0" + coin.getAnimationTime());
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
-                        } else if (object instanceof Container) {
+                        }
+                        else if (object instanceof Container) {
                             Container container = (Container) object;
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
-                        } else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        }
+                        else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
@@ -1078,6 +1029,7 @@ public class Window {
                                 thirdLevelObjectList.remove(object);
                                 if (SingletonPlayer.player.getHealth() > 90) SingletonPlayer.player.setHealth(100);
                                 else SingletonPlayer.player.setHealth(SingletonPlayer.player.getHealth() + 10);
+                                potionSound.play(soundMap.get("pickedPotion"));
                                 break;
                             }
                         }
@@ -1132,14 +1084,20 @@ public class Window {
                             else if (thirdLevelObjectList.get(i) instanceof Container) {
                                 Container change = (Container) thirdLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
-                                    if (change.getIsNeedKey()) {
-                                        if (SingletonPlayer.player.getKeys() > 0)
-                                            SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
-                                    }
-                                    if (change.loot.size() != 0) {
+                                    if (change.getIsNeedKey() && SingletonPlayer.player.getKeys() > 0) {
+                                        SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
                                         change.setState("Opened");
-                                        thirdLevelObjectList.addAll(change.loot);
-                                        change.loot.clear();
+                                        if (change.loot.size() != 0) {
+                                            thirdLevelObjectList.addAll(change.loot);
+                                            change.loot.clear();
+                                        }
+                                    }
+                                    else {
+                                        change.setState("Opened");
+                                        if (change.loot.size() != 0) {
+                                            thirdLevelObjectList.addAll(change.loot);
+                                            change.loot.clear();
+                                        }
                                     }
                                     break;
                                 }
@@ -1180,33 +1138,9 @@ public class Window {
                                 if (imp.isAttackLeft() || imp.isAttackRight() || imp.isAttackUp() || imp.isAttackDown())
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
                                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
-                                createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
-
-                                // Смэрть
-                                if (imp.getHealth() <= 0) imp.getTimer().schedule(imp.getDeathTask(), 0, 120);
-
-                                // Игрок получает урона от импа
-                                if (!imp.isDead()) {
-                                    if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), imp.getAttackBox()) &&
-                                            !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                        if (imp.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
-                                        else if (imp.isAttackRight())
-                                            SingletonPlayer.player.setKnockbackDirection("right");
-                                        else if (imp.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
-                                        else if (imp.isAttackDown())
-                                            SingletonPlayer.player.setKnockbackDirection("down");
-                                        SingletonPlayer.player.takeDamage(imp.getDamage());
-                                        if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
-                                            SingletonPlayer.player.setImmortal(true);
-                                            SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
-                                        }
-                                    }
-                                }
                             }
-                            else {
-                                glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_death_0" + imp.getDeathAnimationTime()));
-                                createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
-                            }
+                            else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_death_0" + imp.getDeathAnimationTime()));
+                            createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
                         }
                     }
 
@@ -1245,10 +1179,7 @@ public class Window {
                 // Полоска здоровья
                 int tempHealth = SingletonPlayer.player.getHealth() % 10 == 0 ? SingletonPlayer.player.getHealth() : SingletonPlayer.player.getHealth() - (SingletonPlayer.player.getHealth() % 10) + 10;
                 if (tempHealth >= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
-                if (SingletonPlayer.player.getHealth() <= 0) {
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
-                    SingletonPlayer.player.setDead(true);
-                }
+                else if (SingletonPlayer.player.getHealth() <= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
                 createQuadTexture(0, 0, 103, 18);
 
                 // Щит с броней
@@ -1411,6 +1342,7 @@ public class Window {
                         SingletonPlayer.player.getX() + SingletonPlayer.player.getWeapon().getMaxX(), SingletonPlayer.player.getY() + SingletonPlayer.player.getWeapon().getMaxY());
             }
 
+            // Отрисовка второстепенного меню
             if (!level.equals("MainMenu") && SingletonPlayer.player.isScrollMenu()) {
                 if (level.equals("Town")) {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice())); // Фон второстепенного меню
@@ -1440,6 +1372,10 @@ public class Window {
         glEnd();
     }
 
+    public static int getCountsOfDigits(long number) {
+        return (number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
+    }
+
     void reshape(int w, int h) {
         glViewport(0, 0, w, h);
         glMatrixMode(GL_PROJECTION);
@@ -1450,9 +1386,5 @@ public class Window {
             glScaled(3, 3, 1);
             forScale = false;
         }
-    }
-
-    public static int getCountsOfDigits(long number) {
-        return (number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
     }
 }

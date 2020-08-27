@@ -28,11 +28,11 @@ public class Skeleton extends Mob {
     };
 
     public Skeleton(int x, int y, int speed, int health, int armor, int damage) {
-        super(x, y, speed, health, armor, damage, new AABB(), new AABB());
+        super(x, y, speed, health, armor, damage);
         setMoveDirection("left");
     }
 
-    public void stopKnockbackTimer() {
+    public void stopTimer() {
         knockbackTime = 0;
         timer.cancel();
         timer.purge();

@@ -1,5 +1,7 @@
 package math;
 
+import singletons.SingletonPlayer;
+
 import java.awt.*;
 
 public class AABB {
@@ -60,11 +62,39 @@ public class AABB {
         return false;
     }
 
-    public void update(int xmin, int ymin, int xmax, int ymax) {
-        min.x = xmin;
-        min.y = ymin;
-        max.x = xmax;
-        max.y = ymax;
+    public void update(int minX, int minY, int maxX, int maxY) {
+        min.x = minX;
+        min.y = minY;
+        max.x = maxX;
+        max.y = maxY;
+    }
+
+    public static String getFirstBoxPosition(AABB first, AABB second) {
+        if (first.getCenterPoint().x < second.getCenterPoint().x &&
+                first.getCenterPoint().y < second.getCenterPoint().y)
+            return "upLeft";
+        else if (first.getCenterPoint().x > second.getCenterPoint().x &&
+                first.getCenterPoint().y < second.getCenterPoint().y)
+            return "upRight";
+        else if (first.getCenterPoint().x < second.getCenterPoint().x &&
+                first.getCenterPoint().y > second.getCenterPoint().y)
+            return "downLeft";
+        else if (first.getCenterPoint().x > second.getCenterPoint().x &&
+                first.getCenterPoint().y > second.getCenterPoint().y)
+            return "downRight";
+        else if (first.getCenterPoint().x < second.getCenterPoint().x &&
+                first.getCenterPoint().y == second.getCenterPoint().y)
+            return "left";
+        else if (first.getCenterPoint().x > second.getCenterPoint().x &&
+                first.getCenterPoint().y == second.getCenterPoint().y)
+            return "right";
+        else if (first.getCenterPoint().x == second.getCenterPoint().x &&
+                first.getCenterPoint().y < second.getCenterPoint().y)
+            return "up";
+        else if (first.getCenterPoint().x == second.getCenterPoint().x &&
+                first.getCenterPoint().y > second.getCenterPoint().y)
+            return "down";
+        else return "someWhere";
     }
 
     public void clear() {
@@ -78,5 +108,12 @@ public class AABB {
 
     private static int getCenter(int firstCoordinate, int secondCoordinate) {
         return Math.abs(firstCoordinate + ((secondCoordinate - firstCoordinate) / 2));
+    }
+
+    private Point getCenterPoint() {
+        Point point = new Point();
+        point.x = Math.abs(min.x + ((max.x - min.x) / 2));
+        point.y = Math.abs(min.y + ((max.y - min.y) / 2));
+        return point;
     }
 }

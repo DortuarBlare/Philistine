@@ -9,24 +9,24 @@ public abstract class Mob {
     private int speed;
     private int health, armor;
     private int damage;
-    private AABB hitBox, collisionBox;
+    private boolean dead = false;
+    private boolean immortal = false;
+    private AABB attackBox, hitBox, collisionBox;
+    private String moveDirection, knockBackDirection;
+    private int animationTime, hitAnimationTime, deathAnimationTime, knockBackTime;
     private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
-    private String moveDirection;
-    private boolean dead;
-    private boolean immortal;
     private Timer timer = new Timer();
 
-    public Mob(int x, int y, int speed, int health, int armor, int damage, AABB hitBox, AABB collisionBox) {
+    public Mob(int x, int y, int speed, int health, int armor, int damage) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.health = health;
         this.armor = armor;
         this.damage = damage;
-        this.hitBox = hitBox;
-        this.collisionBox = collisionBox;
-        dead = false;
-        immortal = false;
+        attackBox = new AABB();
+        hitBox = new AABB();
+        collisionBox = new AABB();
     }
 
     public void moveLeft() {
@@ -44,27 +44,21 @@ public abstract class Mob {
         moveDirection = "up";
     }
 
-    public void moveUpRight() {
-        y -= speed;
-        x += speed;
-        moveDirection = "right";
-    }
-
     public void moveUpLeft() {
         y -= speed;
         x -= speed;
         moveDirection = "left";
     }
 
+    public void moveUpRight() {
+        y -= speed;
+        x += speed;
+        moveDirection = "right";
+    }
+
     public void moveDown() {
         y += speed;
         moveDirection = "down";
-    }
-
-    public void moveDownRight() {
-        y += speed;
-        x += speed;
-        moveDirection = "right";
     }
 
     public void moveDownLeft() {
@@ -73,20 +67,37 @@ public abstract class Mob {
         moveDirection = "left";
     }
 
-    public void moveSomewhere() {
-        int random = (int) (Math.random() * 4);
-        switch (random) {
-            case 0:
-                knockBackLeft();
+    public void moveDownRight() {
+        y += speed;
+        x += speed;
+        moveDirection = "right";
+    }
+
+    public void moveTo(String direction) {
+        switch (direction)  {
+            case "left":
+                moveLeft();
                 break;
-            case 1:
-                knockBackRight();
+            case "right":
+                moveRight();
                 break;
-            case 2:
-                knockBackUp();
+            case "up":
+                moveUp();
                 break;
-            case 3:
-                knockBackDown();
+            case "upLeft":
+                moveUpLeft();
+                break;
+            case "upRight":
+                moveUpRight();
+                break;
+            case "down":
+                moveDown();
+                break;
+            case "downLeft":
+                moveDownLeft();
+                break;
+            case "downRight":
+                moveDownRight();
                 break;
         }
     }
@@ -116,39 +127,67 @@ public abstract class Mob {
 
     public void simulate() {}
 
-    public int getX() { return x; };
+    public int getX() { return x; }
 
-    public void setX(int x) { this.x = x; };
+    public void setX(int x) { this.x = x; }
 
-    public int getY() { return y; };
+    public int getY() { return y; }
 
-    public void setY(int y) { this.y = y; };
+    public void setY(int y) { this.y = y; }
 
-    public int getSpeed() { return speed; };
+    public int getSpeed() { return speed; }
 
-    public void setSpeed(int speed) { this.speed = speed; };
+    public void setSpeed(int speed) { this.speed = speed; }
 
-    public int getHealth() { return health; };
+    public int getHealth() { return health; }
 
-    public void setHealth(int health) { this.health = health; };
+    public void setHealth(int health) { this.health = health; }
 
-    public int getArmor() { return armor; };
+    public int getArmor() { return armor; }
 
-    public void setArmor(int armor) { this.armor = armor; };
+    public void setArmor(int armor) { this.armor = armor; }
 
-    public int getDamage() { return damage; };
+    public int getDamage() { return damage; }
 
-    public void setDamage(int damage) { this.damage = damage; };
+    public void setDamage(int damage) { this.damage = damage; }
 
-    public AABB getHitbox() { return hitBox; };
+    public AABB getAttackBox() { return attackBox; }
 
-    public void setHitBox(AABB hitBox) { this.hitBox = hitBox; };
+    public AABB getHitbox() { return hitBox; }
 
     public AABB getCollisionBox() { return collisionBox; }
 
     public String getMoveDirection() { return moveDirection; }
 
     public void setMoveDirection(String moveDirection) { this.moveDirection = moveDirection; }
+
+    public String getKnockBackDirection() { return knockBackDirection; }
+
+    public void setKnockBackDirection(String knockBackDirection) { this.knockBackDirection = knockBackDirection; }
+
+    public int getAnimationTime() { return animationTime; }
+
+    public void setAnimationTime(int animationTime) { this.animationTime = animationTime; }
+
+    public void incrementAnimationTime() { this.animationTime++; }
+
+    public int getHitAnimationTime() { return  hitAnimationTime; }
+
+    public void setHitAnimationTime(int hitAnimationTime) { this.hitAnimationTime = hitAnimationTime; }
+
+    public void incrementHitAnimationTime() { this.hitAnimationTime++; }
+
+    public int getDeathAnimationTime() { return deathAnimationTime; }
+
+    public void setDeathAnimationTime(int deathAnimationTime) { this.deathAnimationTime = deathAnimationTime; }
+
+    public void incrementDeathAnimationTime() { this.deathAnimationTime++; }
+
+    public int getKnockBackTime() { return knockBackTime; }
+
+    public void setKnockBackTime(int knockBackTime) { this.knockBackTime = knockBackTime; }
+
+    public void incrementKnockBackTime() { this.knockBackTime++; }
 
     public boolean isDead() { return dead; }
 
