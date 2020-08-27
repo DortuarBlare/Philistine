@@ -36,7 +36,7 @@ public class Window {
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
-    private Source backgroundMusic, armorChange, coinSound, potionSound, doorSound, beerSound;
+    private Source backgroundMusic, armorChange, coinSound, potionSound, doorSound, containerSound, beerSound;
     private Coin coinGUI;
     private Shop shop;
     private Blacksmith blacksmith;
@@ -137,6 +137,7 @@ public class Window {
         coinSound = new Source(0);
         potionSound = new Source(0);
         doorSound = new Source(0);
+        containerSound = new Source(0);
         beerSound = new Source(0);
         coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
         coinGUI.getTimer().schedule(coinGUI.getAnimationTask(), 0, 120);
@@ -178,7 +179,7 @@ public class Window {
         firstLevelObjectList.add(new Weapon("longsword", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
         firstLevelObjectList.add(new Lever("lever", 500, 241));
-        shop = new Shop("ChestClosed", true, true, false, 0, 0, 0, 0, new AABB(0, 0, 0, 0));
+        shop = new Shop();
         singletonPlayer = SingletonPlayer.getInstance();
         SingletonMobs.mobList.add(SingletonPlayer.player);
         blacksmith = new Blacksmith(176, 126, 1);
@@ -1086,18 +1087,13 @@ public class Window {
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
                                     if (change.getIsNeedKey() && SingletonPlayer.player.getKeys() > 0) {
                                         SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
-                                        change.setState("Opened");
-                                        if (change.loot.size() != 0) {
-                                            thirdLevelObjectList.addAll(change.loot);
-                                            change.loot.clear();
-                                        }
+                                        containerSound.play(soundMap.get("openChest"));
                                     }
-                                    else {
-                                        change.setState("Opened");
-                                        if (change.loot.size() != 0) {
-                                            thirdLevelObjectList.addAll(change.loot);
-                                            change.loot.clear();
-                                        }
+                                    else containerSound.play(soundMap.get("openBoxBarrel"));
+                                    change.setState("Opened");
+                                    if (change.loot.size() != 0) {
+                                        thirdLevelObjectList.addAll(change.loot);
+                                        change.loot.clear();
                                     }
                                     break;
                                 }

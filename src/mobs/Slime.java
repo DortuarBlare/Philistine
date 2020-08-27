@@ -64,8 +64,8 @@ public class Slime extends Mob {
         getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
         setMoveDirection("left");
         hurtSound = new Source(0);
-        hurtSoundId = AudioMaster.loadSound("sounds/" + Storage.slimeSoundString[0]);
-        deathSoundId = AudioMaster.loadSound("sounds/" + Storage.slimeSoundString[1]);
+        hurtSoundId = AudioMaster.loadSound("sounds/slimeHurt");
+        deathSoundId = AudioMaster.loadSound("sounds/slimeDead");
     }
 
     public void stopTimer() {
