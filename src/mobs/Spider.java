@@ -60,7 +60,7 @@ public class Spider extends Mob {
             }
         }
     };
-    private TimerTask deathTask = new TimerTask() {
+    private final TimerTask deathTask = new TimerTask() {
         @Override
         public void run() {
             deathAnimationTime++;
@@ -142,10 +142,13 @@ public class Spider extends Mob {
             else if (SingletonPlayer.player.isAttackRight()) setKnockbackDirection("right");
             else if (SingletonPlayer.player.isAttackUp()) setKnockbackDirection("up");
             else if (SingletonPlayer.player.isAttackDown()) setKnockbackDirection("down");
-            setHealth(getHealth() - SingletonPlayer.player.getDamage());
 
+            setHealth(getHealth() - SingletonPlayer.player.getDamage());
             if (getHealth() <= 0) {
                 setDead(true);
+                knockbackTask.cancel();
+                animationTask.cancel();
+                hitAnimationTask.cancel();
                 getCollisionBox().clear();
                 getHitbox().clear();
                 attackBox.clear();
@@ -153,8 +156,8 @@ public class Spider extends Mob {
                 hurtSound.play(deathSoundId);
             }
             else {
-                hurtSound.play(hurtSoundId);
                 if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+                hurtSound.play(hurtSoundId);
             }
         }
 
@@ -261,10 +264,6 @@ public class Spider extends Mob {
     public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
 
     public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
-
-    public void setKnockbackTaskStarted(boolean knockbackTaskStarted) { this.knockbackTaskStarted = knockbackTaskStarted; }
-
-    public boolean isHitAnimationTaskStarted() { return hitAnimationTaskStarted; }
 
     public void setHitAnimationTaskStarted(boolean hitAnimationTaskStarted) { this.hitAnimationTaskStarted = hitAnimationTaskStarted; }
 

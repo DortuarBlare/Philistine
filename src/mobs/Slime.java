@@ -119,12 +119,14 @@ public class Slime extends Mob {
             setHealth(getHealth() - SingletonPlayer.player.getDamage());
             if (getHealth() <= 0) {
                 setDead(true);
+                knockbackTask.cancel();
+                animationTask.cancel();
                 getCollisionBox().clear();
                 getHitbox().clear();
                 hurtSound.play(deathSoundId);
             }
-            else if (!isKnockbackTaskStarted()) {
-                getTimer().schedule(getKnockbackTask(), 0, 10);
+            else {
+                if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
                 hurtSound.play(hurtSoundId);
             }
         }
@@ -253,8 +255,6 @@ public class Slime extends Mob {
 
     public TimerTask getDeathTask() { return deathTask; }
 
-    public int getKnockbackTime() { return knockbackTime; }
-
     public int getAnimationTime() { return animationTime; }
 
     public int getDeathAnimationTime() { return deathAnimationTime; }
@@ -266,10 +266,4 @@ public class Slime extends Mob {
     public void setKnockbackDirection(String knockbackDirection) { this.knockbackDirection = knockbackDirection; }
 
     public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
-
-    public void setKnockbackTaskStarted(boolean knockbackTaskStarted) { this.knockbackTaskStarted = knockbackTaskStarted; }
-
-    public int getHurtSoundId() { return hurtSoundId; }
-
-    public Source getHurtSound() { return hurtSound; }
 }

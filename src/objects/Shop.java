@@ -4,7 +4,7 @@ import math.AABB;
 
 public class Shop extends Container {
     public Shop(String texture, boolean isOnlyClothes, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
-        super(texture, isOnlyClothes, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
+        super(texture, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
         for (int i = 0; i < 3; i++) {
             Armor armor;
             int randomNumber = (int) (Math.random() * 22);

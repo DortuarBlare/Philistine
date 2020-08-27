@@ -73,7 +73,7 @@ public class Window {
                     if (time == 3) stopMobSpawn();
                 }
                 else if (level.equals("ForthLevel")) {
-                    SingletonMobs.mobList.add(new Imp(477, 284, 1, 400, 0, 50));
+                    SingletonMobs.mobList.add(new Imp(477, 284, 1, 100, 0, 50));
                     if (time == 1) stopMobSpawn();
                 }
             }
@@ -176,7 +176,7 @@ public class Window {
         firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
         firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
         firstLevelObjectList.add(new Furniture("trash", 462, 173));
-        firstLevelObjectList.add(new Weapon("rapier", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        firstLevelObjectList.add(new Weapon("longsword", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
         firstLevelObjectList.add(new Lever("lever", 500, 241));
         shop = new Shop("ChestClosed", true, true, false, 0, 0, 0, 0, new AABB(0, 0, 0, 0));
@@ -186,18 +186,18 @@ public class Window {
         waiter = new Waiter(168, 136, 1);
 
         // Верхний этаж
-        thirdLevelObjectList.add(new Box("box", false, false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
-        thirdLevelObjectList.add(new Box("box", false, false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
-        thirdLevelObjectList.add(new Box("box", false, false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, false, true, 150, 234, 150 + 20, 234 + 30, new AABB(150, 234, 150 + 20, 234 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, false, true, 111, 241, 111 + 20, 241 + 30, new AABB(111, 241, 111 + 20, 241 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, false, true, 120, 278, 120 + 20, 278 + 30, new AABB(120, 278, 120 + 20, 278 + 30)));
+        thirdLevelObjectList.add(new Box("box", false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
+        thirdLevelObjectList.add(new Box("box", false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
+        thirdLevelObjectList.add(new Box("box", false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 150, 234, 150 + 20, 234 + 30, new AABB(150, 234, 150 + 20, 234 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 111, 241, 111 + 20, 241 + 30, new AABB(111, 241, 111 + 20, 241 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 120, 278, 120 + 20, 278 + 30, new AABB(120, 278, 120 + 20, 278 + 30)));
         thirdLevelObjectList.add(new Furniture("bagBig", 171, 131));
         thirdLevelObjectList.add(new Furniture("bagMedium", 199, 133));
         thirdLevelObjectList.add(new Furniture("bagSmall", 113, 208));
         thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
         thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
-        thirdLevelObjectList.add(new Chest("chest", false, false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
+        thirdLevelObjectList.add(new Chest("chest", false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
 
 
         // Клашива ESC на выход(закрытие приложения)
@@ -929,8 +929,8 @@ public class Window {
                                 // Смэрть
                                 if (spider.getHealth() <= 0) spider.getTimer().schedule(spider.getDeathTask(), 0, 120);
 
+                                // Игрок получает урона от паука
                                 if (!spider.isDead()) {
-                                    // Игрок получает урона от паука
                                     if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), spider.getAttackBox()) &&
                                             !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
                                         if (spider.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
@@ -1162,20 +1162,9 @@ public class Window {
                     }
                     break;
                 }
-                case "ForthLevel":{
+                case "ForthLevel": {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level3"));
                     createQuadTexture(0, 0, 640, 360);
-
-                    for (Mob mob : SingletonMobs.mobList) {
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
-                            mob.stopRight();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
-                            mob.stopLeft();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
-                            mob.stopUp();
-                        if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
-                            mob.stopDown();
-                    }
 
                     if (!fourthLevelMobSpawning) {
                         fourthLevelMobSpawning = true;
@@ -1183,44 +1172,60 @@ public class Window {
                     }
 
                     // Все операции с мобами
-                    for (int i = 0; i < SingletonMobs.mobList.size(); i++) {
-                        if (!SingletonMobs.mobList.get(i).isDead()) {
-                            if (SingletonMobs.mobList.get(i) instanceof Imp) {
-                                Imp imp = (Imp) SingletonMobs.mobList.get(i);
-                                if (imp.isAttackLeft() || imp.isAttackRight() ||imp.isAttackUp() || imp.isAttackDown())
+                    for (int i = 1; i < SingletonMobs.mobList.size(); i++) {
+                        if (SingletonMobs.mobList.get(i) instanceof Imp) {
+                            Imp imp = (Imp) SingletonMobs.mobList.get(i);
+                            if (!imp.isDead()) {
+                                imp.update();
+                                if (imp.isAttackLeft() || imp.isAttackRight() || imp.isAttackUp() || imp.isAttackDown())
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
                                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
                                 createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
-                                imp.update();
-
-                                // Игрок получает урона от паука
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), imp.getAttackBox()) &&
-                                        !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
-                                    if (imp.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
-                                    else if (imp.isAttackRight()) SingletonPlayer.player.setKnockbackDirection("right");
-                                    else if (imp.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
-                                    else if (imp.isAttackDown()) SingletonPlayer.player.setKnockbackDirection("down");
-                                    SingletonPlayer.player.takeDamage(imp.getDamage());
-                                    if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
-                                        SingletonPlayer.player.setImmortal(true);
-                                        SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
-                                    }
-                                }
 
                                 // Смэрть
-                                if (imp.getHealth() <= 0) {
-                                    imp.setDead(true);
-                                    /*imp.getTimer().cancel();
-                                    imp.getTimer().purge();*/
-                                    SingletonMobs.mobList.remove(imp);
+                                if (imp.getHealth() <= 0) imp.getTimer().schedule(imp.getDeathTask(), 0, 120);
+
+                                // Игрок получает урона от импа
+                                if (!imp.isDead()) {
+                                    if (AABB.AABBvsAABB(SingletonPlayer.player.getHitbox(), imp.getAttackBox()) &&
+                                            !SingletonPlayer.player.isDead() && !SingletonPlayer.player.isImmortal()) {
+                                        if (imp.isAttackLeft()) SingletonPlayer.player.setKnockbackDirection("left");
+                                        else if (imp.isAttackRight())
+                                            SingletonPlayer.player.setKnockbackDirection("right");
+                                        else if (imp.isAttackUp()) SingletonPlayer.player.setKnockbackDirection("up");
+                                        else if (imp.isAttackDown())
+                                            SingletonPlayer.player.setKnockbackDirection("down");
+                                        SingletonPlayer.player.takeDamage(imp.getDamage());
+                                        if (!SingletonPlayer.player.isKnockbackTaskStarted()) {
+                                            SingletonPlayer.player.setImmortal(true);
+                                            SingletonPlayer.player.getTimer().schedule(SingletonPlayer.player.getKnockbackTask(), 0, 10);
+                                        }
+                                    }
                                 }
                             }
+                            else {
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_death_0" + imp.getDeathAnimationTime()));
+                                createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
+                            }
+                        }
+                    }
+
+                    // Столкновение мобов со стенами
+                    for (Mob mob : SingletonMobs.mobList) {
+                        if (!mob.isDead()) {
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                                mob.stopRight();
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
+                                mob.stopLeft();
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")))
+                                mob.stopUp();
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                                mob.stopDown();
                         }
                     }
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromForthToSecondLevel"))) {
-                        level = "SecondLevel";
                         // Обновление хитбоксов стен для второго уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
@@ -1229,6 +1234,7 @@ public class Window {
                         SingletonPlayer.player.setX(240);
                         SingletonPlayer.player.setY(120);
                         SingletonPlayer.player.setMoveDirection("down");
+                        level = "SecondLevel";
                     }
                     break;
                 }
@@ -1306,12 +1312,12 @@ public class Window {
 
                 // Количество ключей
                 glBindTexture(GL_TEXTURE_2D, textureMap.get("keyGold"));
-                createQuadTexture(0, 55, 16, 61);
+                createQuadTexture(0, 55, 16, 71);
                 int tempKeys = SingletonPlayer.player.getKeys();
                 tempX0 = 16 + (getCountsOfDigits(SingletonPlayer.player.getKeys()) * 7) - 7;
                 tempX1 = 16 + (getCountsOfDigits(SingletonPlayer.player.getKeys()) * 7);
-                tempY0 = 55;
-                tempY1 = 65;
+                tempY0 = 60;
+                tempY1 = 70;
                 for (int i = 0; i < getCountsOfDigits(SingletonPlayer.player.getKeys()); i++) {
                     switch (tempKeys % 10) {
                         case 0:

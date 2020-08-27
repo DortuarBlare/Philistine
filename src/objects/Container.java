@@ -11,7 +11,7 @@ public class Container extends Object {
     private String state;
     private boolean isNeedKey = false;
 
-    public Container(String texture, boolean isOnlyClothes, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+    public Container(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
         super(texture, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
         state = "Closed";
         loot = new ArrayList<Object>();

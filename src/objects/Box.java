@@ -5,8 +5,8 @@ import math.AABB;
 import static java.lang.Math.random;
 
 public class Box extends Container {
-    public Box(String texture, boolean isOnlyClothes, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
-        super(texture, isOnlyClothes, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
+    public Box(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+        super(texture, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
         for (int i = 0; i < 3; i++) {
             double b = random();
             if (b >= 0 && b < 0.3) {

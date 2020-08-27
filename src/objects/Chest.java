@@ -5,8 +5,8 @@ import math.AABB;
 import static java.lang.Math.random;
 
 public class Chest extends Container {
-    public Chest(String texture, boolean isOnlyClothes, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
-        super(texture, isOnlyClothes, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
+    public Chest(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+        super(texture, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
         setIsNeedKey(true);
         for (int i = 0; i < 3; i++) {
             double b = random();
