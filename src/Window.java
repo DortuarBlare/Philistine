@@ -109,18 +109,33 @@ public class Window {
         glfwSwapInterval(1);
         glfwShowWindow(window);
 
+        // Работа с OpenGL
         GL.createCapabilities(); // создает instance для OpenGL в текущем потоке
         glMatrixMode(GL_PROJECTION); // Выставление камеры
         glLoadIdentity(); // По видимости ненужная строка(что-то с единичной матрицей)
         glOrtho(0, 640, 360, 0, 1, -1); // Камера на место окна
         glMatrixMode(GL_MODELVIEW); // Установка матрицы в состояние ModelView
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D); // Включить 2D текстуры
+        glEnable(GL_BLEND); // Включить смешивание цветов
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Добавляет прозрачность
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+        // Инициализация звуковых источников
+        AudioMaster.init();
+        AudioMaster.setListenerData();
+        backgroundMusic = new Source(1);
+        armorChange = new Source(0);
+        coinSound = new Source(0);
+        potionSound = new Source(0);
+        beerSound = new Source(0);
+        doorSound = new Source(0);
+        containerSound = new Source(0);
+        coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
+        coinGUI.getTimer().schedule(coinGUI.getAnimationTask(), 0, 120);
+
         // Инициализация всех коллекций
+        singletonPlayer = SingletonPlayer.getInstance();
         singletonMobs = SingletonMobs.getInstance();
         textureMap = new HashMap<String, Integer>();
         soundMap = new HashMap<String, Integer>();
@@ -129,18 +144,6 @@ public class Window {
         secondLevelObjectList = new ArrayList<Object>();
         thirdLevelObjectList = new ArrayList<>();
         shopObjectList = new ArrayList<>();
-
-        AudioMaster.init();
-        AudioMaster.setListenerData();
-        backgroundMusic = new Source(1);
-        armorChange = new Source(0);
-        coinSound = new Source(0);
-        potionSound = new Source(0);
-        doorSound = new Source(0);
-        containerSound = new Source(0);
-        beerSound = new Source(0);
-        coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
-        coinGUI.getTimer().schedule(coinGUI.getAnimationTask(), 0, 120);
 
         // Единичная загрузка всех текстур
         for (int i = 0, id = 0; i < Storage.textureString.length; i++)
@@ -165,7 +168,7 @@ public class Window {
         aabbMap.get("entranceFromForgeToTown").update(384,316,415,318);
         aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
 
-        // Добавление всех объектов и мобов
+        // Добавление объектов на первый уровень
         firstLevelObjectList.add(new Furniture("barrelOpened", 118, 135));
         firstLevelObjectList.add(new Furniture("bagMedium", 137, 134));
         firstLevelObjectList.add(new Furniture("bones", 113, 173));
@@ -179,13 +182,8 @@ public class Window {
         firstLevelObjectList.add(new Weapon("longsword", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
         firstLevelObjectList.add(new Lever("lever", 500, 241));
-        shop = new Shop();
-        singletonPlayer = SingletonPlayer.getInstance();
-        SingletonMobs.mobList.add(SingletonPlayer.player);
-        blacksmith = new Blacksmith(176, 126, 1);
-        waiter = new Waiter(168, 136, 1);
 
-        // Верхний этаж
+        // Добавление объектов на третий уровень
         thirdLevelObjectList.add(new Box("box", false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
         thirdLevelObjectList.add(new Box("box", false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
         thirdLevelObjectList.add(new Box("box", false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
@@ -199,8 +197,12 @@ public class Window {
         thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
         thirdLevelObjectList.add(new Chest("chest", false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
 
+        shop = new Shop();
+        blacksmith = new Blacksmith(176, 126, 1);
+        waiter = new Waiter(168, 136, 1);
+        SingletonMobs.mobList.add(SingletonPlayer.player);
 
-        // Клашива ESC на выход(закрытие приложения)
+        // Обработка единичного нажатий клавиш
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             // Нажатие Escape для открытия/закрытия второстепенного меню
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS && !level.equals("MainMenu")) {
@@ -223,176 +225,172 @@ public class Window {
                 }
             }
 
-            // Нажатие Enter на выход из главного меню
-            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("MainMenu")) {
-                level = "Town";
-                backgroundMusic.stop(soundMap.get("mainMenuTheme"));
-            }
+            // Нажатие Е
+            if (key == GLFW_KEY_E && action == GLFW_PRESS && !level.equals("MainMenu")) key_E_Pressed = true;
 
-            // Нажатие Enter в диалоговом окне(Войти в данж?)
-            else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && level.equals("Town") &&
-                    SingletonPlayer.player.isDialogBubble()) {
-                SingletonPlayer.player.setX(SingletonPlayer.player.getX() - 1);
-                SingletonPlayer.player.setDialogBubble(false);
-                if (SingletonPlayer.player.isDialogBubbleChoice()) {
-                    backgroundMusic.changeVolume(0.1f);
-                    backgroundMusic.play(soundMap.get("dungeonAmbient1"));
-                    glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
+            // Нажатие Enter
+            if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+                // Выход из главного меню
+                if (level.equals("MainMenu")) {
+                    level = "Town";
+                    backgroundMusic.stop(soundMap.get("mainMenuTheme"));
+                }
+                // Выбор во второстепенном меню
+                else if (SingletonPlayer.player.isScrollMenu()) {
+                    switch (SingletonPlayer.player.getMenuChoice()) {
+                        case "Resume": {
+                            SingletonPlayer.player.setScrollMenu(false);
+                            break;
+                        }
+                        case "Options": {
+                            SingletonPlayer.player.setMenuChoice("Options_Controls");
+                            break;
+                        }
+                        case "Options_Controls": {
+                            SingletonPlayer.player.setMenuChoice("Controls");
+                            break;
+                        }
+                        case "Exit": {
+                            AudioMaster.destroy();
+                            glfwSetWindowShouldClose(window, true);
+                            for (Mob mob : SingletonMobs.mobList) {
+                                if (!mob.isDead()) {
+                                    mob.getTimer().cancel();
+                                    mob.getTimer().purge();
+                                }
+                            }
+                            for (Object object : firstLevelObjectList) {
+                                if (object instanceof Coin) {
+                                    object.getTimer().cancel();
+                                    object.getTimer().purge();
+                                }
+                            }
+                            System.exit(0);
+                            break;
+                        }
+                    }
+                }
+                // Выбор в диалоговом окне(Войти в данж?)
+                else if (level.equals("Town") && SingletonPlayer.player.isDialogBubble()) {
+                    SingletonPlayer.player.setX(SingletonPlayer.player.getX() - 1);
+                    SingletonPlayer.player.setDialogBubble(false);
+                    if (SingletonPlayer.player.isDialogBubbleChoice()) {
+                        backgroundMusic.changeVolume(0.1f);
+                        backgroundMusic.play(soundMap.get("dungeonAmbient1"));
+                        glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
 
-                    // Установление хитбоксов стен первого уровня
-                    for (int i = 0, j = 0; i < 5; i++, j+=4)
-                        aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
-                    SingletonPlayer.player.setX(199);
-                    SingletonPlayer.player.setY(273);
-                    SingletonPlayer.player.setSpeed(2);
-                    SingletonPlayer.player.setMoveDirection("up");
-                    level = "FirstLevel";
+                        // Установление хитбоксов стен первого уровня
+                        for (int i = 0, j = 0; i < 5; i++, j+=4)
+                            aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
+                        SingletonPlayer.player.setX(199);
+                        SingletonPlayer.player.setY(273);
+                        SingletonPlayer.player.setSpeed(2);
+                        SingletonPlayer.player.setMoveDirection("up");
+                        level = "FirstLevel";
+                    }
                 }
             }
 
-            // Нажатие Enter во второстепенном меню
-            else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && SingletonPlayer.player.isScrollMenu()) {
-                switch (SingletonPlayer.player.getMenuChoice()) {
-                    case "Resume": {
-                        SingletonPlayer.player.setScrollMenu(false);
-                        break;
-                    }
-                    case "Options": {
-                        SingletonPlayer.player.setMenuChoice("Options_Controls");
-                        break;
-                    }
-                    case "Options_Controls": {
-                        SingletonPlayer.player.setMenuChoice("Controls");
-                        break;
-                    }
-                    case "Exit": {
-                        AudioMaster.destroy();
-                        glfwSetWindowShouldClose(window, true);
-                        for (Mob mob : SingletonMobs.mobList) {
-                            if (!mob.isDead()) {
-                                mob.getTimer().cancel();
-                                mob.getTimer().purge();
-                            }
-                        }
-                        for (Object object : firstLevelObjectList) {
-                            if (object instanceof Coin) {
-                                object.getTimer().cancel();
-                                object.getTimer().purge();
-                            }
-                        }
-                        System.exit(0);
-                        break;
-                    }
-                }
-            }
-
-            // Атака
-            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
-                    !level.equals("tavern") && !level.equals("forge")) {
-                if (!SingletonPlayer.player.isAttackRight() && !SingletonPlayer.player.isAttackUp() && !SingletonPlayer.player.isAttackDown()) {
+            // Нажатие стрелки влево
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+                // Атака
+                if (!SingletonPlayer.player.isAttackRight() && !SingletonPlayer.player.isAttackUp() && !SingletonPlayer.player.isAttackDown() &&
+                        !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge")) {
                     SingletonPlayer.player.setAttackLeft(true);
                     SingletonPlayer.player.setMoveDirection("left");
                 }
+                // Выбор в диалоговом окне(Войти в данж?)
+                else if (level.equals("Town") && SingletonPlayer.player.isDialogBubble())
+                    SingletonPlayer.player.setDialogBubbleChoice(!SingletonPlayer.player.isDialogBubbleChoice());
             }
 
-            // Выбор в диалоговом окне
-            else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && level.equals("Town")) {
-                if (SingletonPlayer.player.isDialogBubble()) SingletonPlayer.player.setDialogBubbleChoice(!SingletonPlayer.player.isDialogBubbleChoice());
-            }
-
-            // Атака
-            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
-                    !level.equals("tavern") && !level.equals("forge")) {
-                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackUp() &&
-                        !SingletonPlayer.player.isAttackDown()) {
+            // Нажатие стрелки вправо
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+                // Атака
+                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackUp() && !SingletonPlayer.player.isAttackDown() &&
+                        !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge")) {
                     SingletonPlayer.player.setAttackRight(true);
                     SingletonPlayer.player.setMoveDirection("right");
                 }
+                // Выбор в диалоговом окне(Войти в данж?)
+                else if (level.equals("Town") && SingletonPlayer.player.isDialogBubble())
+                    SingletonPlayer.player.setDialogBubbleChoice(!SingletonPlayer.player.isDialogBubbleChoice());
             }
 
-            // Выбор в диалоговом окне
-            else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS && level.equals("Town")) {
-                if (SingletonPlayer.player.isDialogBubble()) SingletonPlayer.player.setDialogBubbleChoice(!SingletonPlayer.player.isDialogBubbleChoice());
-            }
-
-            // Нажатие стрелки вверх во второстепенном меню
-            if (key == GLFW_KEY_UP && action == GLFW_PRESS && SingletonPlayer.player.isScrollMenu()) {
-                switch (SingletonPlayer.player.getMenuChoice()) {
-                    case "Resume": {
-                        SingletonPlayer.player.setMenuChoice("Exit");
-                        break;
-                    }
-                    case "Options": {
-                        SingletonPlayer.player.setMenuChoice("Resume");
-                        break;
-                    }
-                    case "Exit": {
-                        SingletonPlayer.player.setMenuChoice("Options");
-                        break;
-                    }
-                    case "Options_Controls": {
-                        SingletonPlayer.player.setMenuChoice("Options_Sounds");
-                        break;
-                    }
-                    case "Options_Sounds": {
-                        SingletonPlayer.player.setMenuChoice("Options_Controls");
-                        break;
-                    }
-                }
-            }
-
-            // Атака
-            else if (key == GLFW_KEY_UP && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
-                    !level.equals("tavern") && !level.equals("forge")) {
-                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackRight() &&
-                        !SingletonPlayer.player.isAttackDown()) {
+            // Нажатие стрелки вверх
+            if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+                // Атака
+                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackRight() && !SingletonPlayer.player.isAttackDown() &&
+                        !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge") &&
+                        !SingletonPlayer.player.isScrollMenu()) {
                     SingletonPlayer.player.setAttackUp(true);
                     SingletonPlayer.player.setMoveDirection("up");
                 }
+                // Выбор во второстепенном меню
+                else if (SingletonPlayer.player.isScrollMenu())
+                    switch (SingletonPlayer.player.getMenuChoice()) {
+                        case "Resume": {
+                            SingletonPlayer.player.setMenuChoice("Exit");
+                            break;
+                        }
+                        case "Options": {
+                            SingletonPlayer.player.setMenuChoice("Resume");
+                            break;
+                        }
+                        case "Exit": {
+                            SingletonPlayer.player.setMenuChoice("Options");
+                            break;
+                        }
+                        case "Options_Controls": {
+                            SingletonPlayer.player.setMenuChoice("Options_Sounds");
+                            break;
+                        }
+                        case "Options_Sounds": {
+                            SingletonPlayer.player.setMenuChoice("Options_Controls");
+                            break;
+                        }
+                    }
             }
 
-            // Нажатие стрелки вниз во второстепенном меню
-            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && SingletonPlayer.player.isScrollMenu()) {
-                switch (SingletonPlayer.player.getMenuChoice()) {
-                    case "Resume": {
-                        SingletonPlayer.player.setMenuChoice("Options");
-                        break;
-                    }
-                    case "Options": {
-                        SingletonPlayer.player.setMenuChoice("Exit");
-                        break;
-                    }
-                    case "Exit": {
-                        SingletonPlayer.player.setMenuChoice("Resume");
-                        break;
-                    }
-                    case "Options_Controls": {
-                        SingletonPlayer.player.setMenuChoice("Options_Sounds");
-                        break;
-                    }
-                    case "Options_Sounds": {
-                        SingletonPlayer.player.setMenuChoice("Options_Controls");
-                        break;
-                    }
-                }
-            }
-
-            // Атака
-            else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS && !level.equals("MainMenu") && !level.equals("Town") &&
-                    !level.equals("tavern") && !level.equals("forge")) {
-                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackRight() &&
-                        !SingletonPlayer.player.isAttackUp()) {
+            // Нажатие стрелки вниз
+            if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+                // Атака
+                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackRight() && !SingletonPlayer.player.isAttackUp() &&
+                        !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge") &&
+                        !SingletonPlayer.player.isScrollMenu()) {
                     SingletonPlayer.player.setAttackDown(true);
                     SingletonPlayer.player.setMoveDirection("down");
                 }
+                // Выбор во второстепенном меню
+                else if (SingletonPlayer.player.isScrollMenu())
+                    switch (SingletonPlayer.player.getMenuChoice()) {
+                        case "Resume": {
+                            SingletonPlayer.player.setMenuChoice("Options");
+                            break;
+                        }
+                        case "Options": {
+                            SingletonPlayer.player.setMenuChoice("Exit");
+                            break;
+                        }
+                        case "Exit": {
+                            SingletonPlayer.player.setMenuChoice("Resume");
+                            break;
+                        }
+                        case "Options_Controls": {
+                            SingletonPlayer.player.setMenuChoice("Options_Sounds");
+                            break;
+                        }
+                        case "Options_Sounds": {
+                            SingletonPlayer.player.setMenuChoice("Options_Controls");
+                            break;
+                        }
+                    }
             }
-
-            if (key == GLFW_KEY_E && action == GLFW_PRESS && !level.equals("MainMenu")) key_E_Pressed = true;
         });
     }
 
     private synchronized void loop() {
-        int torch_i = 1, torch_g = 0, guard_i = 1, guard_g = 0, forgeFurnace_i = 1, forgeFurnace_g = 0;
+        int guard_i = 1, guard_g = 0, forgeFurnace_i = 1, forgeFurnace_g = 0;
         backgroundMusic.play(soundMap.get("mainMenuTheme"));
 
         while (!glfwWindowShouldClose(window)) {
@@ -688,18 +686,12 @@ public class Window {
                     createQuadTexture(0, 0, 640, 360);
 
                     //Анимация факела
-                    if (torch_i == 10) torch_i = 1;
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
-                    createQuadTexture(190, 63, 221, 126);
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
-                    createQuadTexture(384, 63, 415, 126);
-                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
-                    createQuadTexture(556, 158, 587, 221);
-                    if (torch_g == 8) {
-                        torch_i++;
-                        torch_g = 0;
-                    }
-                    torch_g++;
+//                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
+//                    createQuadTexture(190, 63, 221, 126);
+//                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
+//                    createQuadTexture(384, 63, 415, 126);
+//                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
+//                    createQuadTexture(556, 158, 587, 221);
 
                     if (!firstLevelMobSpawning) {
                         firstLevelMobSpawning = true;

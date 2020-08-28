@@ -5,14 +5,17 @@ import math.AABB;
 public class Shop extends Container {
     public Shop() {
         super("texture", true, false, 0, 0, 0, 0, new AABB());
+        // Случайная генерация одежды
+        int randomNumber;
+        int forDuplicateExclude = 0;
         for (int i = 0; i < 3; i++) {
             Armor armor;
-            int randomNumber = (int) (Math.random() * 22);
-            int forDuplicateExclude = randomNumber;
+            randomNumber = (int) (Math.random() * 22);
             if (i > 0) {
                 while (randomNumber == forDuplicateExclude)
                     randomNumber = (int) (Math.random() * 22);
             }
+            forDuplicateExclude = randomNumber;
             switch (randomNumber) {
                 case 0:
                     armor = new Armor("plate_shoes", "feet", 5, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64, 10);
@@ -86,6 +89,7 @@ public class Shop extends Container {
             armor.setPositionOnTradeTable(i + 1);
             loot.add(armor);
         }
+        // Добавление сгенерированной одежды в коллекцию
         for (Object object : loot) {
             Armor armorForShop = (Armor) object;
             if (armorForShop.getPositionOnTradeTable() == 1) {

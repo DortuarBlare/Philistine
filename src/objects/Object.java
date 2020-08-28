@@ -63,7 +63,6 @@ public abstract class Object {
                 collisionBox.getMax().x, collisionBox.getMax().y + 1);
     }
 
-
     public void stopLeft() {
         minX += 1;
         maxX += 1;

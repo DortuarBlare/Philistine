@@ -586,7 +586,7 @@ public class Player extends Mob {
 
     public void update(long window, String level) {
         if (!isDead()) {
-            if (!level.equals("MainMenu") && !level.equals("Town")) {
+            if (!level.equals("MainMenu") && !level.equals("Town") && !scrollMenu) {
                 if (getKnockBackTime() >= 50) stopTimer();
 
                 // Получение урона от мобов
