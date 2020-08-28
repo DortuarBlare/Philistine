@@ -35,7 +35,7 @@ public class Player extends Mob {
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
-            setImmortal(true);
+            incrementKnockBackTime();
             knockbackTaskStarted = true;
             if (getKnockBackTime() <= 15) {
                 switch (getKnockBackDirection()) {
@@ -53,7 +53,6 @@ public class Player extends Mob {
                         break;
                 }
             }
-            incrementKnockBackTime();
         }
     };
     private TimerTask hitAnimationTask = new TimerTask() {
@@ -326,11 +325,6 @@ public class Player extends Mob {
     public void stopTimer() {
         setKnockBackTime(0);
         setHitAnimationTime(1);
-        setAttackLeft(false);
-        setAttackRight(false);
-        setAttackUp(false);
-        setAttackDown(false);
-        setImmortal(false);
         getAttackBox().update(0,0,0,0);
         getTimer().cancel();
         getTimer().purge();
@@ -591,8 +585,8 @@ public class Player extends Mob {
 
                 // Получение урона от мобов
                 for (Mob mob : SingletonMobs.mobList) {
-                    if (!(mob instanceof Player) && !mob.isDead() && AABB.AABBvsAABB(getHitbox(), mob.getAttackBox()) &&
-                            !isDead() && !isImmortal()) {
+                    if (!(mob instanceof Player) && !mob.isDead() && !isDead() && !isImmortal() &&
+                            AABB.AABBvsAABB(getHitbox(), mob.getAttackBox())) {
                         if (mob.isAttackLeft()) setKnockBackDirection("left");
                         else if (mob.isAttackRight()) setKnockBackDirection("right");
                         else if (mob.isAttackUp()) setKnockBackDirection("up");

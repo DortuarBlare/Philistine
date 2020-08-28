@@ -64,7 +64,6 @@ public class Imp extends Mob {
         }
     };
 
-
     public Imp(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage);
         setAnimationTime(1);
@@ -199,8 +198,8 @@ public class Imp extends Mob {
             getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
 
             // Преследование игрока
-            if (!SingletonPlayer.player.isScrollMenu() &&
-                    (!isAttackLeft() || !isAttackRight() || !isAttackUp() || !isAttackDown()) && !knockbackTaskStarted)
+            if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted &&
+                    !isAttackLeft() && !isAttackRight() && !isAttackUp() && !isAttackDown())
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
         }
     }

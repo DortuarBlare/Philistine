@@ -1,7 +1,5 @@
 package math;
 
-import singletons.SingletonPlayer;
-
 import java.awt.*;
 
 public class AABB {
@@ -38,21 +36,21 @@ public class AABB {
             CollisionMessage.setMessage("left");
             return true;
         }
-        if ( (first.max.x <= second.min.x + 5 && first.max.x >= second.min.x) &&
+        else if ( (first.max.x <= second.min.x + 5 && first.max.x >= second.min.x) &&
                 ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
                         ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ||
                         ( (getCenter(first.min.y, first.max.y) >= second.min.y) && (getCenter(first.min.y, first.max.y) <= second.max.y) ) ) ) {
             CollisionMessage.setMessage("right");
             return true;
         }
-        if ( (first.min.y >= second.max.y - 5 && first.min.y <= second.max.y) &&
+        else if ( (first.min.y >= second.max.y - 5 && first.min.y <= second.max.y) &&
                 ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
                         ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
                         ( (getCenter(first.min.x, first.max.x) >= second.min.x) && (getCenter(first.min.x, first.max.x) <= second.max.x) ) ) ) {
             CollisionMessage.setMessage("up");
             return true;
         }
-        if ( (first.max.y <= second.min.y + 5 && first.max.y >= second.min.y) &&
+        else if ( (first.max.y <= second.min.y + 5 && first.max.y >= second.min.y) &&
                 ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
                         ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
                         ( (getCenter(first.min.x, first.max.x) >= second.min.x) && (getCenter(first.min.x, first.max.x) <= second.max.x) ) ) ) {
@@ -97,6 +95,17 @@ public class AABB {
         else return "someWhere";
     }
 
+    private Point getCenterPoint() {
+        Point point = new Point();
+        point.x = Math.abs(min.x + ((max.x - min.x) / 2));
+        point.y = Math.abs(min.y + ((max.y - min.y) / 2));
+        return point;
+    }
+
+    private static int getCenter(int firstCoordinate, int secondCoordinate) {
+        return Math.abs(firstCoordinate + ((secondCoordinate - firstCoordinate) / 2));
+    }
+
     public void clear() {
         min = null;
         max = null;
@@ -105,15 +114,4 @@ public class AABB {
     public Point getMin() { return min; }
 
     public Point getMax() { return max; }
-
-    private static int getCenter(int firstCoordinate, int secondCoordinate) {
-        return Math.abs(firstCoordinate + ((secondCoordinate - firstCoordinate) / 2));
-    }
-
-    private Point getCenterPoint() {
-        Point point = new Point();
-        point.x = Math.abs(min.x + ((max.x - min.x) / 2));
-        point.y = Math.abs(min.y + ((max.y - min.y) / 2));
-        return point;
-    }
 }

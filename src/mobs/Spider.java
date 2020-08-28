@@ -197,6 +197,7 @@ public class Spider extends Mob {
                 }
             }
 
+            // Столкновение с мобами
             for (Mob mob : SingletonMobs.mobList) {
                 if (!(mob instanceof Player) && !mob.isDead() && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
                     stop(CollisionMessage.getMessage());
@@ -223,8 +224,8 @@ public class Spider extends Mob {
             }
 
             // Преследование игрока
-            if (!SingletonPlayer.player.isScrollMenu() &&
-                    (!isAttackLeft() || !isAttackRight() || !isAttackUp() || !isAttackDown()) && !knockbackTaskStarted)
+            if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted &&
+                    !isAttackLeft() && !isAttackRight() && !isAttackUp() && !isAttackDown())
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
         }
     }

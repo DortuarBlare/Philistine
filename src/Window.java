@@ -42,11 +42,11 @@ public class Window {
     private Blacksmith blacksmith;
     private Waiter waiter;
     private String level = "MainMenu";
-    private boolean forScale = true;
+    private boolean canChangeLevel = false;
     boolean key_E_Pressed = false;
     boolean forMainMenu = true;
-    private int time = 0;
     private boolean firstLevelMobSpawning, secondLevelMobSpawning, fourthLevelMobSpawning = false;
+    private int time = 0;
     private Timer mobTimer = new Timer();
     private TimerTask mobSpawnTask = new TimerTask() {
         @Override
@@ -157,9 +157,9 @@ public class Window {
         for(int i = 0; i < Storage.aabbString.length; i++)
             aabbMap.put(Storage.aabbString[i], new AABB());
 
-        // Переходов м/у уровнями
+        // Переходы м/у уровнями
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
-        aabbMap.get("entranceToSecondLevel").update(638, 238, 640, 335);
+        aabbMap.get("entranceToSecondLevel").update(626, 237, 640, 335);
         aabbMap.get("entranceToThirdLevel").update(197, 134, 237, 145);
         aabbMap.get("entranceToForthLevel").update(247, 134, 283, 144);
         aabbMap.get("entranceFromThirdToSecondLevel").update(249, 134, 288, 146);
@@ -179,11 +179,14 @@ public class Window {
         firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
         firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
         firstLevelObjectList.add(new Furniture("trash", 462, 173));
+        firstLevelObjectList.add(new Lever("lever", 500, 241));
+        firstLevelObjectList.add(new Gate("verticalGate", 628, 147));
+        firstLevelObjectList.add(new Gate("verticalGate", 628, 243));
         firstLevelObjectList.add(new Weapon("longsword", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
-        firstLevelObjectList.add(new Lever("lever", 500, 241));
 
         // Добавление объектов на третий уровень
+        thirdLevelObjectList.add(new Chest("chest", false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
         thirdLevelObjectList.add(new Box("box", false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
         thirdLevelObjectList.add(new Box("box", false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
         thirdLevelObjectList.add(new Box("box", false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
@@ -195,7 +198,6 @@ public class Window {
         thirdLevelObjectList.add(new Furniture("bagSmall", 113, 208));
         thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
         thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
-        thirdLevelObjectList.add(new Chest("chest", false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
 
         shop = new Shop();
         blacksmith = new Blacksmith(176, 126, 1);
@@ -204,7 +206,7 @@ public class Window {
 
         // Обработка единичного нажатий клавиш
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            // Нажатие Escape для открытия/закрытия второстепенного меню
+            // Нажатие Escape
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS && !level.equals("MainMenu")) {
                 switch (SingletonPlayer.player.getMenuChoice()) {
                     case "Resume":
@@ -280,7 +282,7 @@ public class Window {
                         glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
 
                         // Установление хитбоксов стен первого уровня
-                        for (int i = 0, j = 0; i < 5; i++, j+=4)
+                        for (int i = 0, j = 0; i < 7; i++, j+=4)
                             aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
                         SingletonPlayer.player.setX(199);
                         SingletonPlayer.player.setY(273);
@@ -795,7 +797,7 @@ public class Window {
                         Mob mob = SingletonMobs.mobList.get(i1);
 
                         if (!mob.isDead()) {
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
                                 mob.stopRight();
                             if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                                 mob.stopLeft();
@@ -856,17 +858,25 @@ public class Window {
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
-                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
-
-                        // Обновление хитбоксов стен для второго уровня
-                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
-                                    Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
+                        for (Mob mob : SingletonMobs.mobList) {
+                            if (!mob.isDead() && !(mob instanceof Player)) {
+                                canChangeLevel = false;
+                                break;
+                            }
+                            canChangeLevel = true;
                         }
+                        if (canChangeLevel) {
+                            SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
-                        SingletonPlayer.player.setX(2 - 14);
-                        SingletonPlayer.player.setY(225);
-                        level = "SecondLevel";
+                            // Обновление хитбоксов стен для второго уровня
+                            for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                                aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
+                                        Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
+                            }
+                            SingletonPlayer.player.setX(2 - 14);
+                            SingletonPlayer.player.setY(225);
+                            level = "SecondLevel";
+                        }
                     }
                     break;
                 }
@@ -918,7 +928,7 @@ public class Window {
                             aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1],
                                     Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
                         }
-                        SingletonPlayer.player.setX(589);
+                        SingletonPlayer.player.setX(580);
                         SingletonPlayer.player.setY(281);
                         level = "FirstLevel";
                     }
@@ -1148,6 +1158,10 @@ public class Window {
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromForthToSecondLevel"))) {
+                        for (Mob mob : SingletonMobs.mobList) {
+                            if (!mob.isDead() && !(mob instanceof Player));
+                        }
+
                         // Обновление хитбоксов стен для второго уровня
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
@@ -1362,17 +1376,5 @@ public class Window {
 
     public static int getCountsOfDigits(long number) {
         return (number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
-    }
-
-    void reshape(int w, int h) {
-        glViewport(0, 0, w, h);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, w, h, 0, 1, -1);
-        glMatrixMode(GL_MODELVIEW);
-        if (forScale) {
-            glScaled(3, 3, 1);
-            forScale = false;
-        }
     }
 }

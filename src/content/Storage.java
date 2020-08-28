@@ -7,7 +7,7 @@ public class Storage {
             499, 232, 639, 236, // wall2
             108, 339, 640, 359, // wall3
             0, 45, 107, 338, // wall4
-            0, 0, 0, 0, // wall5
+            628, 237, 640, 335, // wall5
             0, 0, 0, 0 // wall6
     };
 
@@ -112,6 +112,7 @@ public class Storage {
             "table0", "table1",
             "bagSmall", "bagMedium", "bagBig", "littleBag",
             "leverOff", "leverOn",
+            "verticalGate",
             "furnace_burn_01", "furnace_burn_02", "furnace_burn_03",
             "torch_01", "torch_02", "torch_03", "torch_04", "torch_05", "torch_06", "torch_07", "torch_08", "torch_09",
             "leather_hat", "robe_hood", "chain_helmet", "chain_hood", "plate_helmet",
