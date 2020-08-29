@@ -292,7 +292,7 @@ public class Player extends Mob {
         setHitAnimationTime(1);
         setDeathAnimationTime(0);
         setKnockBackTime(0);
-        money = 10;
+        money = 30;
         keys = 1;
         weapon = new Weapon("nothing", "slash", 10, new AABB());
         head = new Armor("nothing", "head", 0, true);
@@ -1079,6 +1079,8 @@ public class Player extends Mob {
             feetAnimation = "FEET_" + getFeetTexture() + "_hurt_0" + getDeathAnimationTime();
         }
     }
+
+    public void updateDamage() { setDamage(weapon.getDamage());}
 
     public void reArmor() {
         this.setArmor(head.getDefense() + shoulders.getDefense() + overTorso.getDefense() + torso.getDefense() + belt.getDefense() +

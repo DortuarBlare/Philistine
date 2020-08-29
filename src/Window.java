@@ -181,10 +181,9 @@ public class Window {
         firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
         firstLevelObjectList.add(new Furniture("bones", 113, 173));
         firstLevelObjectList.add(new Furniture("trash", 462, 173));
-        firstLevelObjectList.add(new Lever("lever", 500, 241));
         firstLevelObjectList.add(new Gate("verticalGate", 628, 147));
-        firstLevelObjectList.add(new Gate("verticalGate", 628, 243));
-        firstLevelObjectList.add(new Weapon("longsword", "slash", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        firstLevelObjectList.add(new Gate("verticalGate", 627, 243));
+        firstLevelObjectList.add(new Weapon("stick", "thrust", 100, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
 
         // Добавление объектов на третий уровень
@@ -193,19 +192,15 @@ public class Window {
         thirdLevelObjectList.add(new Box("box", false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
         thirdLevelObjectList.add(new Box("box", false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
         thirdLevelObjectList.add(new Barrel("barrel", false, true, 150, 234, 150 + 20, 234 + 30, new AABB(150, 234, 150 + 20, 234 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 111, 241, 111 + 20, 241 + 30, new AABB(111, 241, 111 + 20, 241 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 120, 278, 120 + 20, 278 + 30, new AABB(120, 278, 120 + 20, 278 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 180, 260, 180 + 20, 260 + 30, new AABB(180, 260, 180 + 20, 260 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 110, 278, 110 + 20, 278 + 30, new AABB(110, 278, 110 + 20, 278 + 30)));
         thirdLevelObjectList.add(new Furniture("bagBig", 171, 131));
         thirdLevelObjectList.add(new Furniture("bagMedium", 199, 133));
         thirdLevelObjectList.add(new Furniture("bagSmall", 113, 208));
         thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
         thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
 
-        shop = new Shop();
-        blacksmith = new Blacksmith(176, 126, 1);
-        waiter = new Waiter(168, 136, 1);
-        SingletonMobs.mobList.add(SingletonPlayer.player);
-        //4
+        // Добавление объектов на четвертый уровень
         forthLevelObjectList.add(new Furniture("gate2", 292, 336));
         forthLevelObjectList.add(new Furniture("trash", 118, 288));
         forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
@@ -213,6 +208,11 @@ public class Window {
         forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
         forthLevelObjectList.add(new Furniture("water", 466, 163));
         forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
+
+        shop = new Shop();
+        waiter = new Waiter(168, 136, 1);
+        blacksmith = new Blacksmith(176, 126, 1);
+        SingletonMobs.mobList.add(SingletonPlayer.player);
 
         // Обработка единичного нажатий клавиш
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -675,9 +675,9 @@ public class Window {
                                 shopObjectList.remove(i);
                                 armorChange.play(soundMap.get("changingArmor"));
                             }
-                            key_E_Pressed = false;
                         }
                     }
+                    key_E_Pressed = false;
 
                     // Проверка выхода в город
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromForgeToTown"))) {
@@ -767,6 +767,7 @@ public class Window {
                                     changingWeapon.setIsLying(false);
                                     changingWeapon.resize();
                                     SingletonPlayer.player.setWeapon(changingWeapon);
+                                    SingletonPlayer.player.updateDamage();
                                     armorChange.play(soundMap.get("changingArmor"));
                                     changingWeapon = playerWeapon;
                                     if (changingWeapon.getTexture().equals("nothing")) firstLevelObjectList.remove(i);
@@ -790,8 +791,8 @@ public class Window {
                                 }
                             }
                         }
+                        key_E_Pressed = false;
                     }
-                    key_E_Pressed = false;
 
                     // Все операции с мобами
                     for (int i = 1; i < SingletonMobs.mobList.size(); i++) {
@@ -1100,15 +1101,17 @@ public class Window {
                             else if (thirdLevelObjectList.get(i) instanceof Container) {
                                 Container change = (Container) thirdLevelObjectList.get(i);
                                 if (AABB.toInteract(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
-                                    if (change.getIsNeedKey() && SingletonPlayer.player.getKeys() > 0) {
-                                        SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
-                                        containerSound.play(soundMap.get("openChest"));
-                                    }
-                                    else containerSound.play(soundMap.get("openBoxBarrel"));
-                                    change.setState("Opened");
-                                    if (change.loot.size() != 0) {
-                                        thirdLevelObjectList.addAll(change.loot);
-                                        change.loot.clear();
+                                    if (change.getState().equals("Closed")) {
+                                        if (change.getIsNeedKey() && SingletonPlayer.player.getKeys() > 0) {
+                                            SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
+                                            containerSound.play(soundMap.get("openChest"));
+                                        }
+                                        else containerSound.play(soundMap.get("openBoxBarrel"));
+                                        change.setState("Opened");
+                                        if (change.loot.size() != 0) {
+                                            thirdLevelObjectList.addAll(change.loot);
+                                            change.loot.clear();
+                                        }
                                     }
                                     break;
                                 }
@@ -1143,22 +1146,14 @@ public class Window {
                                 coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
                             coin.setTexture("coin_0" + coin.getAnimationTime());
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
-                        } else if (object instanceof Container) {
+                        }
+                        else if (object instanceof Container) {
                             Container container = (Container) object;
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
-                        } else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        }
+                        else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
-
-                    // Столкновение игрока со стенами
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall1")))
-                        SingletonPlayer.player.stopRight();
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall3")))
-                        SingletonPlayer.player.stopLeft();
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall0")))
-                        SingletonPlayer.player.stopUp();
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall2")))
-                        SingletonPlayer.player.stopDown();
 
                     for (int i = 0; i < forthLevelObjectList.size(); i++) {
                         Object object = forthLevelObjectList.get(i);
@@ -1389,6 +1384,7 @@ public class Window {
 
             // Отрисовка экипировки и анимации
             SingletonPlayer.player.update(window, level);
+            System.out.println(SingletonPlayer.player.getBodyAnimation());
             glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getBodyAnimation()));
             createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
             if (!SingletonPlayer.player.getFeetTexture().equals("nothing")) {
