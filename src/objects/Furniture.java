@@ -13,6 +13,18 @@ public class Furniture extends Object {
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
+            case "gate2": {
+                setMaxX(minX + 48);
+                setMaxY(minY + 24);
+                getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
+                break;
+            }
+            case "water": {
+                setMaxX(minX + 32);
+                setMaxY(minY + 32);
+                getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
+                break;
+            }
             case "altar0": {
                 setMaxX(minX + 32);
                 setMaxY(minY + 64);

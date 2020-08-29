@@ -32,6 +32,7 @@ public class Window {
     private ArrayList<Object> firstLevelObjectList;
     private ArrayList<Object> secondLevelObjectList;
     private ArrayList<Object> thirdLevelObjectList;
+    private ArrayList<Object> forthLevelObjectList;
     private ArrayList<Object> shopObjectList;
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
@@ -143,6 +144,7 @@ public class Window {
         firstLevelObjectList = new ArrayList<Object>();
         secondLevelObjectList = new ArrayList<Object>();
         thirdLevelObjectList = new ArrayList<>();
+        forthLevelObjectList = new ArrayList<>();
         shopObjectList = new ArrayList<>();
 
         // Единичная загрузка всех текстур
@@ -203,6 +205,14 @@ public class Window {
         blacksmith = new Blacksmith(176, 126, 1);
         waiter = new Waiter(168, 136, 1);
         SingletonMobs.mobList.add(SingletonPlayer.player);
+        //4
+        forthLevelObjectList.add(new Furniture("gate2", 292, 336));
+        forthLevelObjectList.add(new Furniture("trash", 118, 288));
+        forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
+        forthLevelObjectList.add(new Furniture("bones", 466, 163));
+        forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
+        forthLevelObjectList.add(new Furniture("water", 466, 163));
+        forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
 
         // Обработка единичного нажатий клавиш
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -1124,6 +1134,72 @@ public class Window {
                 case "ForthLevel": {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level3"));
                     createQuadTexture(0, 0, 640, 360);
+
+                    for (Object object : forthLevelObjectList) {
+                        if (!object.isDrawAble()) continue;
+                        if (object instanceof Coin) {
+                            Coin coin = (Coin) object;
+                            if (!coin.isAnimationTaskStarted())
+                                coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
+                            coin.setTexture("coin_0" + coin.getAnimationTime());
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
+                        } else if (object instanceof Container) {
+                            Container container = (Container) object;
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
+                        } else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
+                    }
+
+                    // Столкновение игрока со стенами
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall1")))
+                        SingletonPlayer.player.stopRight();
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall3")))
+                        SingletonPlayer.player.stopLeft();
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall0")))
+                        SingletonPlayer.player.stopUp();
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall2")))
+                        SingletonPlayer.player.stopDown();
+
+                    for (int i = 0; i < forthLevelObjectList.size(); i++) {
+                        Object object = forthLevelObjectList.get(i);
+
+                        // Столкновение игрока с !noclip объектами
+                        if (AABB.AABBvsAABB2(SingletonPlayer.player.getCollisionBox(), object.getCollisionBox()) && !object.isNoclip())
+                            SingletonPlayer.player.stop(CollisionMessage.getMessage());
+
+                        // Столкновение объектов с объектами
+                        for (int j = i + 1; j < forthLevelObjectList.size(); j++) {
+                            Object object2 = forthLevelObjectList.get(j);
+                            if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())) {
+                                if (object.isNoclip() && object2.isNoclip()) {
+                                    object.moveLeft();
+                                    object2.moveRight();
+                                }
+                                else if (object.isNoclip() && !object2.isNoclip()) object.moveRight();
+                                else if (!object.isNoclip() && object2.isNoclip()) object2.moveRight();
+                            }
+                        }
+
+                        // Подбор монет и зелий игроком
+                        if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), object.getCollisionBox())) {
+                            if (object instanceof Coin) {
+                                object.getTimer().cancel();
+                                object.getTimer().purge();
+                                forthLevelObjectList.remove(object);
+                                SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() + 10);
+                                coinSound.play(soundMap.get("pickedCoin"));
+                                break;
+                            }
+                            else if (object instanceof Potion) {
+                                object.getTimer().cancel();
+                                object.getTimer().purge();
+                                forthLevelObjectList.remove(object);
+                                if (SingletonPlayer.player.getHealth() > 90) SingletonPlayer.player.setHealth(100);
+                                else SingletonPlayer.player.setHealth(SingletonPlayer.player.getHealth() + 10);
+                                break;
+                            }
+                        }
+                    }
 
                     if (!fourthLevelMobSpawning) {
                         fourthLevelMobSpawning = true;
