@@ -182,7 +182,7 @@ public class Window {
         firstLevelObjectList.add(new Furniture("bones", 113, 173));
         firstLevelObjectList.add(new Furniture("trash", 462, 173));
         firstLevelObjectList.add(new Gate("verticalGate", 628, 147));
-        firstLevelObjectList.add(new Gate("verticalGate", 627, 243));
+        firstLevelObjectList.add(new Gate("verticalGate", 628, 243));
         firstLevelObjectList.add(new Weapon("stick", "thrust", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
 
@@ -213,6 +213,7 @@ public class Window {
         waiter = new Waiter(168, 136, 1);
         blacksmith = new Blacksmith(176, 126, 1);
         SingletonMobs.mobList.add(SingletonPlayer.player);
+        SingletonMobs.mobList.add(new Slime(470, 288, 1, 50, 0, 5));
 
         // Обработка единичного нажатий клавиш
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -306,7 +307,7 @@ public class Window {
             // Нажатие стрелки влево
             if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
                 // Атака
-                if (!SingletonPlayer.player.isAttackRight() && !SingletonPlayer.player.isAttackUp() && !SingletonPlayer.player.isAttackDown() &&
+                if (!SingletonPlayer.player.isAttack() && !SingletonPlayer.player.isKnockBackTaskStarted() &&
                         !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge")) {
                     SingletonPlayer.player.setAttackLeft(true);
                     SingletonPlayer.player.setMoveDirection("left");
@@ -319,7 +320,7 @@ public class Window {
             // Нажатие стрелки вправо
             if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
                 // Атака
-                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackUp() && !SingletonPlayer.player.isAttackDown() &&
+                if (!SingletonPlayer.player.isAttack() && !SingletonPlayer.player.isKnockBackTaskStarted() &&
                         !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge")) {
                     SingletonPlayer.player.setAttackRight(true);
                     SingletonPlayer.player.setMoveDirection("right");
@@ -332,7 +333,7 @@ public class Window {
             // Нажатие стрелки вверх
             if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
                 // Атака
-                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackRight() && !SingletonPlayer.player.isAttackDown() &&
+                if (!SingletonPlayer.player.isAttack() && !SingletonPlayer.player.isKnockBackTaskStarted() &&
                         !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge") &&
                         !SingletonPlayer.player.isScrollMenu()) {
                     SingletonPlayer.player.setAttackUp(true);
@@ -367,7 +368,7 @@ public class Window {
             // Нажатие стрелки вниз
             if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
                 // Атака
-                if (!SingletonPlayer.player.isAttackLeft() && !SingletonPlayer.player.isAttackRight() && !SingletonPlayer.player.isAttackUp() &&
+                if (!SingletonPlayer.player.isAttack() && !SingletonPlayer.player.isKnockBackTaskStarted() &&
                         !level.equals("MainMenu") && !level.equals("Town") && !level.equals("tavern") && !level.equals("forge") &&
                         !SingletonPlayer.player.isScrollMenu()) {
                     SingletonPlayer.player.setAttackDown(true);
@@ -701,14 +702,6 @@ public class Window {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level0")); // Фон первого уровня
                     createQuadTexture(0, 0, 640, 360);
 
-                    //Анимация факела
-//                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
-//                    createQuadTexture(190, 63, 221, 126);
-//                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
-//                    createQuadTexture(384, 63, 415, 126);
-//                    glBindTexture(GL_TEXTURE_2D, textureMap.get("torch_0" + torch_i));
-//                    createQuadTexture(556, 158, 587, 221);
-
                     if (!firstLevelMobSpawning) {
                         firstLevelMobSpawning = true;
                         mobTimer.schedule(mobSpawnTask, 0, 5000);
@@ -728,9 +721,13 @@ public class Window {
                             Container container = (Container) object;
                             glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
                         }
-                        else if (object instanceof Lever) {
-                            Lever lever = (Lever) object;
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get(lever.getTexture() + lever.getState()));
+                        else if (object instanceof Gate) {
+                            Gate gate = (Gate) object;
+                            if (canChangeLevel && gate.getMinY() == 243) {
+                                gate.setFinalY(147);
+                                gate.update();
+                            }
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(gate.getTexture()));
                         }
                         else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
@@ -807,12 +804,21 @@ public class Window {
                         }
                     }
 
+                    // Проверка возможности перехода на другой уровень
+                    for (Mob mob : SingletonMobs.mobList) {
+                        if (!mob.isDead() && !(mob instanceof Player)) {
+                            canChangeLevel = false;
+                            break;
+                        }
+                        canChangeLevel = true;
+                    }
+
                     // Проверка всех мобов на столкновение со стенами, объектами. Столкновения объектов с объектами
-                    for (int i1 = 0; i1 < SingletonMobs.mobList.size(); i1++) {
-                        Mob mob = SingletonMobs.mobList.get(i1);
+                    for (int i = 0; i < SingletonMobs.mobList.size(); i++) {
+                        Mob mob = SingletonMobs.mobList.get(i);
 
                         if (!mob.isDead()) {
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
                                 mob.stopRight();
                             if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                                 mob.stopLeft();
@@ -822,9 +828,9 @@ public class Window {
                                 mob.stopDown();
                         }
 
-                        for (int i = 0; i < firstLevelObjectList.size(); i++) {
-                            Object object = firstLevelObjectList.get(i);
-                            if (!(object instanceof Furniture) && !(object instanceof Container)) {
+                        for (int j = 0; j < firstLevelObjectList.size(); j++) {
+                            Object object = firstLevelObjectList.get(j);
+                            if (!(object instanceof Furniture) && !(object instanceof Container) && !(object instanceof Gate)) {
                                 // Столкновение объектов со стенами
                                 if (AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall1")))
                                     object.stopRight();
@@ -836,9 +842,9 @@ public class Window {
                                     object.stopDown();
 
                                 // Столкновение объектов с объектами
-                                for (int j = i + 1; j < firstLevelObjectList.size(); j++) {
-                                    Object object2 = firstLevelObjectList.get(j);
-                                    if (!(object2 instanceof Furniture) && !(object2 instanceof Container)) {
+                                for (int k = j + 1; k < firstLevelObjectList.size(); k++) {
+                                    Object object2 = firstLevelObjectList.get(k);
+                                    if (!(object2 instanceof Furniture) && !(object2 instanceof Container) && !(object2 instanceof Gate)) {
                                         if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox()))
                                             object.moveLeft();
                                     }
@@ -873,13 +879,6 @@ public class Window {
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
-                        for (Mob mob : SingletonMobs.mobList) {
-                            if (!mob.isDead() && !(mob instanceof Player)) {
-                                canChangeLevel = false;
-                                break;
-                            }
-                            canChangeLevel = true;
-                        }
                         if (canChangeLevel) {
                             SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 

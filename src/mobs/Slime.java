@@ -110,6 +110,7 @@ public class Slime extends Mob {
             else if (SingletonPlayer.player.isAttackRight()) setKnockBackDirection("right");
             else if (SingletonPlayer.player.isAttackUp()) setKnockBackDirection("up");
             else if (SingletonPlayer.player.isAttackDown()) setKnockBackDirection("down");
+            else setKnockBackDirection("right");
 
             setHealth(getHealth() - SingletonPlayer.player.getDamage());
             if (getHealth() <= 0) {
