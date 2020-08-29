@@ -9,14 +9,14 @@ public abstract class Object {
     private int maxX, maxY;
     private AABB collisionBox;
     private String texture;
-    private boolean isLying;
+    private boolean drawAble;
     private boolean isNoclip;
     private Timer timer = new Timer();
 
-    public Object(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
+    public Object(String texture, boolean isNoclip, boolean drawAble, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
         this.texture = texture;
         this.isNoclip = isNoclip;
-        this.isLying = isLying;
+        this.drawAble = drawAble;
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
@@ -27,7 +27,7 @@ public abstract class Object {
     public Object(String texture, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
         this.texture = texture;
         this.isNoclip = true;
-        this.isLying = false;
+        this.drawAble = false;
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
@@ -122,9 +122,11 @@ public abstract class Object {
 
     public void setTexture(String texture) { this.texture = texture; }
 
-    public boolean isLying() { return isLying; }
+    public boolean isDrawAble() { return drawAble; }
 
-    public void setIsLying(boolean isLying) { this.isLying = isLying; }
+    public void setIsLying(boolean isLying) { this.drawAble = isLying; }
 
     public boolean isNoclip() { return isNoclip; }
+
+    public void setNoclip(boolean noclip) { this.isNoclip = noclip; }
 }

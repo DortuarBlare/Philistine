@@ -13,24 +13,29 @@ import java.util.TimerTask;
 public class Imp extends Mob {
     private Source hurtSound, hitSound;
     private int hurtSoundId, hitSoundId, deathSoundId;
-    private boolean animationTaskStarted = false, knockbackTaskStarted = false, hitAnimationTaskStarted = false;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             incrementKnockBackTime();
-            setImmortal(true);
-            knockbackTaskStarted = true;
-            if (getKnockBackDirection().equals("left")) knockBackLeft();
-            else if (getKnockBackDirection().equals("right")) knockBackRight();
-            else if (getKnockBackDirection().equals("up")) knockBackUp();
-            else if (getKnockBackDirection().equals("down")) knockBackDown();
-            if (getKnockBackTime() >= 25) stopTimer();
+            switch (getKnockBackDirection()) {
+                case "left":
+                    knockBackLeft();
+                    break;
+                case "right":
+                    knockBackRight();
+                    break;
+                case "up":
+                    knockBackUp();
+                    break;
+                case "down":
+                    knockBackDown();
+                    break;
+            }
         }
     };
     private TimerTask animationTask = new TimerTask() {
         @Override
         public void run() {
-            animationTaskStarted = true;
             incrementAnimationTime();
             if (getAnimationTime() == 5) setAnimationTime(1);
         }
@@ -38,7 +43,6 @@ public class Imp extends Mob {
     private TimerTask hitAnimationTask = new TimerTask() {
         @Override
         public void run() {
-            hitAnimationTaskStarted = true;
             incrementHitAnimationTime();
             if (getHitAnimationTime() == 2) {
                 if (isAttackLeft()) getAttackBox().update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
@@ -81,8 +85,6 @@ public class Imp extends Mob {
     }
 
     public void stopTimer() {
-        setKnockBackTime(0);
-        setImmortal(false);
         getTimer().cancel();
         getTimer().purge();
         setTimer(new Timer());
@@ -90,19 +92,25 @@ public class Imp extends Mob {
             @Override
             public void run() {
                 incrementKnockBackTime();
-                setImmortal(true);
-                knockbackTaskStarted = true;
-                if (getKnockBackDirection().equals("left")) knockBackLeft();
-                else if (getKnockBackDirection().equals("right")) knockBackRight();
-                else if (getKnockBackDirection().equals("up")) knockBackUp();
-                else if (getKnockBackDirection().equals("down")) knockBackDown();
-                if (getKnockBackTime() >= 25) stopTimer();
+                switch (getKnockBackDirection()) {
+                    case "left":
+                        knockBackLeft();
+                        break;
+                    case "right":
+                        knockBackRight();
+                        break;
+                    case "up":
+                        knockBackUp();
+                        break;
+                    case "down":
+                        knockBackDown();
+                        break;
+                }
             }
         };
         animationTask = new TimerTask() {
             @Override
             public void run() {
-                animationTaskStarted = true;
                 incrementAnimationTime();
                 if (getAnimationTime() == 5) setAnimationTime(1);
             }
@@ -110,7 +118,6 @@ public class Imp extends Mob {
         hitAnimationTask = new TimerTask() {
             @Override
             public void run() {
-                hitAnimationTaskStarted = true;
                 incrementHitAnimationTime();
                 if (getHitAnimationTime() == 2) {
                     if (isAttackLeft()) getAttackBox().update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
@@ -128,12 +135,16 @@ public class Imp extends Mob {
                 }
             }
         };
-        animationTaskStarted = false;
-        hitAnimationTaskStarted = false;
-        knockbackTaskStarted = false;
+        setKnockBackTime(0);
+        setImmortal(false);
+        setAnimationTaskStarted(false);
+        setHitAnimationTaskStarted(false);
+        setKnockBackTaskStarted(false);
     }
 
     public void update() {
+        if (getKnockBackTime() >= 25) stopTimer();
+
         // Имп получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
             if (SingletonPlayer.player.isAttackLeft()) setKnockBackDirection("left");
@@ -155,7 +166,15 @@ public class Imp extends Mob {
                 getTimer().schedule(getDeathTask(), 0, 120);
             }
             else {
-                if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+                if (!isKnockBackTaskStarted()) {
+                    setImmortal(true);
+                    setKnockBackTaskStarted(true);
+                    setAttackLeft(false);
+                    setAttackRight(false);
+                    setAttackUp(false);
+                    setAttackDown(false);
+                    getTimer().schedule(getKnockbackTask(), 0, 10);
+                }
                 hurtSound.play(hurtSoundId);
             }
         }
@@ -163,43 +182,51 @@ public class Imp extends Mob {
         if (!isDead()) {
             // Имп наносит удар при соприкосновении с игроком
             if (AABB.AABBvsAABB2(getHitbox(), SingletonPlayer.player.getHitbox())) {
-                if (CollisionMessage.getMessage().equals("left")) {
-                    setAttackLeft(true);
-                    if (!hitAnimationTaskStarted) {
-                        hitSound.play(hitSoundId);
-                        getTimer().schedule(hitAnimationTask, 0, 300);
-                    }
-                }
-                else if (CollisionMessage.getMessage().equals("right")) {
-                    setAttackRight(true);
-                    if (!hitAnimationTaskStarted) {
-                        hitSound.play(hitSoundId);
-                        getTimer().schedule(hitAnimationTask, 0, 300);
-                    }
-                }
-                else if (CollisionMessage.getMessage().equals("up")) {
-                    setAttackUp(true);
-                    if (!hitAnimationTaskStarted) {
-                        hitSound.play(hitSoundId);
-                        getTimer().schedule(hitAnimationTask, 0, 300);
-                    }
-                }
-                else if (CollisionMessage.getMessage().equals("down")) {
-                    setAttackDown(true);
-                    if (!hitAnimationTaskStarted) {
-                        hitSound.play(hitSoundId);
-                        getTimer().schedule(hitAnimationTask, 0, 300);
-                    }
+                switch (CollisionMessage.getMessage()) {
+                    case "left":
+                        setAttackLeft(true);
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
+                        break;
+                    case "right":
+                        setAttackRight(true);
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
+                        break;
+                    case "up":
+                        setAttackUp(true);
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
+                        break;
+                    case "down":
+                        setAttackDown(true);
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
+                            hitSound.play(hitSoundId);
+                            getTimer().schedule(hitAnimationTask, 0, 300);
+                        }
+                        break;
                 }
             }
 
-            if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 150);
+            if (!isAnimationTaskStarted()) {
+                setAnimationTaskStarted(true);
+                getTimer().schedule(getAnimationTask(), 0, 150);
+            }
             getHitbox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
             getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
 
             // Преследование игрока
-            if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted &&
-                    !isAttackLeft() && !isAttackRight() && !isAttackUp() && !isAttackDown())
+            if (!SingletonPlayer.player.isScrollMenu() && !isKnockBackTaskStarted() && !isAttack())
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
         }
     }
@@ -209,10 +236,4 @@ public class Imp extends Mob {
     public TimerTask getAnimationTask() { return animationTask; }
 
     public TimerTask getDeathTask() { return deathTask; }
-
-    public boolean isAnimationTaskStarted() { return animationTaskStarted; }
-
-    public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
-
-    public void setHitAnimationTaskStarted(boolean hitAnimationTaskStarted) { this.hitAnimationTaskStarted = hitAnimationTaskStarted; }
 }

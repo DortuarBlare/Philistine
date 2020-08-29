@@ -13,24 +13,29 @@ import java.util.TimerTask;
 public class Spider extends Mob {
     private Source hurtSound, hitSound;
     private int hurtSoundId, hitSoundId, deathSoundId;
-    private boolean animationTaskStarted = false, knockbackTaskStarted = false, hitAnimationTaskStarted = false;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             incrementKnockBackTime();
-            setImmortal(true);
-            knockbackTaskStarted = true;
-            if (getKnockBackDirection().equals("left")) knockBackLeft();
-            else if (getKnockBackDirection().equals("right")) knockBackRight();
-            else if (getKnockBackDirection().equals("up")) knockBackUp();
-            else if (getKnockBackDirection().equals("down")) knockBackDown();
-            if (getKnockBackTime() >= 25) stopTimer();
+            switch (getKnockBackDirection()) {
+                case "left":
+                    knockBackLeft();
+                    break;
+                case "right":
+                    knockBackRight();
+                    break;
+                case "up":
+                    knockBackUp();
+                    break;
+                case "down":
+                    knockBackDown();
+                    break;
+            }
         }
     };
     private TimerTask animationTask = new TimerTask() {
         @Override
         public void run() {
-            animationTaskStarted = true;
             incrementAnimationTime();
             if (getAnimationTime() == 8) setAnimationTime(2);
         }
@@ -38,7 +43,6 @@ public class Spider extends Mob {
     private TimerTask hitAnimationTask = new TimerTask() {
         @Override
         public void run() {
-            hitAnimationTaskStarted = true;
             incrementHitAnimationTime();
             if (getHitAnimationTime() == 2) {
                 if (isAttackLeft()) getAttackBox().update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
@@ -82,28 +86,22 @@ public class Spider extends Mob {
     }
 
     public void stopTimer() {
-        setKnockBackTime(0);
-        setImmortal(false);
         getTimer().cancel();
         getTimer().purge();
         setTimer(new Timer());
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
-                setImmortal(true);
-                knockbackTaskStarted = true;
                 if (getKnockBackDirection().equals("left")) knockBackLeft();
                 else if (getKnockBackDirection().equals("right")) knockBackRight();
                 else if (getKnockBackDirection().equals("up")) knockBackUp();
                 else if (getKnockBackDirection().equals("down")) knockBackDown();
                 incrementKnockBackTime();
-                if (getKnockBackTime() >= 25) stopTimer();
             }
         };
         animationTask = new TimerTask() {
             @Override
             public void run() {
-                animationTaskStarted = true;
                 incrementAnimationTime();
                 if (getAnimationTime() == 8) setAnimationTime(2);
             }
@@ -111,7 +109,6 @@ public class Spider extends Mob {
         hitAnimationTask = new TimerTask() {
             @Override
             public void run() {
-                hitAnimationTaskStarted = true;
                 incrementHitAnimationTime();
                 if (getHitAnimationTime() == 2) {
                     if (isAttackLeft()) getAttackBox().update(getX() + 4, getY() + 24, getX() + 14, getY() + 48);
@@ -130,12 +127,16 @@ public class Spider extends Mob {
                 }
             }
         };
-        animationTaskStarted = false;
-        hitAnimationTaskStarted = false;
-        knockbackTaskStarted = false;
+        setKnockBackTime(0);
+        setImmortal(false);
+        setAnimationTaskStarted(false);
+        setHitAnimationTaskStarted(false);
+        setKnockBackTaskStarted(false);
     }
 
     public void update() {
+        if (getKnockBackTime() >= 25) stopTimer();
+
         // Паук получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
             if (SingletonPlayer.player.isAttackLeft()) setKnockBackDirection("left");
@@ -157,7 +158,15 @@ public class Spider extends Mob {
                 getTimer().schedule(getDeathTask(), 0, 120);
             }
             else {
-                if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+                if (!isKnockBackTaskStarted()) {
+                    setImmortal(true);
+                    setKnockBackTaskStarted(true);
+                    setAttackLeft(false);
+                    setAttackRight(false);
+                    setAttackUp(false);
+                    setAttackDown(false);
+                    getTimer().schedule(getKnockbackTask(), 0, 10);
+                }
                 hurtSound.play(hurtSoundId);
             }
         }
@@ -168,28 +177,32 @@ public class Spider extends Mob {
                 switch (CollisionMessage.getMessage()) {
                     case "left":
                         setAttackLeft(true);
-                        if (!hitAnimationTaskStarted) {
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
                             hitSound.play(hitSoundId);
                             getTimer().schedule(hitAnimationTask, 0, 300);
                         }
                         break;
                     case "right":
                         setAttackRight(true);
-                        if (!hitAnimationTaskStarted) {
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
                             hitSound.play(hitSoundId);
                             getTimer().schedule(hitAnimationTask, 0, 300);
                         }
                         break;
                     case "up":
                         setAttackUp(true);
-                        if (!hitAnimationTaskStarted) {
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
                             hitSound.play(hitSoundId);
                             getTimer().schedule(hitAnimationTask, 0, 300);
                         }
                         break;
                     case "down":
                         setAttackDown(true);
-                        if (!hitAnimationTaskStarted) {
+                        if (!isHitAnimationTaskStarted()) {
+                            setHitAnimationTaskStarted(true);
                             hitSound.play(hitSoundId);
                             getTimer().schedule(hitAnimationTask, 0, 300);
                         }
@@ -199,11 +212,15 @@ public class Spider extends Mob {
 
             // Столкновение с мобами
             for (Mob mob : SingletonMobs.mobList) {
-                if (!(mob instanceof Player) && !mob.isDead() && AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
+                if (!(mob instanceof Player) && !mob.isDead() &&
+                        AABB.AABBvsAABB2(getCollisionBox(), mob.getCollisionBox()))
                     stop(CollisionMessage.getMessage());
             }
 
-            if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 150);
+            if (!isAnimationTaskStarted()) {
+                setAnimationTaskStarted(true);
+                getTimer().schedule(getAnimationTask(), 0, 150);
+            }
             switch (getMoveDirection()) {
                 case "left":
                     getHitbox().update(getX() + 17, getY() + 16, getX() + 47, getY() + 51);
@@ -224,8 +241,7 @@ public class Spider extends Mob {
             }
 
             // Преследование игрока
-            if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted &&
-                    !isAttackLeft() && !isAttackRight() && !isAttackUp() && !isAttackDown())
+            if (!SingletonPlayer.player.isScrollMenu() && !isKnockBackTaskStarted() && !isAttack())
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
         }
     }
@@ -235,10 +251,4 @@ public class Spider extends Mob {
     public TimerTask getAnimationTask() { return animationTask; }
 
     public TimerTask getDeathTask() { return deathTask; }
-
-    public boolean isAnimationTaskStarted() { return animationTaskStarted; }
-
-    public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
-
-    public void setHitAnimationTaskStarted(boolean hitAnimationTaskStarted) { this.hitAnimationTaskStarted = hitAnimationTaskStarted; }
 }

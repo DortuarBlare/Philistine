@@ -14,13 +14,10 @@ import java.util.TimerTask;
 public class Slime extends Mob {
     private Source hurtSound;
     private int hurtSoundId, deathSoundId;
-    private boolean animationTaskStarted = false, knockbackTaskStarted = false;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
             incrementKnockBackTime();
-            setImmortal(true);
-            knockbackTaskStarted = true;
             switch (getKnockBackDirection()) {
                 case "left":
                     knockBackLeft();
@@ -40,12 +37,11 @@ public class Slime extends Mob {
     private TimerTask animationTask = new TimerTask() {
         @Override
         public void run() {
-            animationTaskStarted = true;
             incrementAnimationTime();
             if (getAnimationTime() == 4) setAnimationTime(1);
         }
     };
-    private TimerTask deathTask = new TimerTask() {
+    private final TimerTask deathTask = new TimerTask() {
         @Override
         public void run() {
             incrementDeathAnimationTime();
@@ -69,16 +65,13 @@ public class Slime extends Mob {
     }
 
     public void stopTimer() {
-        setKnockBackTime(0);
-        setImmortal(false);
         getTimer().cancel();
         getTimer().purge();
         setTimer(new Timer());
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
-                setImmortal(true);
-                knockbackTaskStarted = true;
+                incrementKnockBackTime();
                 switch (getKnockBackDirection()) {
                     case "left":
                         knockBackLeft();
@@ -93,19 +86,19 @@ public class Slime extends Mob {
                         knockBackDown();
                         break;
                 }
-                incrementKnockBackTime();
             }
         };
         animationTask = new TimerTask() {
             @Override
             public void run() {
-                animationTaskStarted = true;
                 incrementAnimationTime();
                 if (getAnimationTime() == 4) setAnimationTime(1);
             }
         };
-        knockbackTaskStarted = false;
-        animationTaskStarted = false;
+        setKnockBackTime(0);
+        setImmortal(false);
+        setAnimationTaskStarted(false);
+        setKnockBackTaskStarted(false);
     }
 
     public void update() {
@@ -130,7 +123,11 @@ public class Slime extends Mob {
                 getTimer().schedule(getDeathTask(), 0, 120);
             }
             else {
-                if (!isKnockbackTaskStarted()) getTimer().schedule(getKnockbackTask(), 0, 10);
+                if (!isKnockBackTaskStarted()) {
+                    setImmortal(true);
+                    setKnockBackTaskStarted(true);
+                    getTimer().schedule(getKnockbackTask(), 0, 10);
+                }
                 hurtSound.play(hurtSoundId);
             }
         }
@@ -142,13 +139,16 @@ public class Slime extends Mob {
                     stop(CollisionMessage.getMessage());
             }
 
-            if (!isAnimationTaskStarted()) getTimer().schedule(getAnimationTask(), 0, 300);
+            if (!isAnimationTaskStarted()) {
+                setAnimationTaskStarted(true);
+                getTimer().schedule(getAnimationTask(), 0, 300);
+            }
             getAttackBox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
             getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
             getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
 
             // Преследование игрока
-            if (!SingletonPlayer.player.isScrollMenu() && !knockbackTaskStarted && getAnimationTime() == 3)
+            if (!SingletonPlayer.player.isScrollMenu() && !isKnockBackTaskStarted() && getAnimationTime() == 3)
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
         }
     }
@@ -232,10 +232,4 @@ public class Slime extends Mob {
     public TimerTask getAnimationTask() { return animationTask; }
 
     public TimerTask getDeathTask() { return deathTask; }
-
-    public boolean isAnimationTaskStarted() { return animationTaskStarted; }
-
-    public void setAnimationTaskStarted(boolean animationTaskStarted) { this.animationTaskStarted = animationTaskStarted; }
-
-    public boolean isKnockbackTaskStarted() { return knockbackTaskStarted; }
 }

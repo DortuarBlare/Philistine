@@ -51,17 +51,20 @@ public class Furniture extends Object {
                 break;
             }
             case "bookBlue": {
+                setNoclip(false);
                 setMaxX(minX + 14);
                 setMaxY(minY + 22);
                 break;
             }
             case "bookPink":
             case "bookGreen": {
+                setNoclip(false);
                 setMaxX(minX + 14);
                 setMaxY(minY + 18);
                 break;
             }
             case "bookRed": {
+                setNoclip(false);
                 setMaxX(minX + 18);
                 setMaxY(minY + 26);
                 break;
@@ -86,6 +89,7 @@ public class Furniture extends Object {
             }
             case "bones":
             case "trash": {
+                setNoclip(false);
                 setMaxX(minX + 32);
                 setMaxY(minY + 32);
                 break;

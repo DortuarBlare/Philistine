@@ -14,6 +14,7 @@ public abstract class Mob {
     private AABB attackBox, hitBox, collisionBox;
     private String moveDirection, knockBackDirection;
     private int animationTime, hitAnimationTime, deathAnimationTime, knockBackTime;
+    private boolean animationTaskStarted = false, hitAnimationTaskStarted = false, knockBackTaskStarted = false;
     private boolean isAttackRight = false, isAttackLeft = false, isAttackUp = false, isAttackDown = false;
     private Timer timer = new Timer();
 
@@ -183,6 +184,18 @@ public abstract class Mob {
 
     public void incrementDeathAnimationTime() { this.deathAnimationTime++; }
 
+    public boolean isAnimationTaskStarted() { return animationTaskStarted; }
+
+    public void setAnimationTaskStarted(boolean animationTaskStarted) { this.animationTaskStarted = animationTaskStarted; }
+
+    public boolean isHitAnimationTaskStarted() { return hitAnimationTaskStarted; }
+
+    public void setHitAnimationTaskStarted(boolean hitAnimationTaskStarted) { this.hitAnimationTaskStarted = hitAnimationTaskStarted; }
+
+    public boolean isKnockBackTaskStarted() { return knockBackTaskStarted; }
+
+    public void setKnockBackTaskStarted(boolean knockBackTaskStarted) { this.knockBackTaskStarted = knockBackTaskStarted; }
+
     public int getKnockBackTime() { return knockBackTime; }
 
     public void setKnockBackTime(int knockBackTime) { this.knockBackTime = knockBackTime; }
@@ -203,13 +216,21 @@ public abstract class Mob {
 
     public void takeDamage(int Damage) {this.health = this.health - (int)(Damage * ((double)(100 - (armor * 2)) / 100));}
 
-    public boolean isAttackRight() { return isAttackRight; }
-
-    public void setAttackRight(boolean attackRight) { isAttackRight = attackRight; }
+    public boolean isAttack() {
+        if (isAttackLeft) return true;
+        else if (isAttackRight) return true;
+        else if (isAttackUp) return true;
+        else if (isAttackDown) return true;
+        return false;
+    }
 
     public boolean isAttackLeft() { return isAttackLeft; }
 
     public void setAttackLeft(boolean attackLeft) { isAttackLeft = attackLeft; }
+
+    public boolean isAttackRight() { return isAttackRight; }
+
+    public void setAttackRight(boolean attackRight) { isAttackRight = attackRight; }
 
     public boolean isAttackUp() { return isAttackUp; }
 

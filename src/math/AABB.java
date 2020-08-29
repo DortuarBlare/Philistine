@@ -11,13 +11,13 @@ public class AABB {
         max = new Point();
     }
 
-    public AABB (int xmin, int ymin, int xmax, int ymax) {
+    public AABB (int minX, int minY, int maxX, int maxY) {
         min = new Point();
         max = new Point();
-        min.x = xmin;
-        min.y = ymin;
-        max.x = xmax;
-        max.y = ymax;
+        min.x = minX;
+        min.y = minY;
+        max.x = maxX;
+        max.y = maxY;
     }
 
     public static boolean AABBvsAABB(AABB first, AABB second) {
@@ -55,6 +55,34 @@ public class AABB {
                         ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
                         ( (getCenter(first.min.x, first.max.x) >= second.min.x) && (getCenter(first.min.x, first.max.x) <= second.max.x) ) ) ) {
             CollisionMessage.setMessage("down");
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean toInteract(AABB first, AABB second) {
+        if ( (first.min.x - 2 >= second.max.x - 2 && first.min.x - 2 <= second.max.x - 2) &&
+                ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
+                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ||
+                        ( (getCenter(first.min.y, first.max.y) >= second.min.y) && (getCenter(first.min.y, first.max.y) <= second.max.y) ) ) ) {
+            return true;
+        }
+        else if ( (first.max.x + 2 <= second.min.x + 2 && first.max.x + 2 >= second.min.x + 2) &&
+                ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
+                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ||
+                        ( (getCenter(first.min.y, first.max.y) >= second.min.y) && (getCenter(first.min.y, first.max.y) <= second.max.y) ) ) ) {
+            return true;
+        }
+        else if ( (first.min.y - 2 >= second.max.y - 2 && first.min.y - 2 <= second.max.y - 2) &&
+                ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
+                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
+                        ( (getCenter(first.min.x, first.max.x) >= second.min.x) && (getCenter(first.min.x, first.max.x) <= second.max.x) ) ) ) {
+            return true;
+        }
+        else if ( (first.max.y + 2 <= second.min.y + 2 && first.max.y + 2 >= second.min.y + 2) &&
+                ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
+                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
+                        ( (getCenter(first.min.x, first.max.x) >= second.min.x) && (getCenter(first.min.x, first.max.x) <= second.max.x) ) ) ) {
             return true;
         }
         return false;

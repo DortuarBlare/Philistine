@@ -171,13 +171,13 @@ public class Window {
         // Добавление объектов на первый уровень
         firstLevelObjectList.add(new Furniture("barrelOpened", 118, 135));
         firstLevelObjectList.add(new Furniture("bagMedium", 137, 134));
-        firstLevelObjectList.add(new Furniture("bones", 113, 173));
         firstLevelObjectList.add(new Furniture("boxOpened", 308, 129));
         firstLevelObjectList.add(new Furniture("chair1", 400, 173));
         firstLevelObjectList.add(new Furniture("chair3", 432, 227));
         firstLevelObjectList.add(new Furniture("table1", 426, 163));
         firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
         firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
+        firstLevelObjectList.add(new Furniture("bones", 113, 173));
         firstLevelObjectList.add(new Furniture("trash", 462, 173));
         firstLevelObjectList.add(new Lever("lever", 500, 241));
         firstLevelObjectList.add(new Gate("verticalGate", 628, 147));
@@ -539,12 +539,14 @@ public class Window {
                     // Проверка выхода в город
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromTavernToTown"))) {
                         level = "Town";
+
                         // Обновление хитбоксов стен для города
                         for (int i = 0, j = 0; i < 7; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
                                     Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
                         }
                         doorSound.play(soundMap.get("doorOpen"));
+                        SingletonPlayer.player.getStepSound().stop(SingletonPlayer.player.getPlayerSounds().get("stepWood"));
                         glTranslated(-SingletonPlayer.player.getForPlacingCamera(), 0, 0);
                         SingletonPlayer.player.setX(293);
                         SingletonPlayer.player.setY(192);
@@ -590,13 +592,13 @@ public class Window {
                     }
 
                     for (Object object : shopObjectList) {
-                        if (!object.isLying()) continue;
+                        if (!object.isDrawAble()) continue;
                         else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
                     for (int i = 0; i < shopObjectList.size(); i++) {
-                        if (!shopObjectList.get(i).isLying()) continue;
+                        if (!shopObjectList.get(i).isDrawAble()) continue;
                         if (shopObjectList.get(i) instanceof Armor && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(),
                                 shopObjectList.get(i).getCollisionBox())) {
                             Armor tempArmor = (Armor) shopObjectList.get(i);
@@ -670,12 +672,14 @@ public class Window {
                     // Проверка выхода в город
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromForgeToTown"))) {
                         level = "Town";
+
                         // Обновление хитбоксов стен для города
                         for (int i = 0, j = 0; i < 7; i++, j += 4) {
                             aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
                                     Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
                         }
                         doorSound.play(soundMap.get("doorOpen"));
+                        SingletonPlayer.player.getStepSound().stop(SingletonPlayer.player.getPlayerSounds().get("stepWood"));
                         glTranslated(-SingletonPlayer.player.getForPlacingCamera(), 0, 0);
                         SingletonPlayer.player.setX(605);
                         SingletonPlayer.player.setY(192);
@@ -702,7 +706,7 @@ public class Window {
 
                     // Отрисовка всех объектов
                     for (Object object : firstLevelObjectList) {
-                        if (!object.isLying()) continue;
+                        if (!object.isDrawAble()) continue;
                         if (object instanceof Coin) {
                             Coin coin = (Coin) object;
                             if (!coin.isAnimationTaskStarted())
@@ -895,8 +899,7 @@ public class Window {
                             Spider spider = (Spider) SingletonMobs.mobList.get(i);
                             if (!spider.isDead()) {
                                 spider.update();
-                                if (spider.isAttackLeft() || spider.isAttackRight() || spider.isAttackUp() || spider.isAttackDown())
-                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_attack_0" + spider.getHitAnimationTime()));
+                                if (spider.isAttack()) glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_attack_0" + spider.getHitAnimationTime()));
                                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_" + spider.getMoveDirection() + "_move_0" + spider.getAnimationTime()));
                             }
                             else glBindTexture(GL_TEXTURE_2D, textureMap.get("spider_death_0" + spider.getDeathAnimationTime()));
@@ -970,7 +973,7 @@ public class Window {
 
                     // Отрисовка всех объектов
                     for (Object object : thirdLevelObjectList) {
-                        if (!object.isLying()) continue;
+                        if (!object.isDrawAble()) continue;
                         if (object instanceof Coin) {
                             Coin coin = (Coin) object;
                             if (!coin.isAnimationTaskStarted())
@@ -1086,7 +1089,7 @@ public class Window {
                             }
                             else if (thirdLevelObjectList.get(i) instanceof Container) {
                                 Container change = (Container) thirdLevelObjectList.get(i);
-                                if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
+                                if (AABB.toInteract(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
                                     if (change.getIsNeedKey() && SingletonPlayer.player.getKeys() > 0) {
                                         SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
                                         containerSound.play(soundMap.get("openChest"));
@@ -1133,6 +1136,13 @@ public class Window {
                             Imp imp = (Imp) SingletonMobs.mobList.get(i);
                             if (!imp.isDead()) {
                                 imp.update();
+                                // HealthBar
+                                int tempHealth = imp.getHealth() % 10 == 0 ? imp.getHealth() : imp.getHealth() - (imp.getHealth() % 10) + 10;
+                                if (tempHealth > 0) {
+                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
+                                    createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 8);
+                                }
+
                                 if (imp.isAttackLeft() || imp.isAttackRight() || imp.isAttackUp() || imp.isAttackDown())
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
                                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
@@ -1330,6 +1340,7 @@ public class Window {
                 createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
             }
             if (!SingletonPlayer.player.getHeadTexture().equals("nothing")) {
+//                System.out.println(SingletonPlayer.player.getHeadAnimation());
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getHeadAnimation()));
                 createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
             }
@@ -1337,8 +1348,7 @@ public class Window {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getHandsAnimation()));
                 createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
             }
-            if ((SingletonPlayer.player.isAttackLeft() || SingletonPlayer.player.isAttackRight() || SingletonPlayer.player.isAttackUp() ||
-                    SingletonPlayer.player.isAttackDown()) && !SingletonPlayer.player.isDead() && !level.equals("MainMenu")) {
+            if (SingletonPlayer.player.isAttack() && !SingletonPlayer.player.isDead() && !level.equals("MainMenu")) {
                 glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getWeaponAnimation()));
                 createQuadTexture(SingletonPlayer.player.getX() - SingletonPlayer.player.getWeapon().getMinX(), SingletonPlayer.player.getY() - SingletonPlayer.player.getWeapon().getMinY(),
                         SingletonPlayer.player.getX() + SingletonPlayer.player.getWeapon().getMaxX(), SingletonPlayer.player.getY() + SingletonPlayer.player.getWeapon().getMaxY());
