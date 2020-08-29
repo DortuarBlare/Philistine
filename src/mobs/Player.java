@@ -67,10 +67,7 @@ public class Player extends Mob {
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 7) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
@@ -82,10 +79,7 @@ public class Player extends Mob {
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 7) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
@@ -97,10 +91,7 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 27, getY() - 1, getX() + 95, getY() + 38);
                         if (getHitAnimationTime() == 7) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
@@ -112,10 +103,7 @@ public class Player extends Mob {
                             getAttackBox().update(getX() + 28, getY() + 39, getX() + 96, getY() + 78);
                         if (getHitAnimationTime() == 7) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
@@ -133,10 +121,7 @@ public class Player extends Mob {
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
@@ -151,10 +136,7 @@ public class Player extends Mob {
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
@@ -169,10 +151,7 @@ public class Player extends Mob {
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
@@ -187,10 +166,7 @@ public class Player extends Mob {
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
@@ -198,65 +174,61 @@ public class Player extends Mob {
                 case "stick":
                     if (isAttackLeft()) {
                         if (getHitAnimationTime() == 5)
-                            getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
+                            getAttackBox().update(getX() - 7, getY() + 43, getX() + 15, getY() + 45);
                         if (getHitAnimationTime() == 6)
-                            getAttackBox().update(getX() + 1, getY() + 43, getX() + 12, getY() + 45);
+                            getAttackBox().update(getX() - 19, getY() + 43, getX() + 12, getY() + 45);
                         if (getHitAnimationTime() == 7)
-                            getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
+                            getAttackBox().update(getX() - 7, getY() + 43, getX() + 15, getY() + 45);
                         if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
                     else if (isAttackRight()) {
                         if (getHitAnimationTime() == 5)
-                            getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
+                            getAttackBox().update(getX() + 49, getY() + 43, getX() + 81, getY() + 45);
                         if (getHitAnimationTime() == 6)
-                            getAttackBox().update(getX() + 52, getY() + 43, getX() + 62, getY() + 45);
+                            getAttackBox().update(getX() + 51, getY() + 43, getX() + 83, getY() + 45);
                         if (getHitAnimationTime() == 7)
-                            getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
+                            getAttackBox().update(getX() + 49, getY() + 43, getX() + 81, getY() + 45);
                         if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
                     else if (isAttackUp()) {
                         if (getHitAnimationTime() == 5)
-                            getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
+                            getAttackBox().update(getX() + 39, getY() - 9, getX() + 41, getY() + 17);
                         if (getHitAnimationTime() == 6)
-                            getAttackBox().update(getX() + 39, getY(), getX() + 42, getY() + 19);
+                            getAttackBox().update(getX() + 39, getY() - 17, getX() + 41, getY() + 17);
                         if (getHitAnimationTime() == 7)
-                            getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
+                            getAttackBox().update(getX() + 39, getY() - 9, getX() + 41, getY() + 17);
                         if (getHitAnimationTime() == 8)
                             getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
                     else if (isAttackDown()) {
+                        if (getHitAnimationTime() == 5)
+                            getAttackBox().update(getX() + 27, getY() + 49, getX() + 29, getY() + 75);
+                        if (getHitAnimationTime() == 6)
+                            getAttackBox().update(getX() + 27, getY() + 51, getX() + 29, getY() + 83);
+                        if (getHitAnimationTime() == 7)
+                            getAttackBox().update(getX() + 27, getY() + 49, getX() + 29, getY() + 75);
+                        if (getHitAnimationTime() == 8)
+                            getAttackBox().update(0,0,0,0);
                         if (getHitAnimationTime() == 9) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             stopTimer();
                         }
                     }
@@ -264,10 +236,7 @@ public class Player extends Mob {
                 case "nothing":
                     if (getHitAnimationTime() == 7) {
                         setHitAnimationTime(1);
-                        setAttackLeft(false);
-                        setAttackRight(false);
-                        setAttackUp(false);
-                        setAttackDown(false);
+                        setAttackToFalse();
                         getAttackBox().update(0,0,0,0);
                         stopTimer();
                     }
@@ -279,10 +248,7 @@ public class Player extends Mob {
         @Override
         public void run() {
             incrementDeathAnimationTime();
-            if (getDeathAnimationTime() == 6) {
-                getTimer().cancel();
-                getTimer().purge();
-            }
+            if (getDeathAnimationTime() == 6) deathAnimationTask.cancel();
         }
     };
 
@@ -360,10 +326,7 @@ public class Player extends Mob {
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 7) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
@@ -375,10 +338,7 @@ public class Player extends Mob {
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 7) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
@@ -390,10 +350,7 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 27, getY() - 1, getX() + 95, getY() + 38);
                             if (getHitAnimationTime() == 7) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
@@ -405,10 +362,7 @@ public class Player extends Mob {
                                 getAttackBox().update(getX() + 28, getY() + 39, getX() + 96, getY() + 78);
                             if (getHitAnimationTime() == 7) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 getAttackBox().update(0,0,0,0);
                                 stopTimer();
                             }
@@ -426,10 +380,7 @@ public class Player extends Mob {
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
@@ -444,10 +395,7 @@ public class Player extends Mob {
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
@@ -462,10 +410,7 @@ public class Player extends Mob {
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
@@ -480,10 +425,7 @@ public class Player extends Mob {
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
@@ -491,65 +433,61 @@ public class Player extends Mob {
                     case "stick":
                         if (isAttackLeft()) {
                             if (getHitAnimationTime() == 5)
-                                getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
+                                getAttackBox().update(getX() - 7, getY() + 43, getX() + 15, getY() + 45);
                             if (getHitAnimationTime() == 6)
-                                getAttackBox().update(getX() + 1, getY() + 43, getX() + 12, getY() + 45);
+                                getAttackBox().update(getX() - 19, getY() + 43, getX() + 12, getY() + 45);
                             if (getHitAnimationTime() == 7)
-                                getAttackBox().update(getX() + 6, getY() + 43, getX() + 15, getY() + 45);
+                                getAttackBox().update(getX() - 7, getY() + 43, getX() + 15, getY() + 45);
                             if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
                         else if (isAttackRight()) {
                             if (getHitAnimationTime() == 5)
-                                getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
+                                getAttackBox().update(getX() + 49, getY() + 43, getX() + 81, getY() + 45);
                             if (getHitAnimationTime() == 6)
-                                getAttackBox().update(getX() + 52, getY() + 43, getX() + 62, getY() + 45);
+                                getAttackBox().update(getX() + 51, getY() + 43, getX() + 83, getY() + 45);
                             if (getHitAnimationTime() == 7)
-                                getAttackBox().update(getX() + 48, getY() + 43, getX() + 58, getY() + 45);
+                                getAttackBox().update(getX() + 49, getY() + 43, getX() + 81, getY() + 45);
                             if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
                         else if (isAttackUp()) {
                             if (getHitAnimationTime() == 5)
-                                getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
+                                getAttackBox().update(getX() + 39, getY() - 9, getX() + 41, getY() + 17);
                             if (getHitAnimationTime() == 6)
-                                getAttackBox().update(getX() + 39, getY(), getX() + 42, getY() + 19);
+                                getAttackBox().update(getX() + 39, getY() - 17, getX() + 41, getY() + 17);
                             if (getHitAnimationTime() == 7)
-                                getAttackBox().update(getX() + 39, getY() + 2, getX() + 42, getY() + 19);
+                                getAttackBox().update(getX() + 39, getY() - 9, getX() + 41, getY() + 17);
                             if (getHitAnimationTime() == 8)
                                 getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
                         else if (isAttackDown()) {
+                            if (getHitAnimationTime() == 5)
+                                getAttackBox().update(getX() + 27, getY() + 49, getX() + 29, getY() + 75);
+                            if (getHitAnimationTime() == 6)
+                                getAttackBox().update(getX() + 27, getY() + 51, getX() + 29, getY() + 83);
+                            if (getHitAnimationTime() == 7)
+                                getAttackBox().update(getX() + 27, getY() + 49, getX() + 29, getY() + 75);
+                            if (getHitAnimationTime() == 8)
+                                getAttackBox().update(0,0,0,0);
                             if (getHitAnimationTime() == 9) {
                                 setHitAnimationTime(1);
-                                setAttackLeft(false);
-                                setAttackRight(false);
-                                setAttackUp(false);
-                                setAttackDown(false);
+                                setAttackToFalse();
                                 stopTimer();
                             }
                         }
@@ -557,10 +495,7 @@ public class Player extends Mob {
                     case "nothing":
                         if (getHitAnimationTime() == 7) {
                             setHitAnimationTime(1);
-                            setAttackLeft(false);
-                            setAttackRight(false);
-                            setAttackUp(false);
-                            setAttackDown(false);
+                            setAttackToFalse();
                             getAttackBox().update(0,0,0,0);
                             stopTimer();
                         }
@@ -594,11 +529,14 @@ public class Player extends Mob {
                         takeDamage(mob.getDamage());
                         if (getHealth() <= 0) {
                             setDead(true);
+                            knockbackTask.cancel();
+                            hitAnimationTask.cancel();
                             getTimer().schedule(deathAnimationTask, 0, 200);
                         }
                         else if (!isKnockBackTaskStarted()) {
                             setImmortal(true);
-                            setKnockBackTaskStarted(false);
+                            setKnockBackTaskStarted(true);
+                            setAttackToFalse();
                             getTimer().schedule(knockbackTask, 0, 10);
                         }
                     }

@@ -183,7 +183,7 @@ public class Window {
         firstLevelObjectList.add(new Furniture("trash", 462, 173));
         firstLevelObjectList.add(new Gate("verticalGate", 628, 147));
         firstLevelObjectList.add(new Gate("verticalGate", 627, 243));
-        firstLevelObjectList.add(new Weapon("stick", "thrust", 100, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
+        firstLevelObjectList.add(new Weapon("stick", "thrust", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
         firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
 
         // Добавление объектов на третий уровень
@@ -1384,7 +1384,6 @@ public class Window {
 
             // Отрисовка экипировки и анимации
             SingletonPlayer.player.update(window, level);
-            System.out.println(SingletonPlayer.player.getBodyAnimation());
             glBindTexture(GL_TEXTURE_2D, textureMap.get(SingletonPlayer.player.getBodyAnimation()));
             createQuadTexture(SingletonPlayer.player.getX(), SingletonPlayer.player.getY(), SingletonPlayer.player.getX() + 64, SingletonPlayer.player.getY() + 64);
             if (!SingletonPlayer.player.getFeetTexture().equals("nothing")) {

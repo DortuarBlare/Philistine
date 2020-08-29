@@ -140,6 +140,7 @@ public class Imp extends Mob {
         setAnimationTaskStarted(false);
         setHitAnimationTaskStarted(false);
         setKnockBackTaskStarted(false);
+        getAttackBox().update(0,0,0,0);
     }
 
     public void update() {
@@ -169,10 +170,8 @@ public class Imp extends Mob {
                 if (!isKnockBackTaskStarted()) {
                     setImmortal(true);
                     setKnockBackTaskStarted(true);
-                    setAttackLeft(false);
-                    setAttackRight(false);
-                    setAttackUp(false);
-                    setAttackDown(false);
+                    setAttackToFalse();
+                    getAttackBox().update(0,0,0,0);
                     getTimer().schedule(getKnockbackTask(), 0, 10);
                 }
                 hurtSound.play(hurtSoundId);

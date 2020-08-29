@@ -224,6 +224,13 @@ public abstract class Mob {
         return false;
     }
 
+    public void setAttackToFalse() {
+        isAttackLeft = false;
+        isAttackRight = false;
+        isAttackUp = false;
+        isAttackDown = false;
+    }
+
     public boolean isAttackLeft() { return isAttackLeft; }
 
     public void setAttackLeft(boolean attackLeft) { isAttackLeft = attackLeft; }

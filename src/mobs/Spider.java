@@ -12,7 +12,7 @@ import java.util.TimerTask;
 
 public class Spider extends Mob {
     private Source hurtSound, hitSound;
-    private int hurtSoundId, hitSoundId, deathSoundId;
+    private final int hurtSoundId, hitSoundId, deathSoundId;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
@@ -92,11 +92,21 @@ public class Spider extends Mob {
         knockbackTask = new TimerTask() {
             @Override
             public void run() {
-                if (getKnockBackDirection().equals("left")) knockBackLeft();
-                else if (getKnockBackDirection().equals("right")) knockBackRight();
-                else if (getKnockBackDirection().equals("up")) knockBackUp();
-                else if (getKnockBackDirection().equals("down")) knockBackDown();
                 incrementKnockBackTime();
+                switch (getKnockBackDirection()) {
+                    case "left":
+                        knockBackLeft();
+                        break;
+                    case "right":
+                        knockBackRight();
+                        break;
+                    case "up":
+                        knockBackUp();
+                        break;
+                    case "down":
+                        knockBackDown();
+                        break;
+                }
             }
         };
         animationTask = new TimerTask() {
@@ -116,7 +126,7 @@ public class Spider extends Mob {
                     else if (isAttackUp()) getAttackBox().update(getX() + 16, getY() + 11, getX() + 45, getY() + 19);
                     else if (isAttackDown()) getAttackBox().update(getX() + 16, getY() + 43, getX() + 45, getY() + 54);
                 }
-                if (getHitAnimationTime() == 4) {
+                else if (getHitAnimationTime() == 4) {
                     setAttackLeft(false);
                     setAttackRight(false);
                     setAttackUp(false);
@@ -132,6 +142,7 @@ public class Spider extends Mob {
         setAnimationTaskStarted(false);
         setHitAnimationTaskStarted(false);
         setKnockBackTaskStarted(false);
+        getAttackBox().update(0,0,0,0);
     }
 
     public void update() {
@@ -161,10 +172,8 @@ public class Spider extends Mob {
                 if (!isKnockBackTaskStarted()) {
                     setImmortal(true);
                     setKnockBackTaskStarted(true);
-                    setAttackLeft(false);
-                    setAttackRight(false);
-                    setAttackUp(false);
-                    setAttackDown(false);
+                    setAttackToFalse();
+                    getAttackBox().update(0,0,0,0);
                     getTimer().schedule(getKnockbackTask(), 0, 10);
                 }
                 hurtSound.play(hurtSoundId);

@@ -7,15 +7,16 @@ public class Shop extends Container {
         super("texture", true, false, 0, 0, 0, 0, new AABB());
         // Случайная генерация одежды
         int randomNumber;
-        int forDuplicateExclude = 0;
+        int forDuplicateExclude1 = 0, forDuplicateExclude2 = 0;
         for (int i = 0; i < 3; i++) {
             Armor armor;
             randomNumber = (int) (Math.random() * 22);
             if (i > 0) {
-                while (randomNumber == forDuplicateExclude)
+                while (randomNumber == forDuplicateExclude1 || randomNumber == forDuplicateExclude2)
                     randomNumber = (int) (Math.random() * 22);
             }
-            forDuplicateExclude = randomNumber;
+            if (i == 0) forDuplicateExclude1 = randomNumber;
+            if (i == 1) forDuplicateExclude2 = randomNumber;
             switch (randomNumber) {
                 case 0:
                     armor = new Armor("plate_shoes", "feet", 5, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 64, this.getMaxY() + 64, 10);
