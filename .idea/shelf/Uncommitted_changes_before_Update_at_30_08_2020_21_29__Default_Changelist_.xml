@@ -1,0 +1,34 @@
+<changelist name="Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]" date="1598798144198" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 30.08.2020 21:29 [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Philistine/mobs/Player.class" />
+    <option name="AFTER_PATH" value="out/production/Philistine/mobs/Player.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]/Player.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Philistine/Window.class" />
+    <option name="AFTER_PATH" value="out/production/Philistine/Window.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]/Window.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Philistine/Window$2.class" />
+    <option name="AFTER_PATH" value="out/production/Philistine/Window$2.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]/Window$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Philistine/mobs/Spider.class" />
+    <option name="AFTER_PATH" value="out/production/Philistine/mobs/Spider.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]/Spider.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Philistine/Window$1.class" />
+    <option name="AFTER_PATH" value="out/production/Philistine/Window$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]/Window$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/Philistine/content/Storage.class" />
+    <option name="AFTER_PATH" value="out/production/Philistine/content/Storage.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_30_08_2020_21_29_[Default_Changelist]/Storage.class" />
+  </binary>
+</changelist>

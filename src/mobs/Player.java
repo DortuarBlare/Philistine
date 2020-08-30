@@ -258,9 +258,9 @@ public class Player extends Mob {
         setHitAnimationTime(1);
         setDeathAnimationTime(0);
         setKnockBackTime(0);
-        money = 30;
+        money = 0;
         keys = 1;
-        weapon = new Weapon("nothing", "slash", 10, new AABB());
+        weapon = new Weapon("longsword", "slash", 10, new AABB());
         head = new Armor("nothing", "head", 0, true);
         shoulders = new Armor("nothing", "shoulders", 0, true);
         overTorso = new Armor("nothing", "overTorso", 0, true);

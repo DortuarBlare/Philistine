@@ -44,16 +44,21 @@ public class Window {
     private Waiter waiter;
     private String level = "MainMenu";
     private boolean canChangeLevel = false;
+    private int deathsCounter = 0;
     boolean key_E_Pressed = false;
     boolean forMainMenu = true;
     private boolean firstLevelMobSpawning, secondLevelMobSpawning, fourthLevelMobSpawning = false;
+    private boolean firstLevelMobSpawningStopped, secondLevelMobSpawningStopped, fourthLevelMobSpawningStopped = false;
     private int time = 0;
     private Timer mobTimer = new Timer();
     private TimerTask mobSpawnTask = new TimerTask() {
         @Override
         public void run() {
             time++;
-            if (time == 5) stopMobSpawn();
+            if (time == 5) {
+                firstLevelMobSpawningStopped = true;
+                stopMobSpawn();
+            }
             SingletonMobs.mobList.add(new Slime(470, 288, 1, 50, 0, 5));
         }
     };
@@ -67,13 +72,26 @@ public class Window {
             @Override
             public void run() {
                 time++;
+                if (level.equals("FirstLevel")) {
+                    SingletonMobs.mobList.add(new Slime(470, 288, 1, 50, 0, 5));
+                    if (time == 5) {
+                        firstLevelMobSpawningStopped = true;
+                        stopMobSpawn();
+                    }
+                }
                 if (level.equals("SecondLevel")) {
                     SingletonMobs.mobList.add(new Spider(477, 284, 1, 60, 0, 10));
-                    if (time == 3) stopMobSpawn();
+                    if (time == 3) {
+                        secondLevelMobSpawningStopped = true;
+                        stopMobSpawn();
+                    }
                 }
                 else if (level.equals("ForthLevel")) {
                     SingletonMobs.mobList.add(new Imp(477, 284, 1, 100, 0, 50));
-                    if (time == 1) stopMobSpawn();
+                    if (time == 1) {
+                        fourthLevelMobSpawningStopped = true;
+                        stopMobSpawn();
+                    }
                 }
             }
         };
@@ -156,70 +174,26 @@ public class Window {
             soundMap.put(Storage.soundString[i], id = AudioMaster.loadSound("sounds/" + Storage.soundString[i]));
 
         // Единичная загрузка всех хитбоксов
-        for(int i = 0; i < Storage.aabbString.length; i++)
+        for (int i = 0; i < Storage.aabbString.length; i++)
             aabbMap.put(Storage.aabbString[i], new AABB());
 
-        // Переходы м/у уровнями
+        // Единичная инициализация переходов м/у уровнями
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(626, 237, 640, 335);
         aabbMap.get("entranceToThirdLevel").update(197, 104, 237, 107);
         aabbMap.get("entranceToForthLevel").update(247, 124, 283, 127);
         aabbMap.get("entranceFromThirdToSecondLevel").update(249, 134, 288, 146);
         aabbMap.get("entranceFromForthToSecondLevel").update(199, 108, 236, 112);
-        aabbMap.get("entranceFromTavernToTown").update(224,316,255,318);
-        aabbMap.get("entranceFromForgeToTown").update(384,316,415,318);
         aabbMap.get("entranceFromFourthToTownLevel").update(292, 356, 339, 359);
+        aabbMap.get("entranceFromTavernToTown").update(224, 316, 255, 318);
+        aabbMap.get("entranceFromForgeToTown").update(384, 316, 415, 318);
         aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
 
-        // Добавление объектов на первый уровень
-        firstLevelObjectList.add(new Furniture("barrelOpened", 118, 135));
-        firstLevelObjectList.add(new Furniture("bagMedium", 137, 134));
-        firstLevelObjectList.add(new Furniture("boxOpened", 308, 129));
-        firstLevelObjectList.add(new Furniture("chair1", 400, 173));
-        firstLevelObjectList.add(new Furniture("chair3", 432, 227));
-        firstLevelObjectList.add(new Furniture("table1", 426, 163));
-        firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
-        firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
-        firstLevelObjectList.add(new Furniture("bones", 113, 173));
-        firstLevelObjectList.add(new Furniture("trash", 462, 173));
-        firstLevelObjectList.add(new Gate("verticalGate", 628, 147));
-        firstLevelObjectList.add(new Gate("verticalGate", 628, 243));
-        firstLevelObjectList.add(new Weapon("stick", "thrust", 10, true, true, 150, 150, 342, 342, new AABB(231, 231, 259, 259)));
-        firstLevelObjectList.add(new Armor("chain_helmet", "head", 4, true, true, 300, 150, 364, 214, 10));
-
-        // Добавление объектов на третий уровень
-        thirdLevelObjectList.add(new Chest("chest", false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
-        thirdLevelObjectList.add(new Box("box", false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
-        thirdLevelObjectList.add(new Box("box", false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
-        thirdLevelObjectList.add(new Box("box", false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 150, 234, 150 + 20, 234 + 30, new AABB(150, 234, 150 + 20, 234 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 180, 260, 180 + 20, 260 + 30, new AABB(180, 260, 180 + 20, 260 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 110, 278, 110 + 20, 278 + 30, new AABB(110, 278, 110 + 20, 278 + 30)));
-        thirdLevelObjectList.add(new Furniture("bagBig", 171, 131));
-        thirdLevelObjectList.add(new Furniture("bagMedium", 199, 133));
-        thirdLevelObjectList.add(new Furniture("bagSmall", 113, 208));
-        thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
-        thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
-
-        //2
-        secondLevelObjectList.add(new Furniture("gate3", 198, 54));
-        secondLevelObjectList.add(new Furniture("gate3", 246, 54));
-
-        // Добавление объектов на четвертый уровень
-        forthLevelObjectList.add(new Furniture("gate2", 292, 336));
-        forthLevelObjectList.add(new Furniture("gate3", 198, 54));
-        forthLevelObjectList.add(new Furniture("trash", 118, 288));
-        forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
-        forthLevelObjectList.add(new Furniture("bones", 466, 163));
-        forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
-        forthLevelObjectList.add(new Furniture("water", 466, 163));
-        forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
-
+        addAllObjects();
         shop = new Shop();
         waiter = new Waiter(168, 136, 1);
         blacksmith = new Blacksmith(176, 126, 1);
         SingletonMobs.mobList.add(SingletonPlayer.player);
-        SingletonMobs.mobList.add(new Slime(470, 288, 1, 50, 0, 5));
 
         // Обработка единичного нажатий клавиш
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -299,7 +273,7 @@ public class Window {
                         glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
 
                         // Установление хитбоксов стен первого уровня
-                        for (int i = 0, j = 0; i < 7; i++, j+=4)
+                        for (int i = 0, j = 0; i < 7; i++, j += 4)
                             aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1], Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
                         SingletonPlayer.player.setX(199);
                         SingletonPlayer.player.setY(273);
@@ -441,8 +415,7 @@ public class Window {
                         glTranslated(-1, 0, 0);
                         SingletonPlayer.player.setForPlacingCamera(SingletonPlayer.player.getForPlacingCamera() + 1);
                         SingletonPlayer.player.setMainMenuDirection(true);
-                    }
-                    else {
+                    } else {
                         glTranslated(1, 0, 0);
                         SingletonPlayer.player.setForPlacingCamera(SingletonPlayer.player.getForPlacingCamera() - 1);
                         SingletonPlayer.player.setMainMenuDirection(false);
@@ -473,8 +446,10 @@ public class Window {
                     // Переход в данж
                     if (SingletonPlayer.player.getX() + 32 == 1519) {
                         SingletonPlayer.player.setDialogBubble(true);
-                        if (SingletonPlayer.player.isDialogBubbleChoice()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_Yes"));
-                        else if (!SingletonPlayer.player.isDialogBubbleChoice()) glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_No"));
+                        if (SingletonPlayer.player.isDialogBubbleChoice())
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_Yes"));
+                        else if (!SingletonPlayer.player.isDialogBubbleChoice())
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("enterTheDungeon_No"));
                         createQuadTexture(SingletonPlayer.player.getX() - 20, SingletonPlayer.player.getY() - 55, SingletonPlayer.player.getX() + 40, SingletonPlayer.player.getY());
                     }
 
@@ -486,7 +461,7 @@ public class Window {
                             SingletonPlayer.player.setForPlacingCamera(3);
 
                             // Обновление хитбоксов стен для tavern
-                            for (int i = 0, j = 0; i < 13; i++, j+=4) {
+                            for (int i = 0, j = 0; i < 13; i++, j += 4) {
                                 aabbMap.get("wall" + i).update(Storage.tavernLevelWalls[j], Storage.tavernLevelWalls[j + 1],
                                         Storage.tavernLevelWalls[j + 2], Storage.tavernLevelWalls[j + 3]);
                             }
@@ -502,7 +477,7 @@ public class Window {
                             SingletonPlayer.player.setForPlacingCamera(315);
 
                             // Обновление хитбоксов стен для forge
-                            for (int i = 0, j = 0; i < 13; i++, j+=4) {
+                            for (int i = 0, j = 0; i < 13; i++, j += 4) {
                                 aabbMap.get("wall" + i).update(Storage.forgeLevelWalls[j], Storage.forgeLevelWalls[j + 1],
                                         Storage.forgeLevelWalls[j + 2], Storage.forgeLevelWalls[j + 3]);
                             }
@@ -558,7 +533,7 @@ public class Window {
                         level = "Town";
 
                         // Обновление хитбоксов стен для города
-                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
+                        for (int i = 0, j = 0; i < 13; i++, j += 4) {
                             aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
                                     Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
                         }
@@ -620,7 +595,7 @@ public class Window {
                                 shopObjectList.get(i).getCollisionBox())) {
                             Armor tempArmor = (Armor) shopObjectList.get(i);
                             glBindTexture(GL_TEXTURE_2D, textureMap.get("price"));
-                            createQuadTexture(tempArmor.getMinX() + 15 ,tempArmor.getCollisionBox().getMin().y - 27, tempArmor.getMinX() + 45,  tempArmor.getCollisionBox().getMin().y);
+                            createQuadTexture(tempArmor.getMinX() + 15, tempArmor.getCollisionBox().getMin().y - 27, tempArmor.getMinX() + 45, tempArmor.getCollisionBox().getMin().y);
                             int tempX0, tempX1, tempY0, tempY1;
                             tempX0 = tempArmor.getMinX() + 37 - 7;
                             tempX1 = tempArmor.getMinX() + 37;
@@ -729,7 +704,7 @@ public class Window {
                         }
                         else if (object instanceof Gate) {
                             Gate gate = (Gate) object;
-                            if (canChangeLevel && gate.getMinY() == 243) {
+                            if (canChangeLevel && firstLevelMobSpawningStopped && gate.getMinY() == 243) {
                                 gate.setFinalY(147);
                                 gate.update();
                             }
@@ -762,8 +737,7 @@ public class Window {
                                     }
                                     break;
                                 }
-                            }
-                            else if (firstLevelObjectList.get(i) instanceof Weapon) {
+                            } else if (firstLevelObjectList.get(i) instanceof Weapon) {
                                 Weapon changingWeapon = (Weapon) firstLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), changingWeapon.getCollisionBox())) {
                                     Weapon playerWeapon = SingletonPlayer.player.getWeapon();
@@ -785,8 +759,7 @@ public class Window {
                                     }
                                     break;
                                 }
-                            }
-                            else if (firstLevelObjectList.get(i) instanceof Lever) {
+                            } else if (firstLevelObjectList.get(i) instanceof Lever) {
                                 Lever change = (Lever) firstLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
                                     change.setState("On");
@@ -804,19 +777,10 @@ public class Window {
                             if (!slime.isDead()) {
                                 slime.update();
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_" + slime.getMoveDirection() + "_0" + slime.getAnimationTime()));
-                            }
-                            else glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_death_0" + slime.getDeathAnimationTime()));
+                            } else
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("slime_death_0" + slime.getDeathAnimationTime()));
                             createQuadTexture(slime.getX(), slime.getY(), slime.getX() + 18, slime.getY() + 12);
                         }
-                    }
-
-                    // Проверка возможности перехода на другой уровень
-                    for (Mob mob : SingletonMobs.mobList) {
-                        if (!mob.isDead() && !(mob instanceof Player)) {
-                            canChangeLevel = false;
-                            break;
-                        }
-                        canChangeLevel = true;
                     }
 
                     // Проверка всех мобов на столкновение со стенами, объектами. Столкновения объектов с объектами
@@ -865,8 +829,7 @@ public class Window {
                                     SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() + 10);
                                     coinSound.play(soundMap.get("pickedCoin"));
                                     break;
-                                }
-                                else if ((mob instanceof Player) && (object instanceof Potion)) {
+                                } else if ((mob instanceof Player) && (object instanceof Potion)) {
                                     object.getTimer().cancel();
                                     object.getTimer().purge();
                                     firstLevelObjectList.remove(object);
@@ -883,19 +846,30 @@ public class Window {
                         }
                     }
 
+                    // Проверка возможности перехода на другой уровень
+                    if (firstLevelMobSpawningStopped) {
+                        for (Mob mob : SingletonMobs.mobList) {
+                            if (mob.isDead() && !(mob instanceof Player)) deathsCounter++;
+                        }
+                        if (deathsCounter == SingletonMobs.mobList.size() - 1) canChangeLevel = true;
+                        else canChangeLevel = false;
+                        deathsCounter = 0;
+                    }
+
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToSecondLevel"))) {
                         if (canChangeLevel) {
                             SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
                             // Обновление хитбоксов стен для второго уровня
-                            for (int i = 0, j = 0; i < 13; i++, j+=4) {
+                            for (int i = 0, j = 0; i < 13; i++, j += 4) {
                                 aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
                                         Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
                             }
-                            SingletonPlayer.player.setX(2 - 14);
+                            SingletonPlayer.player.setX(-12);
                             SingletonPlayer.player.setY(225);
                             level = "SecondLevel";
+                            canChangeLevel = false;
                         }
                     }
                     break;
@@ -907,6 +881,17 @@ public class Window {
                     if (!secondLevelMobSpawning) {
                         secondLevelMobSpawning = true;
                         mobTimer.schedule(mobSpawnTask, 3000, 10000);
+                    }
+
+                    // Отрисовка всех объектов
+                    for (Object object : secondLevelObjectList) {
+                        if (!object.isDrawAble()) continue;
+                        if (object.getTexture().equals("gate3") && canChangeLevel && secondLevelMobSpawningStopped) {
+                            object.setIsLying(false);
+                            object.setNoclip(true);
+                        }
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
                     }
 
                     // Все операции с мобами
@@ -929,57 +914,83 @@ public class Window {
                         if (!mob.isDead()) {
                             if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall8")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall11")))
                                 mob.stopRight();
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5"))  || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall7"))  || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall10")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall7")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall10")))
                                 mob.stopLeft();
                             if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall9")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall12")))
                                 mob.stopUp();
                             if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                                 mob.stopDown();
+
+                            for (Object object : secondLevelObjectList) {
+                                // Столкновение мобов с !noclip объектами
+                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()) && !object.isNoclip())
+                                    mob.stop(CollisionMessage.getMessage());
+                            }
                         }
+                    }
+
+                    // Проверка возможности перехода на другой уровень
+                    if (secondLevelMobSpawningStopped) {
+                        for (Mob mob : SingletonMobs.mobList) {
+                            if (mob.isDead() && !(mob instanceof Player)) deathsCounter++;
+                        }
+                        if (deathsCounter == SingletonMobs.mobList.size() - 1) {
+                            System.out.println(deathsCounter + " " + (SingletonMobs.mobList.size() - 1));
+                            canChangeLevel = true;
+                        }
+                        else canChangeLevel = false;
+                        deathsCounter = 0;
                     }
 
                     // Проверка перехода на первый уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToFirstLevel"))) {
-                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
+                        if (canChangeLevel) {
+                            SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
-                        // Обновление хитбоксов стен для первого уровня
-                        for(int i = 0, j = 0; i < 13; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1],
-                                    Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
+                            // Обновление хитбоксов стен для первого уровня
+                            for (int i = 0, j = 0; i < 13; i++, j += 4) {
+                                aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1],
+                                        Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
+                            }
+                            SingletonPlayer.player.setX(580);
+                            SingletonPlayer.player.setY(281);
+                            level = "FirstLevel";
                         }
-                        SingletonPlayer.player.setX(580);
-                        SingletonPlayer.player.setY(281);
-                        level = "FirstLevel";
                     }
 
                     // Проверка перехода на 3 уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToThirdLevel"))) {
-                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
+                        if (canChangeLevel) {
+                            SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
-                        // Обновление хитбоксов стен для 3 уровня
-                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(Storage.thirdLevelWalls[j], Storage.thirdLevelWalls[j + 1],
-                                    Storage.thirdLevelWalls[j + 2], Storage.thirdLevelWalls[j + 3]);
+                            // Обновление хитбоксов стен для 3 уровня
+                            for (int i = 0, j = 0; i < 13; i++, j += 4) {
+                                aabbMap.get("wall" + i).update(Storage.thirdLevelWalls[j], Storage.thirdLevelWalls[j + 1],
+                                        Storage.thirdLevelWalls[j + 2], Storage.thirdLevelWalls[j + 3]);
+                            }
+                            SingletonPlayer.player.setX(240);
+                            SingletonPlayer.player.setY(120);
+                            SingletonPlayer.player.setMoveDirection("down");
+                            level = "ThirdLevel";
                         }
-                        SingletonPlayer.player.setX(240);
-                        SingletonPlayer.player.setY(120);
-                        SingletonPlayer.player.setMoveDirection("down");
-                        level = "ThirdLevel";
                     }
 
                     // Проверка перехода на 4 уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceToForthLevel"))) {
-                        SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
+                        if (canChangeLevel) {
+                            SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
-                        // Обновление хитбоксов стен для 4 уровня
-                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(Storage.fourthLevelWalls[j], Storage.fourthLevelWalls[j + 1],
-                                    Storage.fourthLevelWalls[j + 2], Storage.fourthLevelWalls[j + 3]);
+                            // Обновление хитбоксов стен для 4 уровня
+                            for (int i = 0, j = 0; i < 13; i++, j += 4) {
+                                aabbMap.get("wall" + i).update(Storage.fourthLevelWalls[j], Storage.fourthLevelWalls[j + 1],
+                                        Storage.fourthLevelWalls[j + 2], Storage.fourthLevelWalls[j + 3]);
+                            }
+                            SingletonPlayer.player.setX(180);
+                            SingletonPlayer.player.setY(120);
+                            SingletonPlayer.player.setMoveDirection("down");
+                            level = "ForthLevel";
+                            canChangeLevel = false;
                         }
-                        SingletonPlayer.player.setX(180);
-                        SingletonPlayer.player.setY(120);
-                        SingletonPlayer.player.setMoveDirection("down");
-                        level = "ForthLevel";
                     }
                     break;
                 }
@@ -1029,8 +1040,7 @@ public class Window {
                                 if (object.isNoclip() && object2.isNoclip()) {
                                     object.moveLeft();
                                     object2.moveRight();
-                                }
-                                else if (object.isNoclip() && !object2.isNoclip()) object.moveRight();
+                                } else if (object.isNoclip() && !object2.isNoclip()) object.moveRight();
                                 else if (!object.isNoclip() && object2.isNoclip()) object2.moveRight();
                             }
                         }
@@ -1044,8 +1054,7 @@ public class Window {
                                 SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() + 10);
                                 coinSound.play(soundMap.get("pickedCoin"));
                                 break;
-                            }
-                            else if (object instanceof Potion) {
+                            } else if (object instanceof Potion) {
                                 object.getTimer().cancel();
                                 object.getTimer().purge();
                                 thirdLevelObjectList.remove(object);
@@ -1080,8 +1089,7 @@ public class Window {
                                     }
                                     break;
                                 }
-                            }
-                            else if (thirdLevelObjectList.get(i) instanceof Weapon) {
+                            } else if (thirdLevelObjectList.get(i) instanceof Weapon) {
                                 Weapon changingWeapon = (Weapon) thirdLevelObjectList.get(i);
                                 if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), changingWeapon.getCollisionBox())) {
                                     Weapon playerWeapon = SingletonPlayer.player.getWeapon();
@@ -1102,16 +1110,14 @@ public class Window {
                                     }
                                     break;
                                 }
-                            }
-                            else if (thirdLevelObjectList.get(i) instanceof Container) {
+                            } else if (thirdLevelObjectList.get(i) instanceof Container) {
                                 Container change = (Container) thirdLevelObjectList.get(i);
                                 if (AABB.toInteract(SingletonPlayer.player.getCollisionBox(), change.getCollisionBox())) {
                                     if (change.getState().equals("Closed")) {
                                         if (change.getIsNeedKey() && SingletonPlayer.player.getKeys() > 0) {
                                             SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() - 1);
                                             containerSound.play(soundMap.get("openChest"));
-                                        }
-                                        else containerSound.play(soundMap.get("openBoxBarrel"));
+                                        } else containerSound.play(soundMap.get("openBoxBarrel"));
                                         change.setState("Opened");
                                         if (change.loot.size() != 0) {
                                             thirdLevelObjectList.addAll(change.loot);
@@ -1143,62 +1149,11 @@ public class Window {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("level3"));
                     createQuadTexture(0, 0, 640, 360);
 
+                    // Отрисовка объектов
                     for (Object object : forthLevelObjectList) {
                         if (!object.isDrawAble()) continue;
-                        if (object instanceof Coin) {
-                            Coin coin = (Coin) object;
-                            if (!coin.isAnimationTaskStarted())
-                                coin.getTimer().schedule(coin.getAnimationTask(), 0, 120);
-                            coin.setTexture("coin_0" + coin.getAnimationTime());
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get(coin.getTexture()));
-                        }
-                        else if (object instanceof Container) {
-                            Container container = (Container) object;
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get(container.getTexture() + container.getState()));
-                        }
-                        else glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get(object.getTexture()));
                         createQuadTexture(object.getMinX(), object.getMinY(), object.getMaxX(), object.getMaxY());
-                    }
-
-                    for (int i = 0; i < forthLevelObjectList.size(); i++) {
-                        Object object = forthLevelObjectList.get(i);
-
-                        // Столкновение игрока с !noclip объектами
-                        if (AABB.AABBvsAABB2(SingletonPlayer.player.getCollisionBox(), object.getCollisionBox()) && !object.isNoclip())
-                            SingletonPlayer.player.stop(CollisionMessage.getMessage());
-
-                        // Столкновение объектов с объектами
-                        for (int j = i + 1; j < forthLevelObjectList.size(); j++) {
-                            Object object2 = forthLevelObjectList.get(j);
-                            if (AABB.AABBvsAABB(object.getCollisionBox(), object2.getCollisionBox())) {
-                                if (object.isNoclip() && object2.isNoclip()) {
-                                    object.moveLeft();
-                                    object2.moveRight();
-                                }
-                                else if (object.isNoclip() && !object2.isNoclip()) object.moveRight();
-                                else if (!object.isNoclip() && object2.isNoclip()) object2.moveRight();
-                            }
-                        }
-
-                        // Подбор монет и зелий игроком
-                        if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), object.getCollisionBox())) {
-                            if (object instanceof Coin) {
-                                object.getTimer().cancel();
-                                object.getTimer().purge();
-                                forthLevelObjectList.remove(object);
-                                SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() + 10);
-                                coinSound.play(soundMap.get("pickedCoin"));
-                                break;
-                            }
-                            else if (object instanceof Potion) {
-                                object.getTimer().cancel();
-                                object.getTimer().purge();
-                                forthLevelObjectList.remove(object);
-                                if (SingletonPlayer.player.getHealth() > 90) SingletonPlayer.player.setHealth(100);
-                                else SingletonPlayer.player.setHealth(SingletonPlayer.player.getHealth() + 10);
-                                break;
-                            }
-                        }
                     }
 
                     if (!fourthLevelMobSpawning) {
@@ -1221,14 +1176,16 @@ public class Window {
 
                                 if (imp.isAttackLeft() || imp.isAttackRight() || imp.isAttackUp() || imp.isAttackDown())
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
-                                else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
+                                else
+                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
                             }
                             else {
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_death_0" + imp.getDeathAnimationTime()));
-                                for (int j = 0; j < forthLevelObjectList.size(); j++){
-                                    if (forthLevelObjectList.get(j).getTexture().equals("gate2") || forthLevelObjectList.get(j).getTexture().equals("gate3")) {
-                                        forthLevelObjectList.get(j).setIsLying(false);
-                                        forthLevelObjectList.get(j).setNoclip(true);
+                                for (Object object : forthLevelObjectList) {
+                                    if (object.getTexture().equals("gate2") ||
+                                            object.getTexture().equals("gate3")) {
+                                        object.setIsLying(false);
+                                        object.setNoclip(true);
                                     }
                                 }
                             }
@@ -1247,36 +1204,72 @@ public class Window {
                                 mob.stopUp();
                             if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                                 mob.stopDown();
+
+                            for (Object object : forthLevelObjectList) {
+                                // Столкновение мобов с !noclip объектами
+                                if (AABB.AABBvsAABB2(mob.getCollisionBox(), object.getCollisionBox()) && !object.isNoclip())
+                                    mob.stop(CollisionMessage.getMessage());
+                            }
                         }
+                    }
+
+                    // Проверка возможности перехода на другой уровень
+                    if (fourthLevelMobSpawningStopped) {
+                        for (Mob mob : SingletonMobs.mobList) {
+                            if (mob.isDead() && !(mob instanceof Player)) deathsCounter++;
+                        }
+                        if (deathsCounter == SingletonMobs.mobList.size() - 1) canChangeLevel = true;
+                        else canChangeLevel = false;
+                        deathsCounter = 0;
                     }
 
                     // Проверка перехода на второй уровень
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromForthToSecondLevel"))) {
-                        for (Mob mob : SingletonMobs.mobList) {
-                            if (!mob.isDead() && !(mob instanceof Player));
-                        }
+                        if (canChangeLevel) {
+                            SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
-                        // Обновление хитбоксов стен для второго уровня
-                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
-                            aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
-                                    Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
+                            // Обновление хитбоксов стен для второго уровня
+                            for (int i = 0, j = 0; i < 13; i++, j += 4) {
+                                aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
+                                        Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
+                            }
+                            SingletonPlayer.player.setX(240);
+                            SingletonPlayer.player.setY(120);
+                            SingletonPlayer.player.setMoveDirection("down");
+                            level = "SecondLevel";
                         }
-                        SingletonPlayer.player.setX(240);
-                        SingletonPlayer.player.setY(120);
-                        SingletonPlayer.player.setMoveDirection("down");
-                        level = "SecondLevel";
                     }
                     // Проверка перехода в город
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromFourthToTownLevel"))) { //add to aabb
-                        level = "Town";
-                        // Обновление хитбоксов стен for town
-                        for (int i = 0, j = 0; i < 13; i++, j += 4) {
-                            aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
-                                    Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromFourthToTownLevel"))) {
+                        if (canChangeLevel) {
+                            SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
+
+                            // Обновление хитбоксов стен для города
+                            for (int i = 0, j = 0; i < 7; i++, j += 4) {
+                                aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
+                                        Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
+                            }
+
+                            // Обновление всех объектов
+                            firstLevelObjectList.clear();
+                            secondLevelObjectList.clear();
+                            thirdLevelObjectList.clear();
+                            forthLevelObjectList.clear();
+                            addAllObjects();
+                            shopObjectList.clear();
+                            shop = new Shop();
+                            firstLevelMobSpawning = secondLevelMobSpawning = fourthLevelMobSpawning = false;
+                            firstLevelMobSpawningStopped = secondLevelMobSpawningStopped = fourthLevelMobSpawningStopped = false;
+                            glTranslated(-689, 0, 0);
+                            backgroundMusic.stop(soundMap.get("dungeonAmbient1"));
+                            SingletonPlayer.player.setForPlacingCamera(689);
+                            SingletonPlayer.player.setX(979);
+                            SingletonPlayer.player.setY(192);
+                            SingletonPlayer.player.setSpeed(1);
+                            SingletonPlayer.player.setMoveDirection("left");
+                            level = "Town";
+                            canChangeLevel = false;
                         }
-                        SingletonPlayer.player.setX(290);
-                        SingletonPlayer.player.setY(192);
-                        SingletonPlayer.player.setMoveDirection("left");
                     }
                     break;
                 }
@@ -1287,7 +1280,8 @@ public class Window {
                 // Полоска здоровья
                 int tempHealth = SingletonPlayer.player.getHealth() % 10 == 0 ? SingletonPlayer.player.getHealth() : SingletonPlayer.player.getHealth() - (SingletonPlayer.player.getHealth() % 10) + 10;
                 if (tempHealth >= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get(tempHealth + "hp"));
-                else if (SingletonPlayer.player.getHealth() <= 0) glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
+                else if (SingletonPlayer.player.getHealth() <= 0)
+                    glBindTexture(GL_TEXTURE_2D, textureMap.get("0hp"));
                 createQuadTexture(0, 0, 103, 18);
 
                 // Щит с броней
@@ -1455,8 +1449,7 @@ public class Window {
                 if (level.equals("Town")) {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice())); // Фон второстепенного меню
                     createQuadTexture(SingletonPlayer.player.getForPlacingCamera(), 0, SingletonPlayer.player.getForPlacingCamera() + 640, 360);
-                }
-                else {
+                } else {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice())); // Фон второстепенного меню
                     createQuadTexture(0, 0, 640, 360);
                 }
@@ -1465,6 +1458,47 @@ public class Window {
             glfwPollEvents();
             glfwSwapBuffers(window);
         }
+    }
+
+    private void addAllObjects() {
+        // Добавление объектов на первый уровень
+        firstLevelObjectList.add(new Furniture("barrelOpened", 118, 135));
+        firstLevelObjectList.add(new Furniture("bagMedium", 137, 134));
+        firstLevelObjectList.add(new Furniture("boxOpened", 308, 129));
+        firstLevelObjectList.add(new Furniture("chair1", 400, 173));
+        firstLevelObjectList.add(new Furniture("chair3", 432, 227));
+        firstLevelObjectList.add(new Furniture("table1", 426, 163));
+        firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
+        firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
+        firstLevelObjectList.add(new Furniture("bones", 113, 173));
+        firstLevelObjectList.add(new Furniture("trash", 462, 173));
+        firstLevelObjectList.add(new Gate("verticalGate", 628, 147));
+        firstLevelObjectList.add(new Gate("verticalGate", 628, 243));
+
+        // Добавление объектов на второй уровень
+        secondLevelObjectList.add(new Furniture("gate3", 198, 54));
+        secondLevelObjectList.add(new Furniture("gate3", 246, 54));
+
+        // Добавление объектов на третий уровень
+        thirdLevelObjectList.add(new Chest("chest", false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
+        thirdLevelObjectList.add(new Box("box", false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
+        thirdLevelObjectList.add(new Box("box", false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
+        thirdLevelObjectList.add(new Box("box", false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 150, 234, 150 + 20, 234 + 30, new AABB(150, 234, 150 + 20, 234 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 180, 260, 180 + 20, 260 + 30, new AABB(180, 260, 180 + 20, 260 + 30)));
+        thirdLevelObjectList.add(new Barrel("barrel", false, true, 110, 278, 110 + 20, 278 + 30, new AABB(110, 278, 110 + 20, 278 + 30)));
+        thirdLevelObjectList.add(new Furniture("bagBig", 171, 131));
+        thirdLevelObjectList.add(new Furniture("bagMedium", 199, 133));
+        thirdLevelObjectList.add(new Furniture("bagSmall", 113, 208));
+        thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
+        thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
+
+        // Добавление объектов на четвертый уровень
+        forthLevelObjectList.add(new Furniture("gate2", 292, 336));
+        forthLevelObjectList.add(new Furniture("gate3", 198, 54));
+        forthLevelObjectList.add(new Furniture("trash", 118, 288));
+        forthLevelObjectList.add(new Furniture("bones", 466, 163));
+        forthLevelObjectList.add(new Furniture("water", 466, 163));
     }
 
     private void createQuadTexture(int xMin, int yMin, int xMax, int yMax) {

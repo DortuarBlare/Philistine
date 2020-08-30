@@ -138,6 +138,7 @@ public class Spider extends Mob {
             }
         };
         setKnockBackTime(0);
+        setHitAnimationTime(1);
         setImmortal(false);
         setAnimationTaskStarted(false);
         setHitAnimationTaskStarted(false);
