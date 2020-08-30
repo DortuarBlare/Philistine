@@ -8,37 +8,61 @@ public class Storage {
             108, 339, 640, 359, // wall3
             0, 45, 107, 338, // wall4
             0, 0, 0, 0, // wall5
-            0, 0, 0, 0 // wall6
+            0, 0, 0, 0, // wall6
+            0,0,0,0, // wall7
+            0,0,0,0, // wall8
+            0,0,0,0, // wall9
+            0,0,0,0, // wall10
+            0,0,0,0, // wall11
+            0,0,0,0 // wall12
     };
 
     public static final int[] secondLevelWalls = {
             0, 182, 94, 188, // wall0
             92, 140, 96, 184, // wall1
-            98, 134, 526, 140, // wall2
+            98, 134, 196, 140, // wall2 up
             529, 143, 534, 334, // wall3
             97, 335, 528, 340, // wall4
             92, 290, 96, 334, // wall5
-            0, 287, 92, 291 // wall6
+            0, 287, 92, 291, // wall6
+            195, 102, 197, 139, // wall7 left
+            234, 102, 235, 139, // wall8 right
+            234, 134, 245, 140, // wall9 up
+            235, 122, 245, 139, // wall10 left
+            281, 122, 283, 139, // wall11 right
+            282, 134, 526, 140 // wall12 up
     };
 
     public static final int[] thirdLevelWalls = {
-            96, 135, 528, 141, // wall0
+            96, 135, 528, 141, // wall0 up
             528, 147, 534, 339, // wall1
-            96, 339, 528, 342, // wall2
+            96, 339, 528, 342, // wall2 down
             90, 141, 96, 336, // wall3
             0, 0, 0, 0, // wall4
             0, 0, 0, 0, // wall5
-            0, 0, 0, 0 // wall6
+            0, 0, 0, 0, // wall6
+            0,0,0,0, // wall7
+            0,0,0,0, // wall8
+            0,0,0,0, // wall9
+            0,0,0,0, // wall10
+            0,0,0,0, // wall11
+            0,0,0,0 // wall12
     };
 
     public static final int[] fourthLevelWalls = {
-            96, 135, 528, 141, // wall0
+            96, 135, 193, 141, // wall0 up
             528, 147, 534, 339, // wall1
-            96, 339, 528, 342, // wall2
+            96, 339, 290, 342, // wall2 down
             90, 141, 96, 336, // wall3
-            0, 0, 0, 0, // wall4
-            0, 0, 0, 0, // wall5
-            0, 0, 0, 0 // wall6
+            337, 339, 528, 342, // wall4 down
+            290, 342, 292, 359, // wall5
+            339, 337, 343, 359, // wall6
+            195,107,197,135, // wall7
+            234,106,236,135, // wall8
+            238,138,523,140, // wall9
+            0,0,0,0, // wall10
+            0,0,0,0, // wall11
+            0,0,0,0 // wall12
     };
 
     public static final int[] townLevelWalls = {
@@ -48,7 +72,13 @@ public class Storage {
             0, 0, 0, 0, // wall3
             0, 0, 0, 0, // wall4
             0, 0, 0, 0, // wall5
-            0, 0, 0, 0 // wall6
+            0, 0, 0, 0, // wall6
+            0,0,0,0, // wall7
+            0,0,0,0, // wall8
+            0,0,0,0, // wall9
+            0,0,0,0, // wall10
+            0,0,0,0, // wall11
+            0,0,0,0 // wall12
     };
 
     public static final int[] tavernLevelWalls = {
@@ -58,7 +88,13 @@ public class Storage {
             448, 242, 451, 277, // wall3
             257, 279, 448, 273, // wall4
             256, 280, 261, 318, // wall5
-            222, 280, 224, 318 // wall6
+            222, 280, 224, 318, // wall6
+            0,0,0,0, // wall7
+            0,0,0,0, // wall8
+            0,0,0,0, // wall9
+            0,0,0,0, // wall10
+            0,0,0,0, // wall11
+            0,0,0,0 // wall12
     };
 
     public static final int[] forgeLevelWalls = {
@@ -68,12 +104,18 @@ public class Storage {
             342, 230, 451, 231, // wall3
             452, 239, 458, 276, // wall4
             418, 277, 451, 278, // wall5
-            416, 279, 417, 317 // wall6
+            416, 279, 417, 317, // wall6
+            0,0,0,0, // wall7
+            0,0,0,0, // wall8
+            0,0,0,0, // wall9
+            0,0,0,0, // wall10
+            0,0,0,0, // wall11
+            0,0,0,0 // wall12
     };
 
     public static final String[] aabbString = {
-            "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6",
-            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel", "entranceFromTavernToTown", "entranceFromForgeToTown",
+            "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "wall9", "wall10", "wall11", "wall12",
+            "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel", "entranceFromTavernToTown", "entranceFromForgeToTown", "entranceFromFourthToTownLevel",
             "toBuyBeer"
     };
 
@@ -601,7 +643,7 @@ public class Storage {
 
             "imp_death_01", "imp_death_02", "imp_death_03", "imp_death_04", "imp_death_05", "imp_death_06", "imp_death_07", "imp_death_08",
 
-            "boxClosed", "boxOpened", "barrelClosed", "barrelOpened", "bagBig", "bagMedium", "bagSmall", "altar0", "altar1", "water", "gate2"
+            "boxClosed", "boxOpened", "barrelClosed", "barrelOpened", "bagBig", "bagMedium", "bagSmall", "altar0", "altar1", "water", "gate2", "gate3"
 
     };
 }

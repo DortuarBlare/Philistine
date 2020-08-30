@@ -162,12 +162,13 @@ public class Window {
         // Переходы м/у уровнями
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
         aabbMap.get("entranceToSecondLevel").update(626, 237, 640, 335);
-        aabbMap.get("entranceToThirdLevel").update(197, 134, 237, 145);
-        aabbMap.get("entranceToForthLevel").update(247, 134, 283, 144);
+        aabbMap.get("entranceToThirdLevel").update(197, 104, 237, 107);
+        aabbMap.get("entranceToForthLevel").update(247, 124, 283, 127);
         aabbMap.get("entranceFromThirdToSecondLevel").update(249, 134, 288, 146);
-        aabbMap.get("entranceFromForthToSecondLevel").update(199, 132, 236, 141);
+        aabbMap.get("entranceFromForthToSecondLevel").update(199, 108, 236, 112);
         aabbMap.get("entranceFromTavernToTown").update(224,316,255,318);
         aabbMap.get("entranceFromForgeToTown").update(384,316,415,318);
+        aabbMap.get("entranceFromFourthToTownLevel").update(292, 356, 339, 359);
         aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
 
         // Добавление объектов на первый уровень
@@ -200,8 +201,13 @@ public class Window {
         thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
         thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
 
+        //2
+        secondLevelObjectList.add(new Furniture("gate3", 198, 54));
+        secondLevelObjectList.add(new Furniture("gate3", 246, 54));
+
         // Добавление объектов на четвертый уровень
         forthLevelObjectList.add(new Furniture("gate2", 292, 336));
+        forthLevelObjectList.add(new Furniture("gate3", 198, 54));
         forthLevelObjectList.add(new Furniture("trash", 118, 288));
         forthLevelObjectList.get(forthLevelObjectList.size() - 1).setNoclip(true);
         forthLevelObjectList.add(new Furniture("bones", 466, 163));
@@ -480,7 +486,7 @@ public class Window {
                             SingletonPlayer.player.setForPlacingCamera(3);
 
                             // Обновление хитбоксов стен для tavern
-                            for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            for (int i = 0, j = 0; i < 13; i++, j+=4) {
                                 aabbMap.get("wall" + i).update(Storage.tavernLevelWalls[j], Storage.tavernLevelWalls[j + 1],
                                         Storage.tavernLevelWalls[j + 2], Storage.tavernLevelWalls[j + 3]);
                             }
@@ -496,7 +502,7 @@ public class Window {
                             SingletonPlayer.player.setForPlacingCamera(315);
 
                             // Обновление хитбоксов стен для forge
-                            for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            for (int i = 0, j = 0; i < 13; i++, j+=4) {
                                 aabbMap.get("wall" + i).update(Storage.forgeLevelWalls[j], Storage.forgeLevelWalls[j + 1],
                                         Storage.forgeLevelWalls[j + 2], Storage.forgeLevelWalls[j + 3]);
                             }
@@ -552,7 +558,7 @@ public class Window {
                         level = "Town";
 
                         // Обновление хитбоксов стен для города
-                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
                                     Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
                         }
@@ -685,7 +691,7 @@ public class Window {
                         level = "Town";
 
                         // Обновление хитбоксов стен для города
-                        for (int i = 0, j = 0; i < 7; i++, j += 4) {
+                        for (int i = 0, j = 0; i < 13; i++, j += 4) {
                             aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
                                     Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
                         }
@@ -883,7 +889,7 @@ public class Window {
                             SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
                             // Обновление хитбоксов стен для второго уровня
-                            for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                            for (int i = 0, j = 0; i < 13; i++, j+=4) {
                                 aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
                                         Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
                             }
@@ -921,11 +927,11 @@ public class Window {
                     for (int i1 = 0; i1 < SingletonMobs.mobList.size(); i1++) {
                         Mob mob = SingletonMobs.mobList.get(i1);
                         if (!mob.isDead()) {
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall8")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall11")))
                                 mob.stopRight();
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5"))  || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall7"))  || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall10")))
                                 mob.stopLeft();
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall9")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall12")))
                                 mob.stopUp();
                             if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                                 mob.stopDown();
@@ -937,7 +943,7 @@ public class Window {
                         SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
                         // Обновление хитбоксов стен для первого уровня
-                        for(int i = 0, j = 0; i < 5; i++, j+=4) {
+                        for(int i = 0, j = 0; i < 13; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.firstLevelWalls[j], Storage.firstLevelWalls[j + 1],
                                     Storage.firstLevelWalls[j + 2], Storage.firstLevelWalls[j + 3]);
                         }
@@ -951,7 +957,7 @@ public class Window {
                         SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
                         // Обновление хитбоксов стен для 3 уровня
-                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.thirdLevelWalls[j], Storage.thirdLevelWalls[j + 1],
                                     Storage.thirdLevelWalls[j + 2], Storage.thirdLevelWalls[j + 3]);
                         }
@@ -966,7 +972,7 @@ public class Window {
                         SingletonMobs.mobList.removeIf(mob -> !(mob instanceof Player)); // Удаление трупов
 
                         // Обновление хитбоксов стен для 4 уровня
-                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.fourthLevelWalls[j], Storage.fourthLevelWalls[j + 1],
                                     Storage.fourthLevelWalls[j + 2], Storage.fourthLevelWalls[j + 3]);
                         }
@@ -1123,7 +1129,7 @@ public class Window {
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromThirdToSecondLevel"))) {
                         level = "SecondLevel";
                         // Обновление хитбоксов стен для второго уровня
-                        for (int i = 0, j = 0; i < 7; i++, j += 4) {
+                        for (int i = 0, j = 0; i < 13; i++, j += 4) {
                             aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
                                     Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
                         }
@@ -1217,7 +1223,15 @@ public class Window {
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
                                 else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
                             }
-                            else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_death_0" + imp.getDeathAnimationTime()));
+                            else {
+                                glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_death_0" + imp.getDeathAnimationTime()));
+                                for (int j = 0; j < forthLevelObjectList.size(); j++){
+                                    if (forthLevelObjectList.get(j).getTexture().equals("gate2") || forthLevelObjectList.get(j).getTexture().equals("gate3")) {
+                                        forthLevelObjectList.get(j).setIsLying(false);
+                                        forthLevelObjectList.get(j).setNoclip(true);
+                                    }
+                                }
+                            }
                             createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 64);
                         }
                     }
@@ -1225,13 +1239,13 @@ public class Window {
                     // Столкновение мобов со стенами
                     for (Mob mob : SingletonMobs.mobList) {
                         if (!mob.isDead()) {
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall1")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall8")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall6")))
                                 mob.stopRight();
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall7")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall5")))
                                 mob.stopLeft();
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall0")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall9")))
                                 mob.stopUp();
-                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")))
+                            if (AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall2")) || AABB.AABBvsAABB(mob.getCollisionBox(), aabbMap.get("wall4")))
                                 mob.stopDown();
                         }
                     }
@@ -1243,7 +1257,7 @@ public class Window {
                         }
 
                         // Обновление хитбоксов стен для второго уровня
-                        for (int i = 0, j = 0; i < 7; i++, j+=4) {
+                        for (int i = 0, j = 0; i < 13; i++, j+=4) {
                             aabbMap.get("wall" + i).update(Storage.secondLevelWalls[j], Storage.secondLevelWalls[j + 1],
                                     Storage.secondLevelWalls[j + 2], Storage.secondLevelWalls[j + 3]);
                         }
@@ -1251,6 +1265,18 @@ public class Window {
                         SingletonPlayer.player.setY(120);
                         SingletonPlayer.player.setMoveDirection("down");
                         level = "SecondLevel";
+                    }
+                    // Проверка перехода в город
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("entranceFromFourthToTownLevel"))) { //add to aabb
+                        level = "Town";
+                        // Обновление хитбоксов стен for town
+                        for (int i = 0, j = 0; i < 13; i++, j += 4) {
+                            aabbMap.get("wall" + i).update(Storage.townLevelWalls[j], Storage.townLevelWalls[j + 1],
+                                    Storage.townLevelWalls[j + 2], Storage.townLevelWalls[j + 3]);
+                        }
+                        SingletonPlayer.player.setX(290);
+                        SingletonPlayer.player.setY(192);
+                        SingletonPlayer.player.setMoveDirection("left");
                     }
                     break;
                 }
