@@ -34,10 +34,10 @@ public class Storage {
     };
 
     public static final int[] thirdLevelWalls = {
-            96, 135, 248, 141, // wall0 up
-            528, 147, 534, 339, // wall1
-            96, 339, 528, 342, // wall2 down
-            90, 141, 96, 336, // wall3
+            96, 0, 248, 141, // wall0 up
+            528, 147, 640, 339, // wall1
+            96, 339, 528, 360, // wall2 down
+            0, 141, 96, 336, // wall3
             287, 137, 528, 141, // wall4 up
             245, 121, 247, 139, // wall5 left
             285, 121, 287, 139, // wall6 right
@@ -116,12 +116,12 @@ public class Storage {
     public static final String[] aabbString = {
             "wall0", "wall1", "wall2", "wall3", "wall4", "wall5", "wall6", "wall7", "wall8", "wall9", "wall10", "wall11", "wall12",
             "entranceToFirstLevel", "entranceToSecondLevel", "entranceToThirdLevel", "entranceToForthLevel", "entranceFromThirdToSecondLevel", "entranceFromForthToSecondLevel", "entranceFromTavernToTown", "entranceFromForgeToTown", "entranceFromFourthToTownLevel",
-            "toBuyBeer"
+            "toBuyBeer", "toBuyKey"
     };
 
     public static final String[] soundString = {
             "mainMenuTheme", "townTheme", "forgeTheme", "tavernTheme", "dungeonAmbient1", "doorOpen", "openChest", "openBoxBarrel",
-            "changingArmor", "pickedCoin", "pickedPotion", "drinkBeer",
+            "changingArmor", "pickedCoin", "pickedPotion", "drinkBeer", "boughtKey"
     };
 
     public static final String[] playerSoundString = {
@@ -138,7 +138,7 @@ public class Storage {
             "0armor", "5armor", "10armor", "15armor", "20armor", "25armor", "30armor",
             "you_Shall_Not_Pass", "enterTheDungeon_Yes", "enterTheDungeon_No",
             "Press_enter", "Philistine", "price", "price2",
-            "emotion_question", "emotion_health",
+            "emotion_question", "emotion_health", "emotion_key", "emotion_coin",
             "enemyHp0", "enemyHp10", "enemyHp20", "enemyHp30", "enemyHp40", "enemyHp50", "enemyHp60", "enemyHp70", "enemyHp80", "enemyHp90", "enemyHp100",
             "coin_01", "coin_02", "coin_03", "coin_04", "coin_05", "coin_06", "coin_07", "coin_08",
             "number_0", "number_1", "number_2", "number_3", "number_4", "number_5", "number_6", "number_7", "number_8", "number_9", "keyGold",
