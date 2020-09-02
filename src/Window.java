@@ -227,6 +227,8 @@ public class Window {
                 if (level.equals("MainMenu")) {
                     level = "Town";
                     backgroundMusic.stop(soundMap.get("mainMenuTheme"));
+                    backgroundMusic.play(soundMap.get("townTheme"));
+                    backgroundMusic.changeVolume(0.02f);
                 }
                 // Выбор во второстепенном меню
                 else if (SingletonPlayer.player.isScrollMenu()) {
@@ -269,6 +271,7 @@ public class Window {
                     SingletonPlayer.player.setDialogBubble(false);
                     if (SingletonPlayer.player.isDialogBubbleChoice()) {
                         backgroundMusic.changeVolume(0.1f);
+                        backgroundMusic.stop(soundMap.get("townTheme"));
                         backgroundMusic.play(soundMap.get("dungeonAmbient1"));
                         glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
 
@@ -415,7 +418,8 @@ public class Window {
                         glTranslated(-1, 0, 0);
                         SingletonPlayer.player.setForPlacingCamera(SingletonPlayer.player.getForPlacingCamera() + 1);
                         SingletonPlayer.player.setMainMenuDirection(true);
-                    } else {
+                    }
+                    else {
                         glTranslated(1, 0, 0);
                         SingletonPlayer.player.setForPlacingCamera(SingletonPlayer.player.getForPlacingCamera() - 1);
                         SingletonPlayer.player.setMainMenuDirection(false);
@@ -482,6 +486,8 @@ public class Window {
                                         Storage.forgeLevelWalls[j + 2], Storage.forgeLevelWalls[j + 3]);
                             }
                             doorSound.play(soundMap.get("doorOpen"));
+                            backgroundMusic.stop(soundMap.get("townTheme"));
+                            backgroundMusic.play(soundMap.get("forgeTheme"));
                             SingletonPlayer.player.setX(368);
                             SingletonPlayer.player.setY(254);
                             SingletonPlayer.player.setMoveDirection("up");
@@ -672,6 +678,8 @@ public class Window {
                         }
                         doorSound.play(soundMap.get("doorOpen"));
                         SingletonPlayer.player.getStepSound().stop(SingletonPlayer.player.getPlayerSounds().get("stepWood"));
+                        backgroundMusic.stop(soundMap.get("forgeTheme"));
+                        backgroundMusic.play(soundMap.get("townTheme"));
                         glTranslated(-SingletonPlayer.player.getForPlacingCamera(), 0, 0);
                         SingletonPlayer.player.setX(605);
                         SingletonPlayer.player.setY(192);

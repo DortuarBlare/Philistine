@@ -744,9 +744,6 @@ public class Player extends Mob {
                                 case "long_spear":
                                     getTimer().schedule(hitAnimationTask, 0, 120);
                                     break;
-                                case "spear":
-                                    getTimer().schedule(hitAnimationTask, 0, 85);
-                                    break;
                                 case "stick":
                                     getTimer().schedule(hitAnimationTask, 0, 80);
                                     break;
@@ -780,9 +777,6 @@ public class Player extends Mob {
                                     break;
                                 case "long_spear":
                                     getTimer().schedule(hitAnimationTask, 0, 120);
-                                    break;
-                                case "spear":
-                                    getTimer().schedule(hitAnimationTask, 0, 85);
                                     break;
                                 case "stick":
                                     getTimer().schedule(hitAnimationTask, 0, 80);
@@ -818,9 +812,6 @@ public class Player extends Mob {
                                 case "long_spear":
                                     getTimer().schedule(hitAnimationTask, 0, 120);
                                     break;
-                                case "spear":
-                                    getTimer().schedule(hitAnimationTask, 0, 85);
-                                    break;
                                 case "stick":
                                     getTimer().schedule(hitAnimationTask, 0, 80);
                                     break;
@@ -854,9 +845,6 @@ public class Player extends Mob {
                                     break;
                                 case "long_spear":
                                     getTimer().schedule(hitAnimationTask, 0, 120);
-                                    break;
-                                case "spear":
-                                    getTimer().schedule(hitAnimationTask, 0, 85);
                                     break;
                                 case "stick":
                                     getTimer().schedule(hitAnimationTask, 0, 80);
