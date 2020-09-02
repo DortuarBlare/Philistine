@@ -34,19 +34,19 @@ public class Storage {
     };
 
     public static final int[] thirdLevelWalls = {
-            96, 0, 528, 141, // wall0 up
-            528, 147, 640, 339, // wall1 right
+            96, 0, 248, 141, // wall0 up
+            528, 147, 640, 339, // wall1
             96, 339, 528, 360, // wall2 down
-            0, 141, 96, 336, // wall3 left
-            0, 0, 0, 0, // wall4
-            0, 0, 0, 0, // wall5
-            0, 0, 0, 0, // wall6
-            0, 0, 0, 0, // wall7
-            0, 0, 0, 0, // wall8
-            0, 0, 0, 0, // wall9
-            0, 0, 0, 0, // wall10
-            0, 0, 0, 0, // wall11
-            0, 0, 0, 0 // wall12
+            0, 141, 96, 336, // wall3
+            287, 137, 528, 141, // wall4 up
+            245, 121, 247, 139, // wall5 left
+            285, 121, 287, 139, // wall6 right
+            0,0,0,0, // wall7
+            0,0,0,0, // wall8
+            0,0,0,0, // wall9
+            0,0,0,0, // wall10
+            0,0,0,0, // wall11
+            0,0,0,0 // wall12
     };
 
     public static final int[] fourthLevelWalls = {

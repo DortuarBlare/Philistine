@@ -182,7 +182,7 @@ public class Window {
         aabbMap.get("entranceToSecondLevel").update(626, 237, 640, 335);
         aabbMap.get("entranceToThirdLevel").update(197, 104, 237, 107);
         aabbMap.get("entranceToForthLevel").update(247, 124, 283, 127);
-        aabbMap.get("entranceFromThirdToSecondLevel").update(249, 134, 288, 146);
+        aabbMap.get("entranceFromThirdToSecondLevel").update(249, 122, 288, 124);
         aabbMap.get("entranceFromForthToSecondLevel").update(199, 108, 236, 112);
         aabbMap.get("entranceFromFourthToTownLevel").update(292, 356, 339, 359);
         aabbMap.get("entranceFromTavernToTown").update(224, 316, 255, 318);
@@ -1048,11 +1048,11 @@ public class Window {
                     }
 
                     // Столкновение игрока со стенами
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall3")))
-                        SingletonPlayer.player.stopLeft();
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall1")))
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall1")) && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall6")))
                         SingletonPlayer.player.stopRight();
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall0")))
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall3")) && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall5")))
+                        SingletonPlayer.player.stopLeft();
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall0")) && AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall4")))
                         SingletonPlayer.player.stopUp();
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall2")))
                         SingletonPlayer.player.stopDown();
