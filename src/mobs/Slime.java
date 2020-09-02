@@ -53,7 +53,7 @@ public class Slime extends Mob {
     public Slime(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage);
         setAnimationTime(1);
-        setDeathAnimationTime(0);
+        setDeathAnimationTime(1);
         setKnockBackTime(0);
         getAttackBox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
         getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);

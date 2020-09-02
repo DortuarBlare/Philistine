@@ -912,7 +912,15 @@ public class Window {
                     // Отрисовка всех объектов
                     for (Object object : secondLevelObjectList) {
                         if (!object.isDrawAble()) continue;
-                        if (object.getTexture().equals("gate3") && canChangeLevel && secondLevelMobSpawningStopped) {
+                        if (object instanceof Gate) {
+                            Gate gate = (Gate) object;
+                            if (canChangeLevel && secondLevelMobSpawningStopped && gate.getMinY() == 195) {
+                                gate.setFinalY(99);
+                                gate.update();
+                            }
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get(gate.getTexture()));
+                        }
+                        else if (object.getTexture().equals("gate3") && canChangeLevel && secondLevelMobSpawningStopped) {
                             object.setIsLying(false);
                             object.setNoclip(true);
                         }
@@ -1295,6 +1303,7 @@ public class Window {
                             glTranslated(-689, 0, 0);
                             backgroundMusic.stop(soundMap.get("dungeonAmbient1"));
                             backgroundMusic.play(soundMap.get("townTheme"));
+                            backgroundMusic.changeVolume(0.02f);
                             SingletonPlayer.player.setForPlacingCamera(689);
                             SingletonPlayer.player.setX(979);
                             SingletonPlayer.player.setY(192);
@@ -1482,7 +1491,8 @@ public class Window {
                 if (level.equals("Town")) {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice())); // Фон второстепенного меню
                     createQuadTexture(SingletonPlayer.player.getForPlacingCamera(), 0, SingletonPlayer.player.getForPlacingCamera() + 640, 360);
-                } else {
+                }
+                else {
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice())); // Фон второстепенного меню
                     createQuadTexture(0, 0, 640, 360);
                 }
@@ -1511,6 +1521,8 @@ public class Window {
         // Добавление объектов на второй уровень
         secondLevelObjectList.add(new Furniture("gate3", 198, 54));
         secondLevelObjectList.add(new Furniture("gate3", 246, 54));
+        secondLevelObjectList.add(new Gate("verticalGate", 0, 99));
+        secondLevelObjectList.add(new Gate("verticalGate", 0, 195));
 
         // Добавление объектов на третий уровень
         thirdLevelObjectList.add(new Chest("chest",279, 215));

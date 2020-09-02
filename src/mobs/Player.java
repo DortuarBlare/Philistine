@@ -511,9 +511,10 @@ public class Player extends Mob {
         };
         setKnockBackTime(0);
         setHitAnimationTime(1);
-        setImmortal(false);
         setHitAnimationTaskStarted(false);
         setKnockBackTaskStarted(false);
+        setImmortal(false);
+        setAttackToFalse();
         getAttackBox().update(0,0,0,0);
     }
 
@@ -542,7 +543,6 @@ public class Player extends Mob {
                         else if (!isKnockBackTaskStarted()) {
                             setImmortal(true);
                             setKnockBackTaskStarted(true);
-                            setAttackToFalse();
                             getTimer().schedule(knockbackTask, 0, 10);
                         }
                     }
@@ -900,7 +900,7 @@ public class Player extends Mob {
                             getHitbox().update(getX() + 20, getY() + 15, getX() + 43, getY() + 61);
                             break;
                     }
-                    getCollisionBox().update(getX() + 17, getY() + 52, getX() + 46, getY() + 60);
+                    getCollisionBox().update(getX() + 17, getY() + 52, getX() + 46, getY() + 61);
                     reArmor();
                 }
             }

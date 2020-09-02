@@ -73,7 +73,7 @@ public class Spider extends Mob {
         super(x, y, speed, health, armor, damage);
         setAnimationTime(2);
         setHitAnimationTime(1);
-        setDeathAnimationTime(0);
+        setDeathAnimationTime(1);
         setKnockBackTime(0);
         getHitbox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
         getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);

@@ -61,29 +61,28 @@ public class AABB {
     }
 
     public static boolean toInteract(AABB first, AABB second) {
-        /*if (first.max.x <= second.min.x && first.max.x >= second.min.x - 2) return true; // Контейнер слева
-        else if (first.min.x >= second.max.x && first.min.x <= second.max.x + 2) return true; // Контейнер справа
-        else if (first.min.y >= second.max.y && first.min.y <= second.max.y + 2) return true; // Контейнер вверху
-        else if (first.max.y <= second.min.y && first.max.y >= second.min.y - 2) return true; // Контейнер снизу
-        return false;*/
         if ( (first.min.x >= second.max.x && first.min.x <= second.max.x + 2) && // Контейнер слева
                 ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
-                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ) ) {
+                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ||
+                        ( (getCenter(first.min.y, first.max.y) >= second.min.y) && (getCenter(first.min.y, first.max.y) <= second.max.y) )) ) {
             return true;
         }
         else if ( (first.max.x <= second.min.x && first.max.x >= second.min.x - 2) && // Контейнер справа
                 ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
-                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ) ) {
+                        ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ||
+                        ( (getCenter(first.min.y, first.max.y) >= second.min.y) && (getCenter(first.min.y, first.max.y) <= second.max.y) )) ) {
             return true;
         }
         else if ( (first.min.y >= second.max.y && first.min.y <= second.max.y + 2) && // Контейнер сверху
                 ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
-                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ) ) {
+                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
+                        ( (getCenter(first.min.x, first.max.x) >= second.min.x) && (getCenter(first.min.x, first.max.x) <= second.max.x) )) ) {
             return true;
         }
         else if ( (first.max.y <= second.min.y && first.max.y >= second.min.y - 2) && // Контейнер снизу
                 ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
-                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ) ) {
+                        ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
+                        ( (getCenter(first.min.x, first.max.x) >= second.min.x) && (getCenter(first.min.x, first.max.x) <= second.max.x) )) ) {
             return true;
         }
         return false;
