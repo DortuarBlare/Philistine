@@ -5,8 +5,11 @@ import math.AABB;
 import static java.lang.Math.random;
 
 public class Chest extends Container {
-    public Chest(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {
-        super(texture, isNoclip, isLying, minX, minY, maxX, maxY, collisionBox);
+    public Chest(String texture, int minX, int minY) {
+        super(texture, false, true, minX, minY, 0, 0, new AABB());
+        setMaxX(minX + 32);
+        setMaxY(minY + 32);
+        getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
         setIsNeedKey(true);
         for (int i = 0; i < 3; i++) {
             double b = random();
@@ -15,7 +18,7 @@ public class Chest extends Container {
                     System.out.println("coin");
                 }
                 else if (b >= 0.1 && b < 0.2) {
-                    loot.add(loot.size(), new Potion("potionRed", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 10, this.getMaxY() + 16, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 10, this.getMaxY() + 16)));
+                    loot.add(loot.size(), new Potion("potionRed", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 12, this.getMaxY() + 18, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 12, this.getMaxY() + 18)));
                     System.out.println("potion");
                 }
                 else if (b >= 0.2 && b < 0.4){

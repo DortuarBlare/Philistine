@@ -120,8 +120,8 @@ public class Storage {
     };
 
     public static final String[] soundString = {
-            "mainMenuTheme", "townTheme", "forgeTheme", "dungeonAmbient1", "doorOpen", "openChest", "openBoxBarrel",
-            "changingArmor", "pickedCoin", "pickedPotion", "drinkBeer", "tavernTheme"
+            "mainMenuTheme", "townTheme", "forgeTheme", "tavernTheme", "dungeonAmbient1", "doorOpen", "openChest", "openBoxBarrel",
+            "changingArmor", "pickedCoin", "pickedPotion", "drinkBeer",
     };
 
     public static final String[] playerSoundString = {

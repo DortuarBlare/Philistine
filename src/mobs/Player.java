@@ -49,6 +49,9 @@ public class Player extends Mob {
                     case "down":
                         knockBackDown();
                         break;
+                    default:
+                        System.out.println("Немного не сработало отбрасывание");
+                        break;
                 }
             }
         }
@@ -307,6 +310,9 @@ public class Player extends Mob {
                             break;
                         case "down":
                             knockBackDown();
+                            break;
+                        default:
+                            System.out.println("Немного не сработало отбрасывание");
                             break;
                     }
                 }
@@ -752,7 +758,10 @@ public class Player extends Mob {
                                     break;
                             }
                         }
-                        if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                        if (getHitAnimationTime() == 4) {
+                            hitSound.stop(playerSounds.get("swish"));
+                            hitSound.play(playerSounds.get("swish"));
+                        }
                         bodyAnimation = "player_" + getWeapon().getAttackType() + "_left_0" + getHitAnimationTime();
                         if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_left_0" + getHitAnimationTime();
                         else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_left_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
@@ -786,7 +795,10 @@ public class Player extends Mob {
                                     break;
                             }
                         }
-                        if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                        if (getHitAnimationTime() == 4) {
+                            hitSound.stop(playerSounds.get("swish"));
+                            hitSound.play(playerSounds.get("swish"));
+                        }
                         bodyAnimation = "player_" + getWeapon().getAttackType() + "_right_0" + getHitAnimationTime();
                         if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_right_0" + getHitAnimationTime();
                         else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_right_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
@@ -820,7 +832,10 @@ public class Player extends Mob {
                                     break;
                             }
                         }
-                        if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                        if (getHitAnimationTime() == 4) {
+                            hitSound.stop(playerSounds.get("swish"));
+                            hitSound.play(playerSounds.get("swish"));
+                        }
                         bodyAnimation = "player_" + getWeapon().getAttackType() + "_up_0" + getHitAnimationTime();
                         if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_up_0" + getHitAnimationTime();
                         else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_up_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
@@ -854,7 +869,10 @@ public class Player extends Mob {
                                     break;
                             }
                         }
-                        if (getHitAnimationTime() == 4) hitSound.play(playerSounds.get("swish"));
+                        if (getHitAnimationTime() == 4) {
+                            hitSound.stop(playerSounds.get("swish"));
+                            hitSound.play(playerSounds.get("swish"));
+                        }
                         bodyAnimation = "player_" + getWeapon().getAttackType() + "_down_0" + getHitAnimationTime();
                         if (weapon.getTexture().equals("nothing")) weaponAnimation = "player_slash_down_0" + getHitAnimationTime();
                         else weaponAnimation = "weapon_" + getWeapon().getTexture() + "_down_" + getWeapon().getAttackType() + "_0" + getHitAnimationTime();
