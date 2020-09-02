@@ -463,6 +463,8 @@ public class Window {
                             level = "tavern";
                             glTranslated(SingletonPlayer.player.getForPlacingCamera(), 0, 0);
                             SingletonPlayer.player.setForPlacingCamera(3);
+                            backgroundMusic.stop(soundMap.get("mainMenuTheme"));
+                            backgroundMusic.play(soundMap.get("tavernTheme"));
 
                             // Обновление хитбоксов стен для tavern
                             for (int i = 0, j = 0; i < 13; i++, j += 4) {

@@ -10,15 +10,38 @@ public class Chest extends Container {
         setIsNeedKey(true);
         for (int i = 0; i < 3; i++) {
             double b = random();
-                if (b >= 0 && b < 0.3) {
+                if (b >= 0 && b < 0.1) {
                     loot.add(loot.size(), new Coin("coin_01", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 11, this.getMaxY() + 12, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 9, this.getMaxY() + 9)));
                     System.out.println("coin");
                 }
-                else if (b >= 0.3 && b < 0.55) {
+                else if (b >= 0.1 && b < 0.2) {
                     loot.add(loot.size(), new Potion("potionRed", true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 10, this.getMaxY() + 16, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 10, this.getMaxY() + 16)));
                     System.out.println("potion");
                 }
-                else if (b >= 0.55 && b < 0.75) {
+                else if (b >= 0.2 && b < 0.4){
+                    Weapon weapon;
+                    int randomNumber = (int) (Math.random() * 3);
+                    switch (randomNumber){
+                        case 0:
+                            weapon = new Weapon("longsword", "slash", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            break;
+                        case 1:
+                            weapon = new Weapon("rapier", "slash", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            break;
+                        case 2:
+                            weapon = new Weapon("long_spear", "thrust", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            break;
+                        case 3:
+                            weapon = new Weapon("stick", "thrust", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + randomNumber);
+                    }
+                    weapon.correctCollisionBox();
+                    loot.add(loot.size(), weapon);
+
+                }
+                else if (b >= 0.4 && b < 0.75) {
                     Armor armor;
                     int randomNumber = (int) (Math.random() * 22);
                     switch (randomNumber) {
