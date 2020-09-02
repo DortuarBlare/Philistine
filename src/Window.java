@@ -37,7 +37,7 @@ public class Window {
     private HashMap<String, Integer> textureMap;
     private HashMap<String, Integer> soundMap;
     private HashMap<String, AABB> aabbMap;
-    private Source backgroundMusic, armorChange, coinSound, potionSound, doorSound, containerSound, beerSound;
+    private Source backgroundMusic, armorChange, coinSound, potionSound, doorSound, containerSound, tavernSound;
     private Coin coinGUI;
     private Shop shop;
     private Blacksmith blacksmith;
@@ -147,7 +147,7 @@ public class Window {
         armorChange = new Source(0);
         coinSound = new Source(0);
         potionSound = new Source(0);
-        beerSound = new Source(0);
+        tavernSound = new Source(0);
         doorSound = new Source(0);
         containerSound = new Source(0);
         coinGUI = new Coin("coin_01", true, false, 0, 0, 0, 0, new AABB());
@@ -188,6 +188,7 @@ public class Window {
         aabbMap.get("entranceFromTavernToTown").update(224, 316, 255, 318);
         aabbMap.get("entranceFromForgeToTown").update(384, 316, 415, 318);
         aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
+        aabbMap.get("toBuyKey").update(359, 244, 373, 250);
 
         addAllObjects();
         shop = new Shop();
@@ -507,25 +508,38 @@ public class Window {
                     createQuadTexture(waiter.getX(), waiter.getY(), waiter.getX() + 64, waiter.getY() + 64);
                     waiter.simulateBehavior();
                     if (waiter.isWaitingTaskStarted()) {
-                        glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_question"));
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_health"));
                         createQuadTexture(waiter.getX() + 31, waiter.getY(), waiter.getX() + 51, waiter.getY() + 20);
 
                         // Восстановить здоровье
                         if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("toBuyBeer"))) {
-                            glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_health")); // Фон таверны
+                            glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_coin"));
                             createQuadTexture(SingletonPlayer.player.getX() + 32, SingletonPlayer.player.getY(),
                                     SingletonPlayer.player.getX() + 52, SingletonPlayer.player.getY() + 20);
                             if (key_E_Pressed && SingletonPlayer.player.getHealth() < 100 && SingletonPlayer.player.getMoney() >= 10) {
                                 SingletonPlayer.player.setHealth(100);
                                 SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() - 10);
-                                beerSound.play(soundMap.get("drinkBeer"));
+                                tavernSound.play(soundMap.get("drinkBeer"));
                             }
                         }
                     }
-                    key_E_Pressed = false;
 
+                    // Торговец ключами
                     glBindTexture(GL_TEXTURE_2D, textureMap.get("gentleman_brown"));
                     createQuadTexture(350, 190, 350 + 64, 190 + 64);
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("toBuyKey"))) {
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_key"));
+                        createQuadTexture(381, 182, 381 + 20, 182 + 20);
+                        glBindTexture(GL_TEXTURE_2D, textureMap.get("emotion_coin"));
+                        createQuadTexture(SingletonPlayer.player.getX() + 32, SingletonPlayer.player.getY(),
+                                SingletonPlayer.player.getX() + 52, SingletonPlayer.player.getY() + 20);
+                        if (key_E_Pressed && SingletonPlayer.player.getMoney() >= 20) {
+                            SingletonPlayer.player.setMoney(SingletonPlayer.player.getMoney() - 20);
+                            SingletonPlayer.player.setKeys(SingletonPlayer.player.getKeys() + 1);
+                            tavernSound.play(soundMap.get("boughtKey"));
+                        }
+                    }
+                    key_E_Pressed = false;
 
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall3")) || AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall5")))
                         SingletonPlayer.player.stopRight();
@@ -1026,10 +1040,10 @@ public class Window {
                     }
 
                     // Столкновение игрока со стенами
-                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall1")))
-                        SingletonPlayer.player.stopRight();
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall3")))
                         SingletonPlayer.player.stopLeft();
+                    if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall1")))
+                        SingletonPlayer.player.stopRight();
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall0")))
                         SingletonPlayer.player.stopUp();
                     if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), aabbMap.get("wall2")))
@@ -1042,6 +1056,16 @@ public class Window {
                         if (AABB.AABBvsAABB2(SingletonPlayer.player.getCollisionBox(), object.getCollisionBox()) && !object.isNoclip())
                             SingletonPlayer.player.stop(CollisionMessage.getMessage());
 
+                        // Столкновение объектов со стенами
+                        if (object.isNoclip() && AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall3")))
+                            object.stopLeft();
+                        if (object.isNoclip() && AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall1")))
+                            object.stopRight();
+                        if (object.isNoclip() && AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall0")))
+                            object.stopUp();
+                        if (object.isNoclip() && AABB.AABBvsAABB(object.getCollisionBox(), aabbMap.get("wall2")))
+                            object.stopDown();
+
                         // Столкновение объектов с объектами
                         for (int j = i + 1; j < thirdLevelObjectList.size(); j++) {
                             Object object2 = thirdLevelObjectList.get(j);
@@ -1049,7 +1073,8 @@ public class Window {
                                 if (object.isNoclip() && object2.isNoclip()) {
                                     object.moveLeft();
                                     object2.moveRight();
-                                } else if (object.isNoclip() && !object2.isNoclip()) object.moveRight();
+                                }
+                                else if (object.isNoclip() && !object2.isNoclip()) object.moveRight();
                                 else if (!object.isNoclip() && object2.isNoclip()) object2.moveRight();
                             }
                         }
@@ -1269,6 +1294,7 @@ public class Window {
                             firstLevelMobSpawningStopped = secondLevelMobSpawningStopped = fourthLevelMobSpawningStopped = false;
                             glTranslated(-689, 0, 0);
                             backgroundMusic.stop(soundMap.get("dungeonAmbient1"));
+                            backgroundMusic.play(soundMap.get("townTheme"));
                             SingletonPlayer.player.setForPlacingCamera(689);
                             SingletonPlayer.player.setX(979);
                             SingletonPlayer.player.setY(192);
