@@ -5,6 +5,7 @@ import math.AABB;
 public class Shop extends Container {
     public Shop() {
         super("texture", true, false, 0, 0, 0, 0, new AABB());
+
         // Случайная генерация одежды
         int randomNumber;
         int forDuplicateExclude1 = 0, forDuplicateExclude2 = 0;
@@ -90,6 +91,7 @@ public class Shop extends Container {
             armor.setPositionOnTradeTable(i + 1);
             loot.add(armor);
         }
+
         // Добавление сгенерированной одежды в коллекцию
         for (Object object : loot) {
             Armor armorForShop = (Armor) object;

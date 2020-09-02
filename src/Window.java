@@ -547,6 +547,8 @@ public class Window {
                         }
                         doorSound.play(soundMap.get("doorOpen"));
                         SingletonPlayer.player.getStepSound().stop(SingletonPlayer.player.getPlayerSounds().get("stepWood"));
+                        backgroundMusic.stop(soundMap.get("tavernTheme"));
+                        backgroundMusic.play(soundMap.get("townTheme"));
                         glTranslated(-SingletonPlayer.player.getForPlacingCamera(), 0, 0);
                         SingletonPlayer.player.setX(293);
                         SingletonPlayer.player.setY(192);
@@ -944,10 +946,7 @@ public class Window {
                         for (Mob mob : SingletonMobs.mobList) {
                             if (mob.isDead() && !(mob instanceof Player)) deathsCounter++;
                         }
-                        if (deathsCounter == SingletonMobs.mobList.size() - 1) {
-                            System.out.println(deathsCounter + " " + (SingletonMobs.mobList.size() - 1));
-                            canChangeLevel = true;
-                        }
+                        if (deathsCounter == SingletonMobs.mobList.size() - 1) canChangeLevel = true;
                         else canChangeLevel = false;
                         deathsCounter = 0;
                     }
@@ -1181,13 +1180,11 @@ public class Window {
                                 int tempHealth = imp.getHealth() % 10 == 0 ? imp.getHealth() : imp.getHealth() - (imp.getHealth() % 10) + 10;
                                 if (tempHealth > 0) {
                                     glBindTexture(GL_TEXTURE_2D, textureMap.get("enemyHp" + tempHealth));
-                                    createQuadTexture(imp.getX(), imp.getY(), imp.getX() + 64, imp.getY() + 8);
+                                    createQuadTexture(197, 0, 442, 30);
                                 }
 
-                                if (imp.isAttackLeft() || imp.isAttackRight() || imp.isAttackUp() || imp.isAttackDown())
-                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
-                                else
-                                    glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
+                                if (imp.isAttack()) glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_attack_0" + imp.getHitAnimationTime()));
+                                else glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_" + imp.getMoveDirection() + "_move_0" + imp.getAnimationTime()));
                             }
                             else {
                                 glBindTexture(GL_TEXTURE_2D, textureMap.get("imp_death_0" + imp.getDeathAnimationTime()));
@@ -1475,9 +1472,9 @@ public class Window {
         firstLevelObjectList.add(new Furniture("barrelOpened", 118, 135));
         firstLevelObjectList.add(new Furniture("bagMedium", 137, 134));
         firstLevelObjectList.add(new Furniture("boxOpened", 308, 129));
-        firstLevelObjectList.add(new Furniture("chair1", 400, 173));
-        firstLevelObjectList.add(new Furniture("chair3", 432, 227));
-        firstLevelObjectList.add(new Furniture("table1", 426, 163));
+        firstLevelObjectList.add(new Furniture("chair1", 399, 172));
+        firstLevelObjectList.add(new Furniture("chair3", 431, 226));
+        firstLevelObjectList.add(new Furniture("table1", 425, 162));
         firstLevelObjectList.add(new Furniture("littleBag", 426, 160));
         firstLevelObjectList.add(new Furniture("bookRed", 434, 186));
         firstLevelObjectList.add(new Furniture("bones", 113, 173));
@@ -1490,18 +1487,18 @@ public class Window {
         secondLevelObjectList.add(new Furniture("gate3", 246, 54));
 
         // Добавление объектов на третий уровень
-        thirdLevelObjectList.add(new Chest("chest", false, true, 279, 215, 279 + 32, 215 + 32, new AABB(279, 215, 279 + 32, 215 + 32)));
-        thirdLevelObjectList.add(new Box("box", false, true, 369, 127, 369 + 24, 127 + 30, new AABB(369, 127, 369 + 24, 127 + 30)));
-        thirdLevelObjectList.add(new Box("box", false, true, 451, 153, 451 + 24, 153 + 30, new AABB(451, 153, 451 + 24, 153 + 30)));
-        thirdLevelObjectList.add(new Box("box", false, true, 414, 246, 414 + 24, 246 + 30, new AABB(414, 246, 414 + 24, 246 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 150, 234, 150 + 20, 234 + 30, new AABB(150, 234, 150 + 20, 234 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 180, 260, 180 + 20, 260 + 30, new AABB(180, 260, 180 + 20, 260 + 30)));
-        thirdLevelObjectList.add(new Barrel("barrel", false, true, 110, 278, 110 + 20, 278 + 30, new AABB(110, 278, 110 + 20, 278 + 30)));
+        thirdLevelObjectList.add(new Chest("chest",279, 215));
+        thirdLevelObjectList.add(new Box("box", 369, 127));
+        thirdLevelObjectList.add(new Box("box", 451, 153));
+        thirdLevelObjectList.add(new Box("box", 414, 246));
+        thirdLevelObjectList.add(new Barrel("barrel", 150, 236));
+        thirdLevelObjectList.add(new Barrel("barrel", 205, 260));
+        thirdLevelObjectList.add(new Barrel("barrel", 110, 278));
         thirdLevelObjectList.add(new Furniture("bagBig", 171, 131));
-        thirdLevelObjectList.add(new Furniture("bagMedium", 199, 133));
-        thirdLevelObjectList.add(new Furniture("bagSmall", 113, 208));
-        thirdLevelObjectList.add(new Furniture("altar0", 463, 164));
-        thirdLevelObjectList.add(new Furniture("altar1", 129, 168));
+        thirdLevelObjectList.add(new Furniture("bagMedium", 199, 132));
+        thirdLevelObjectList.add(new Furniture("bagSmall", 113, 210));
+        thirdLevelObjectList.add(new Furniture("altar0", 460, 164));
+        thirdLevelObjectList.add(new Furniture("altar1", 129, 170));
 
         // Добавление объектов на четвертый уровень
         forthLevelObjectList.add(new Furniture("gate2", 292, 336));

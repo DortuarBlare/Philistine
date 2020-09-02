@@ -32,27 +32,27 @@ public class Furniture extends Object {
                 break;
             }
             case "altar0": {
-                setMaxX(minX + 32);
-                setMaxY(minY + 64);
+                setMaxX(minX + 34);
+                setMaxY(minY + 66);
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
             case "altar1": {
-                setMaxX(minX + 32);
-                setMaxY(minY + 60);
+                setMaxX(minX + 34);
+                setMaxY(minY + 62);
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
             case "table1": {
-                setMaxX(minX + 32);
-                setMaxY(minY + 80);
+                setMaxX(minX + 34);
+                setMaxY(minY + 82);
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
             case "chair0":
             case "chair1": {
-                setMaxX(minX + 18);
-                setMaxY(minY + 44);
+                setMaxX(minX + 20);
+                setMaxY(minY + 46);
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
@@ -63,8 +63,8 @@ public class Furniture extends Object {
                 break;
             }
             case "chair3": {
-                setMaxX(minX + 20);
-                setMaxY(minY + 36);
+                setMaxX(minX + 22);
+                setMaxY(minY + 38);
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
@@ -83,13 +83,13 @@ public class Furniture extends Object {
             }
             case "bookRed": {
                 setNoclip(false);
-                setMaxX(minX + 18);
-                setMaxY(minY + 26);
+                setMaxX(minX + 20);
+                setMaxY(minY + 28);
                 break;
             }
             case "bagSmall": {
-                setMaxX(minX + 16);
-                setMaxY(minY + 20);
+                setMaxX(minX + 18);
+                setMaxY(minY + 22);
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
@@ -100,8 +100,8 @@ public class Furniture extends Object {
                 break;
             }
             case "bagBig": {
-                setMaxX(minX + 28);
-                setMaxY(minY + 26);
+                setMaxX(minX + 30);
+                setMaxY(minY + 28);
                 getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
                 break;
             }
