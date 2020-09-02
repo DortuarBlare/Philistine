@@ -23,16 +23,16 @@ public class Chest extends Container {
                     int randomNumber = (int) (Math.random() * 3);
                     switch (randomNumber){
                         case 0:
-                            weapon = new Weapon("longsword", "slash", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            weapon = new Weapon("longsword", "slash", 30, true, true, this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128, new AABB(this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128));
                             break;
                         case 1:
-                            weapon = new Weapon("rapier", "slash", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            weapon = new Weapon("rapier", "slash", 30, true, true, this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128, new AABB(this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128));
                             break;
                         case 2:
-                            weapon = new Weapon("long_spear", "thrust", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            weapon = new Weapon("long_spear", "thrust", 30, true, true, this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128, new AABB(this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128));
                             break;
                         case 3:
-                            weapon = new Weapon("stick", "thrust", 30, true, true, this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192, new AABB(this.getMaxX(), this.getMaxY(), this.getMaxX() + 192, this.getMaxY() + 192));
+                            weapon = new Weapon("stick", "thrust", 30, true, true, this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128, new AABB(this.getMaxX() - 64, this.getMaxY() - 64, this.getMaxX() + 128, this.getMaxY() + 128));
                             break;
                         default:
                             throw new IllegalStateException("Unexpected value: " + randomNumber);
