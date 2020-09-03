@@ -9,12 +9,12 @@ public class Storage {
             0, 45, 107, 338, // wall4
             0, 0, 0, 0, // wall5
             0, 0, 0, 0, // wall6
-            0,0,0,0, // wall7
-            0,0,0,0, // wall8
-            0,0,0,0, // wall9
-            0,0,0,0, // wall10
-            0,0,0,0, // wall11
-            0,0,0,0 // wall12
+            0, 0, 0, 0, // wall7
+            0, 0, 0, 0, // wall8
+            0, 0, 0, 0, // wall9
+            0, 0, 0, 0, // wall10
+            0, 0, 0, 0, // wall11
+            0, 0, 0, 0 // wall12
     };
 
     public static final int[] secondLevelWalls = {
@@ -89,12 +89,12 @@ public class Storage {
             257, 279, 448, 273, // wall4
             256, 280, 261, 318, // wall5
             222, 280, 224, 318, // wall6
-            0,0,0,0, // wall7
-            0,0,0,0, // wall8
-            0,0,0,0, // wall9
-            0,0,0,0, // wall10
-            0,0,0,0, // wall11
-            0,0,0,0 // wall12
+            0, 0, 0, 0, // wall7
+            0, 0, 0, 0, // wall8
+            0, 0, 0, 0, // wall9
+            0, 0, 0, 0, // wall10
+            0, 0, 0, 0, // wall11
+            0, 0, 0, 0 // wall12
     };
 
     public static final int[] forgeLevelWalls = {
@@ -644,6 +644,5 @@ public class Storage {
             "imp_death_01", "imp_death_02", "imp_death_03", "imp_death_04", "imp_death_05", "imp_death_06", "imp_death_07", "imp_death_08",
 
             "boxClosed", "boxOpened", "barrelClosed", "barrelOpened", "bagBig", "bagMedium", "bagSmall", "altar0", "altar1", "water", "gate2", "gate3"
-
     };
 }

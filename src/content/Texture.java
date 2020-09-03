@@ -41,5 +41,4 @@ public class Texture {
         catch (Exception e) { e.printStackTrace(); }
         return 0;
     }
-
 }

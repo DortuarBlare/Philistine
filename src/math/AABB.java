@@ -36,6 +36,7 @@ public class AABB {
             CollisionMessage.setMessage("left");
             return true;
         }
+
         else if ( (first.max.x <= second.min.x + 5 && first.max.x >= second.min.x) &&
                 ( ( (first.min.y >= second.min.y) && (first.min.y <= second.max.y) ) ||
                         ( (first.max.y >= second.min.y) && (first.max.y <= second.max.y) ) ||
@@ -43,6 +44,7 @@ public class AABB {
             CollisionMessage.setMessage("right");
             return true;
         }
+
         else if ( (first.min.y >= second.max.y - 5 && first.min.y <= second.max.y) &&
                 ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
                         ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||
@@ -50,6 +52,7 @@ public class AABB {
             CollisionMessage.setMessage("up");
             return true;
         }
+
         else if ( (first.max.y <= second.min.y + 5 && first.max.y >= second.min.y) &&
                 ( ( (first.min.x >= second.min.x) && (first.min.x <= second.max.x) ) ||
                         ( (first.max.x >= second.min.x) && (first.max.x <= second.max.x) ) ||

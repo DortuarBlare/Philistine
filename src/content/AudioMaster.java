@@ -15,7 +15,7 @@ public class AudioMaster {
     static long device;
     private static HashMap<String, Integer> idMap = new HashMap<String, Integer>();
 
-    public static void init(){
+    public static void init() {
         device = ALC10.alcOpenDevice((ByteBuffer) null);
         ALCCapabilities deviceCaps = ALC.createCapabilities(device);
         long context = ALC10.alcCreateContext(device, (IntBuffer) null);
@@ -23,12 +23,12 @@ public class AudioMaster {
         AL.createCapabilities(deviceCaps);
     }
 
-    public static void setListenerData(){
+    public static void setListenerData() {
         AL10.alListener3f(AL_POSITION, 0, 0, 0);
         AL10.alListener3f(AL_VELOCITY, 0, 0, 0);
     }
 
-    public static int loadSound(String fileName){
+    public static int loadSound(String fileName) {
         if (idMap.containsKey(fileName)) return idMap.get(fileName);
 
         try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -51,9 +51,8 @@ public class AudioMaster {
         }
     }
 
-    public static void destroy(){
+    public static void destroy() {
         ALC10.alcCloseDevice(device);
         ALC.destroy();
     }
-
 }
