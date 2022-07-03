@@ -1,10 +1,8 @@
 package objects;
 
-import math.AABB;
+import physics.AABB;
 
 import java.util.ArrayList;
-
-import static java.lang.Math.random;
 
 public class Container extends Object {
     public ArrayList<Object> loot;

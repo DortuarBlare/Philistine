@@ -1,6 +1,6 @@
 package objects;
 
-import math.AABB;
+import physics.AABB;
 
 public class Weapon extends Object {
     private int damage;

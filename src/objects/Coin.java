@@ -1,6 +1,6 @@
 package objects;
 
-import math.AABB;
+import physics.AABB;
 
 import java.util.TimerTask;
 

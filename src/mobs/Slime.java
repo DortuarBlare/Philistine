@@ -1,10 +1,9 @@
 package mobs;
 
 import content.AudioMaster;
-import content.Source;
-import content.Storage;
-import math.AABB;
-import math.CollisionMessage;
+import content.AudioSource;
+import physics.AABB;
+import physics.CollisionMessage;
 import singletons.SingletonMobs;
 import singletons.SingletonPlayer;
 
@@ -12,7 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Slime extends Mob {
-    private Source hurtSound;
+    private AudioSource hurtSound;
     private int hurtSoundId, deathSoundId;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
@@ -59,7 +58,7 @@ public class Slime extends Mob {
         getHitbox().update(getX() + 3, getY() + 2, getX() + 14, getY() + 10);
         getCollisionBox().update(getX() + 1, getY() + 1, getX() + 16, getY() + 11);
         setMoveDirection("left");
-        hurtSound = new Source(0);
+        hurtSound = new AudioSource(0);
         hurtSoundId = AudioMaster.loadSound("sounds/slimeHurt");
         deathSoundId = AudioMaster.loadSound("sounds/slimeDead");
     }

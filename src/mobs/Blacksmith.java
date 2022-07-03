@@ -1,7 +1,5 @@
 package mobs;
 
-import math.AABB;
-
 import java.util.Timer;
 import java.util.TimerTask;
 

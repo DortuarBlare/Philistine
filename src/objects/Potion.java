@@ -1,7 +1,6 @@
 package objects;
 
-import content.Source;
-import math.AABB;
+import physics.AABB;
 
 public class Potion extends Object {
     public Potion(String texture, boolean isNoclip, boolean isLying, int minX, int minY, int maxX, int maxY, AABB collisionBox) {

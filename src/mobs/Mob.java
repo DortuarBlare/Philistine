@@ -1,6 +1,6 @@
 package mobs;
 
-import math.AABB;
+import physics.AABB;
 
 import java.util.Timer;
 

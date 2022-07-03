@@ -1,9 +1,9 @@
 package mobs;
 
 import content.AudioMaster;
-import content.Source;
-import math.AABB;
-import math.CollisionMessage;
+import content.AudioSource;
+import physics.AABB;
+import physics.CollisionMessage;
 import singletons.SingletonMobs;
 import singletons.SingletonPlayer;
 
@@ -11,7 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Spider extends Mob {
-    private Source hurtSound, hitSound;
+    private AudioSource hurtSound, hitSound;
     private final int hurtSoundId, hitSoundId, deathSoundId;
     private TimerTask knockbackTask = new TimerTask() {
         @Override
@@ -78,8 +78,8 @@ public class Spider extends Mob {
         getHitbox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
         getCollisionBox().update(getX() + 10, getY() + 15, getX() + 51, getY() + 49);
         setMoveDirection("left");
-        hurtSound = new Source(0);
-        hitSound = new Source(0);
+        hurtSound = new AudioSource(0);
+        hitSound = new AudioSource(0);
         hurtSoundId = AudioMaster.loadSound("sounds/spiderHurt");
         hitSoundId = AudioMaster.loadSound("sounds/spiderAttack");
         deathSoundId = AudioMaster.loadSound("sounds/spiderDeath");

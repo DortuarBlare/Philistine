@@ -1,7 +1,11 @@
 package content;
 
+import physics.AABB;
+
+import java.util.HashMap;
+
 public class Storage {
-    public static final int[] firstLevelWalls = {
+    public static final int[] dungeonVestibuleLevelWalls = {
             108, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
             499, 232, 639, 236, // wall2
@@ -17,7 +21,7 @@ public class Storage {
             0, 0, 0, 0 // wall12
     };
 
-    public static final int[] secondLevelWalls = {
+    public static final int[] dungeonBranchingLevelWalls = {
             0, 182, 94, 188, // wall0
             92, 140, 96, 184, // wall1
             98, 134, 196, 140, // wall2 up
@@ -33,7 +37,7 @@ public class Storage {
             282, 134, 526, 140 // wall12 up
     };
 
-    public static final int[] thirdLevelWalls = {
+    public static final int[] treasureLevelWalls = {
             96, 0, 248, 141, // wall0 up
             528, 147, 640, 339, // wall1
             96, 339, 528, 360, // wall2 down
@@ -49,7 +53,7 @@ public class Storage {
             0,0,0,0 // wall12
     };
 
-    public static final int[] fourthLevelWalls = {
+    public static final int[] bossLevelWalls = {
             96, 135, 193, 141, // wall0 up
             528, 147, 534, 339, // wall1
             96, 339, 290, 342, // wall2 down
@@ -60,22 +64,6 @@ public class Storage {
             195,107,197,135, // wall7
             234,106,236,135, // wall8
             238,138,523,140, // wall9
-            0,0,0,0, // wall10
-            0,0,0,0, // wall11
-            0,0,0,0 // wall12
-    };
-
-    public static final int[] townLevelWalls = {
-            0, 0, 0, 0, // wall0
-            0, 0, 0, 0, // wall1
-            0, 0, 0, 0, // wall2
-            0, 0, 0, 0, // wall3
-            0, 0, 0, 0, // wall4
-            0, 0, 0, 0, // wall5
-            0, 0, 0, 0, // wall6
-            0,0,0,0, // wall7
-            0,0,0,0, // wall8
-            0,0,0,0, // wall9
             0,0,0,0, // wall10
             0,0,0,0, // wall11
             0,0,0,0 // wall12
@@ -645,4 +633,35 @@ public class Storage {
 
             "boxClosed", "boxOpened", "barrelClosed", "barrelOpened", "bagBig", "bagMedium", "bagSmall", "altar0", "altar1", "water", "gate2", "gate3"
     };
+
+    public static final HashMap<String, Integer> textureMap = new HashMap<>();
+    public static final HashMap<String, Integer> soundMap = new HashMap<>();
+    public static final HashMap<String, AABB> aabbMap = new HashMap<>();
+
+    static {
+        // Единичная загрузка всех текстур
+        for (int i = 0; i < textureString.length; i++)
+            textureMap.put(textureString[i], Texture.loadTexture("textures/" + textureString[i]));
+
+        // Единичная загрузка всех звуков
+        for (int i = 0; i < soundString.length; i++)
+            soundMap.put(soundString[i], AudioMaster.loadSound("sounds/" + soundString[i]));
+
+        // Единичная загрузка всех хитбоксов
+        for (int i = 0; i < aabbString.length; i++)
+            aabbMap.put(aabbString[i], new AABB());
+
+        // Единичная инициализация переходов м/у уровнями
+        aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);
+        aabbMap.get("entranceToSecondLevel").update(626, 237, 640, 335);
+        aabbMap.get("entranceToThirdLevel").update(197, 104, 237, 107);
+        aabbMap.get("entranceToForthLevel").update(247, 124, 283, 127);
+        aabbMap.get("entranceFromThirdToSecondLevel").update(249, 122, 288, 124);
+        aabbMap.get("entranceFromForthToSecondLevel").update(199, 108, 236, 112);
+        aabbMap.get("entranceFromFourthToTownLevel").update(292, 356, 339, 359);
+        aabbMap.get("entranceFromTavernToTown").update(224, 316, 255, 318);
+        aabbMap.get("entranceFromForgeToTown").update(384, 316, 415, 318);
+        aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
+        aabbMap.get("toBuyKey").update(359, 244, 373, 250);
+    }
 }

@@ -1,7 +1,6 @@
 package objects;
 
-import math.AABB;
-
+import physics.AABB;
 import java.util.Timer;
 
 public abstract class Object {

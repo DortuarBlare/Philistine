@@ -4,19 +4,26 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
+
+import physics.AABB;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glEnd;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 public class Texture {
-    private static HashMap<String, Integer> idMap = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> idMap = new HashMap<>();
 
     public static int loadTexture(String resourceName) {
         if (idMap.containsKey(resourceName)) return idMap.get(resourceName);
 
         int width, height;
         ByteBuffer buffer;
+
         try (MemoryStack stack = MemoryStack.stackPush()){
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
@@ -39,6 +46,25 @@ public class Texture {
             return id;
         }
         catch (Exception e) { e.printStackTrace(); }
+
         return 0;
+    }
+
+    public static void draw(int target, int texture, AABB position) {
+        glBindTexture(target, texture);
+        glBegin(GL_QUADS);
+        glTexCoord2d(0, 0);
+        glVertex2f(position.getMin().x, position.getMin().y);
+        glTexCoord2d(1, 0);
+        glVertex2f(position.getMax().x, position.getMin().y);
+        glTexCoord2d(1, 1);
+        glVertex2f(position.getMax().x, position.getMax().y);
+        glTexCoord2d(0, 1);
+        glVertex2f(position.getMin().x, position.getMax().y);
+        glEnd();
+    }
+
+    public static void draw(int texture, AABB position) {
+        draw(GL_TEXTURE_2D, texture, position);
     }
 }

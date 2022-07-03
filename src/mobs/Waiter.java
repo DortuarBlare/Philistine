@@ -1,9 +1,14 @@
 package mobs;
 
-import math.AABB;
+import content.Storage;
+import content.Texture;
+import physics.AABB;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
 
 public class Waiter extends Mob {
     private int waitingTime = 0;
@@ -106,6 +111,13 @@ public class Waiter extends Mob {
         else if (directionToMove.equals("right")) moveRight();
         else if (directionToMove.equals("up")) moveUp();
         else if (directionToMove.equals("down")) moveDown();
+    }
+
+    public void draw() {
+        Texture.draw(
+                Storage.textureMap.get("waiter_" + getMoveDirection() + "_move_0" + animationTime),
+                new AABB(getX(), getY(), getX() + 64, getY() + 64)
+        );
     }
 
     public int getAnimationTime() { return animationTime; }
