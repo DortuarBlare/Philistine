@@ -2,6 +2,8 @@ package mobs;
 
 import content.AudioMaster;
 import content.AudioSource;
+import content.Storage;
+import content.Texture;
 import physics.AABB;
 import physics.CollisionMessage;
 import singletons.SingletonMobs;
@@ -10,9 +12,13 @@ import singletons.SingletonPlayer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+
 public class Spider extends Mob {
     private AudioSource hurtSound, hitSound;
     private final int hurtSoundId, hitSoundId, deathSoundId;
+
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
@@ -33,6 +39,7 @@ public class Spider extends Mob {
             }
         }
     };
+
     private TimerTask animationTask = new TimerTask() {
         @Override
         public void run() {
@@ -40,6 +47,7 @@ public class Spider extends Mob {
             if (getAnimationTime() == 8) setAnimationTime(2);
         }
     };
+
     private TimerTask hitAnimationTask = new TimerTask() {
         @Override
         public void run() {
@@ -61,6 +69,7 @@ public class Spider extends Mob {
             }
         }
     };
+
     private final TimerTask deathTask = new TimerTask() {
         @Override
         public void run() {
@@ -146,6 +155,7 @@ public class Spider extends Mob {
         getAttackBox().update(0,0,0,0);
     }
 
+    @Override
     public void update() {
         if (getKnockBackTime() >= 25) stopTimer();
 
@@ -254,6 +264,25 @@ public class Spider extends Mob {
             if (!SingletonPlayer.player.isScrollMenu() && !isKnockBackTaskStarted() && !isAttack())
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
         }
+    }
+
+    @Override
+    public void draw() {
+        String frame;
+
+        if (!isDead()) {
+            if (isAttack())
+                frame = "spider_" + getMoveDirection() + "_attack_0" + getHitAnimationTime();
+            else
+                frame = "spider_" + getMoveDirection() + "_move_0" + getAnimationTime();
+        }
+        else
+            frame = "spider_death_0" + getDeathAnimationTime();
+
+        Texture.draw(
+                Storage.textureMap.get(frame),
+                new AABB(getX(), getY(), getX() + 64, getY() + 64)
+        );
     }
 
     public TimerTask getKnockbackTask() { return knockbackTask; }

@@ -4,6 +4,10 @@ import content.AudioMaster;
 import content.AudioSource;
 import content.Storage;
 import content.Texture;
+import levels.ForgeLevel;
+import levels.MainMenuLevel;
+import levels.TavernLevel;
+import levels.TownLevel;
 import managers.LevelManager;
 import physics.AABB;
 import objects.Armor;
@@ -20,8 +24,11 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Player extends Mob {
-    private HashMap<String, Integer> playerSounds;
-    private AudioSource stepSound, hitSound, selectionMenuSound, openMenuSound;
+    private final HashMap<String, Integer> playerSounds;
+    private final AudioSource stepSound;
+    private final AudioSource hitSound;
+    private final AudioSource selectionMenuSound;
+    private final AudioSource openMenuSound;
     private Armor head, shoulders, overTorso, torso, belt, hands, legs, feet;
     private Weapon weapon;
     private int money, keys;
@@ -34,6 +41,7 @@ public class Player extends Mob {
     private boolean dialogBubbleChoice = false;
     private boolean mainMenuDirection = true;
     private String menuChoice = "Resume";
+
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
@@ -59,6 +67,7 @@ public class Player extends Mob {
             }
         }
     };
+
     private TimerTask hitAnimationTask = new TimerTask() {
         @Override
         public void run() {
@@ -250,6 +259,7 @@ public class Player extends Mob {
             }
         }
     };
+
     private final TimerTask deathAnimationTask = new TimerTask() {
         @Override
         public void run() {
@@ -257,7 +267,6 @@ public class Player extends Mob {
             if (getDeathAnimationTime() == 6) deathAnimationTask.cancel();
         }
     };
-    private final AABB drawSquare = new AABB(getX(), getY(), getX() + 64, getY() + 64);
 
     public Player(int x, int y, int speed, int health, int armor, int damage) {
         super(x, y, speed, health, armor, damage);
@@ -267,6 +276,7 @@ public class Player extends Mob {
         setKnockBackTime(0);
         money = 100;
         keys = 1;
+
         weapon = new Weapon("longsword", "slash", 10, new AABB());
         head = new Armor("nothing", "head", 0, true);
         shoulders = new Armor("nothing", "shoulders", 0, true);
@@ -276,6 +286,7 @@ public class Player extends Mob {
         hands = new Armor("nothing", "hands", 0, true);
         legs = new Armor("pants_greenish", "legs", 1, true);
         feet = new Armor("nothing", "feet", 0, true);
+
         bodyAnimation = "player_stand_" + getMoveDirection();
         headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
         shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";
@@ -284,11 +295,13 @@ public class Player extends Mob {
         handsAnimation = "HANDS_" + getHandsTexture() + "_" + getMoveDirection() + "_move_01";
         legsAnimation = "LEGS_" + getLegsTexture() + "_" + getMoveDirection() + "_move_01";
         feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
+
         playerSounds = new HashMap<String, Integer>();
         stepSound = new AudioSource(0);
         hitSound = new AudioSource(0);
         selectionMenuSound = new AudioSource(0);
         openMenuSound = new AudioSource(0);
+
         for (int i = 0, id = 0; i < Storage.playerSoundString.length; i++)
             playerSounds.put(Storage.playerSoundString[i], id = AudioMaster.loadSound("sounds/" + Storage.playerSoundString[i]));
     }
@@ -525,7 +538,8 @@ public class Player extends Mob {
     public void update(long window) {
         if (!isDead()) {
             // На игровых уровнях
-            if (!LevelManager.level.equals("MainMenu") && !LevelManager.level.equals("Town") && !scrollMenu) {
+            if (!(LevelManager.currentLevel instanceof MainMenuLevel) &&
+                    !(LevelManager.currentLevel instanceof TownLevel) && !scrollMenu) {
                 if (getKnockBackTime() >= 50) stopTimer();
 
                 // Получение урона от мобов
@@ -570,7 +584,8 @@ public class Player extends Mob {
                             moveLeftFrame = 2;
 
                         if (moveLeftFrame == 3 || moveLeftFrame == 6) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -598,7 +613,8 @@ public class Player extends Mob {
                             moveRightFrame = 2;
 
                         if (moveRightFrame == 3 || moveRightFrame == 6) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -627,7 +643,8 @@ public class Player extends Mob {
                             moveLeftFrame = 2;
 
                         if (moveLeftFrame == 3 || moveLeftFrame == 6) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -654,7 +671,8 @@ public class Player extends Mob {
                         if (moveRightFrame == 10)
                             moveRightFrame = 2;
                         if (moveRightFrame == 3 || moveRightFrame == 6) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -683,7 +701,8 @@ public class Player extends Mob {
                             moveLeftFrame = 2;
 
                         if (moveLeftFrame == 3 || moveLeftFrame == 6) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -712,7 +731,8 @@ public class Player extends Mob {
                             moveRightFrame = 2;
 
                         if (moveRightFrame == 3 || moveRightFrame == 6) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -741,7 +761,8 @@ public class Player extends Mob {
                             moveUpFrame = 2;
 
                         if (moveUpFrame == 4 || moveUpFrame == 8) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -770,7 +791,8 @@ public class Player extends Mob {
                             moveDownFrame = 2;
 
                         if (moveDownFrame == 4 || moveDownFrame == 8) {
-                            if (LevelManager.level.equals("tavern") || LevelManager.level.equals("forge"))
+                            if (LevelManager.currentLevel instanceof TavernLevel ||
+                                    LevelManager.currentLevel instanceof ForgeLevel)
                                 stepSound.play(playerSounds.get("stepWood"));
                             else
                                 stepSound.play(playerSounds.get("stepStone"));
@@ -983,7 +1005,7 @@ public class Player extends Mob {
                 }
             }
             // В городе
-            else if (LevelManager.level.equals("Town") && !dialogBubble && !scrollMenu) {
+            else if (LevelManager.currentLevel instanceof TownLevel && !dialogBubble && !scrollMenu) {
                 bodyAnimation = "player_stand_" + getMoveDirection();
                 headAnimation = "HEAD_" + getHeadTexture() + "_" + getMoveDirection() + "_move_01";
                 shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_" + getMoveDirection() + "_move_01";
@@ -995,9 +1017,12 @@ public class Player extends Mob {
                 feetAnimation = "FEET_" + getFeetTexture() + "_" + getMoveDirection() + "_move_01";
 
                 if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-                    if (moveLeftFrame == 10) moveLeftFrame = 2;
+                    if (moveLeftFrame == 10)
+                        moveLeftFrame = 2;
+
                     if (moveLeftFrame == 3 || moveLeftFrame == 6)
                         stepSound.play(playerSounds.get("stepStone"));
+
                     bodyAnimation = "player_walk_left_0" + moveLeftFrame;
                     headAnimation = "HEAD_" + getHeadTexture() + "_left_move_0" + moveLeftFrame;
                     shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_left_move_0" + moveLeftFrame;
@@ -1007,24 +1032,31 @@ public class Player extends Mob {
                     handsAnimation = "HANDS_" + getHandsTexture() + "_left_move_0" + moveLeftFrame;
                     legsAnimation = "LEGS_" + getLegsTexture() + "_left_move_0" + moveLeftFrame;
                     feetAnimation = "FEET_" + getFeetTexture() + "_left_move_0" + moveLeftFrame;
+
                     if (player_animation_move_g == 8) {
                         moveLeftFrame++;
                         player_animation_move_g = 0;
                     }
                     player_animation_move_g++;
+
                     moveLeft();
+
                     if (!(getX() <= 290) && !(getX() > 1186)) {
                         glTranslated(1, 0, 0);
                         forPlacingCamera--;
                     }
+
                     if (getX() + 40 > 1410 && getX() + 40 < 1503) {
-                        if (getY() != 192) setY(getY() + 1);
+                        if (getY() != 192)
+                            setY(getY() + 1);
                     }
                 }
                 else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-                    if (moveRightFrame == 10) moveRightFrame = 2;
+                    if (moveRightFrame == 10)
+                        moveRightFrame = 2;
                     if (moveRightFrame == 3 || moveRightFrame == 6)
                         stepSound.play(playerSounds.get("stepStone"));
+
                     bodyAnimation = "player_walk_right_0" + moveRightFrame;
                     headAnimation = "HEAD_" + getHeadTexture() + "_right_move_0" + moveRightFrame;
                     shouldersAnimation = "SHOULDERS_" + getShouldersTexture() + "_right_move_0" + moveRightFrame;
@@ -1034,23 +1066,28 @@ public class Player extends Mob {
                     handsAnimation = "HANDS_" + getHandsTexture() + "_right_move_0" + moveRightFrame;
                     legsAnimation = "LEGS_" + getLegsTexture() + "_right_move_0" + moveRightFrame;
                     feetAnimation = "FEET_" + getFeetTexture() + "_right_move_0" + moveRightFrame;
+
                     if (player_animation_move_g == 8) {
                         moveRightFrame++;
                         player_animation_move_g = 0;
                     }
                     player_animation_move_g++;
+
                     moveRight();
+
                     if (!(getX() > 1186) && !(getX() <= 290)) {
                         glTranslated(-1, 0, 0);
                         forPlacingCamera++;
                     }
+
                     if (getX() + 40 > 1410 && getX() + 40 < 1503) {
-                        if (getY() != 100) setY(getY() - 1);
+                        if (getY() != 100)
+                            setY(getY() - 1);
                     }
                 }
             }
             // В главном меню
-            else if (LevelManager.level.equals("MainMenu")) {
+            else if (LevelManager.currentLevel instanceof MainMenuLevel) {
                 if (mainMenuDirection) {
                     if (moveRightFrame == 10)
                         moveRightFrame = 2;
@@ -1111,6 +1148,8 @@ public class Player extends Mob {
     }
 
     public void draw() {
+        AABB drawSquare = new AABB(getX(), getY(), getX() + 64, getY() + 64);
+
         Texture.draw(Storage.textureMap.get(bodyAnimation), drawSquare);
 
         if (!getFeetTexture().equals("nothing"))
@@ -1209,9 +1248,13 @@ public class Player extends Mob {
 
     public int getForPlacingCamera() { return forPlacingCamera; }
 
-    public void setForPlacingCamera(int forPlacingCamera) { this.forPlacingCamera = forPlacingCamera; }
+    public void setForPlacingCamera(int forPlacingCamera) {
+        this.forPlacingCamera = forPlacingCamera;
+    }
 
-    public String getHeadTexture() { return head.getTexture(); }
+    public String getHeadTexture() {
+        return head.getTexture();
+    }
 
     public String getShouldersTexture() { return shoulders.getTexture(); }
 
@@ -1259,16 +1302,22 @@ public class Player extends Mob {
 
     public void setKeys(int keys) { this.keys = keys; }
 
-    public boolean isDialogBubbleChoice() { return dialogBubbleChoice; }
+    public boolean isDialogBubbleChoice() {
+        return dialogBubbleChoice;
+    }
 
     public void setDialogBubbleChoice(boolean dialogBubbleChoice) {
         this.dialogBubbleChoice = dialogBubbleChoice;
         selectionMenuSound.play(playerSounds.get("selectionClick"));
     }
 
-    public boolean isDialogBubble() { return dialogBubble; }
+    public boolean isDialogBubble() {
+        return dialogBubble;
+    }
 
-    public void setDialogBubble(boolean dialogBubble) { this.dialogBubble = dialogBubble; }
+    public void setDialogBubble(boolean dialogBubble) {
+        this.dialogBubble = dialogBubble;
+    }
 
     public boolean isScrollMenu() { return scrollMenu; }
 
@@ -1284,5 +1333,7 @@ public class Player extends Mob {
         selectionMenuSound.play(playerSounds.get("selectionClick"));
     }
 
-    public void setMainMenuDirection(boolean mainMenuDirection) { this.mainMenuDirection = mainMenuDirection; }
+    public void setMainMenuDirection(boolean mainMenuDirection) {
+        this.mainMenuDirection = mainMenuDirection;
+    }
 }

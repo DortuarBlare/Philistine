@@ -8,9 +8,6 @@ import managers.LevelManager;
 import managers.SoundManager;
 import managers.UserInputManager;
 import physics.AABB;
-import mobs.*;
-import objects.*;
-import objects.Object;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -33,25 +30,7 @@ public class Window {
     SingletonMobs singletonMobs;
     SingletonPlayer singletonPlayer;
 
-    private boolean canChangeLevel = false;
-    private int deathsCounter = 0;
-    boolean forMainMenu = true;
-    /*private boolean firstLevelMobSpawning, secondLevelMobSpawning, fourthLevelMobSpawning = false;
-    private boolean firstLevelMobSpawningStopped, secondLevelMobSpawningStopped, fourthLevelMobSpawningStopped = false;
-    private int time = 0;
-    private Timer mobTimer = new Timer();
-    private TimerTask mobSpawnTask = new TimerTask() {
-        @Override
-        public void run() {
-            time++;
-            if (time == 5) {
-                firstLevelMobSpawningStopped = true;
-                stopMobSpawn();
-            }
-            SingletonMobs.mobList.add(new Slime(470, 288, 1, 50, 0, 5));
-        }
-    };
-
+    /*
     private void stopMobSpawn() {
         time = 0;
         mobTimer.cancel();
@@ -104,7 +83,7 @@ public class Window {
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Работа с экраном
-        window = glfwCreateWindow(1920, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
+        window = glfwCreateWindow(2560, 1080, "Philistine", glfwGetPrimaryMonitor(), NULL);
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
@@ -150,40 +129,51 @@ public class Window {
     }
 
     private synchronized void loop() {
-        int guard_i = 1, guard_g = 0, forgeFurnace_i = 1, forgeFurnace_g = 0;
         SoundManager.musicSource.play(Storage.soundMap.get("mainMenuTheme"));
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Отрисовка интерфейса
-            if (!(LevelManager.currentLevel instanceof MainMenuLevel) && !(LevelManager.currentLevel instanceof TownLevel)) {
-                HUD.update();
-                HUD.draw();
+            try {
+                // Обновление и отрисовка уровней
+                LevelManager.update();
+
+                // Отрисовка интерфейса
+                if (!(LevelManager.currentLevel instanceof MainMenuLevel) && !(LevelManager.currentLevel instanceof TownLevel)) {
+                    HUD.update();
+                    HUD.draw();
+                }
+
+                // Обновление и отрисовка игрока
+                SingletonPlayer.player.update(window);
+                SingletonPlayer.player.draw();
+
+                // Отрисовка второстепенного меню
+                if (!(LevelManager.currentLevel instanceof MainMenuLevel) && SingletonPlayer.player.isScrollMenu()) {
+                    if (LevelManager.currentLevel instanceof TownLevel)
+                        Texture.draw(
+                                Storage.textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice()),
+                                new AABB(
+                                        SingletonPlayer.player.getForPlacingCamera(),
+                                        0,
+                                        SingletonPlayer.player.getForPlacingCamera() + 640,
+                                        360
+                                )
+                        );
+                    else
+                        Texture.draw(
+                                Storage.textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice()),
+                                new AABB(0, 0, 640, 360)
+                        );
+                }
+
+                // Сброс единичных нажатий клавиш
+                UserInputManager.update();
+            }
+            catch (Exception e) {
+                System.out.println(e);
             }
 
-            // Обновление и отрисовка игрока
-            SingletonPlayer.player.update(window);
-            SingletonPlayer.player.draw();
-
-            // Отрисовка второстепенного меню
-            if (!(LevelManager.currentLevel instanceof MainMenuLevel) && SingletonPlayer.player.isScrollMenu()) {
-                if (LevelManager.currentLevel instanceof TownLevel)
-                    Texture.draw(
-                            Storage.textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice()),
-                            new AABB(
-                                    SingletonPlayer.player.getForPlacingCamera(),
-                                    0,
-                                    SingletonPlayer.player.getForPlacingCamera() + 640,
-                                    360
-                            )
-                    );
-                else
-                    Texture.draw(
-                            Storage.textureMap.get("scrollMenu_" + SingletonPlayer.player.getMenuChoice()),
-                            new AABB(0, 0, 640, 360)
-                    );
-            }
 
             glfwPollEvents();
             glfwSwapBuffers(window);

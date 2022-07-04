@@ -11,6 +11,7 @@ public class Chest extends Container {
         setMaxY(minY + 32);
         getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
         setIsNeedKey(true);
+
         for (int i = 0; i < 3; i++) {
             double b = random();
                 if (b >= 0 && b < 0.1) {

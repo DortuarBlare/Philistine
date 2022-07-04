@@ -30,6 +30,10 @@ public abstract class Mob {
         collisionBox = new AABB();
     }
 
+    public void update() {}
+
+    public void draw() {}
+
     public void moveLeft() {
         x -= speed;
         moveDirection = "left";

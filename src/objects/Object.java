@@ -1,6 +1,10 @@
 package objects;
 
+import content.Storage;
+import content.Texture;
 import physics.AABB;
+
+import java.util.ArrayList;
 import java.util.Timer;
 
 public abstract class Object {
@@ -32,6 +36,14 @@ public abstract class Object {
         this.maxX = maxX;
         this.maxY = maxY;
         this.collisionBox = collisionBox;
+    }
+
+    public void update() {}
+
+    public void interact(ArrayList<Object> objects) {}
+
+    public void draw() {
+        Texture.draw(Storage.textureMap.get(texture), new AABB(minX, minY, maxX, maxY));
     }
 
     public void moveLeft() {
@@ -121,9 +133,13 @@ public abstract class Object {
 
     public void setTexture(String texture) { this.texture = texture; }
 
-    public boolean isDrawAble() { return drawAble; }
+    public boolean isDrawAble() {
+        return drawAble;
+    }
 
-    public void setIsLying(boolean isLying) { this.drawAble = isLying; }
+    public void setDrawable(boolean drawable) {
+        this.drawAble = drawable;
+    }
 
     public boolean isNoclip() { return isNoclip; }
 

@@ -178,8 +178,7 @@ public class UserInputManager {
         });
     }
 
-    public void update() {
-
+    public static void update() {
         pressedKeyE = false;
     }
 }

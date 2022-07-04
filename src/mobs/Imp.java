@@ -2,6 +2,8 @@ package mobs;
 
 import content.AudioMaster;
 import content.AudioSource;
+import content.Storage;
+import content.Texture;
 import physics.AABB;
 import physics.CollisionMessage;
 import singletons.SingletonPlayer;
@@ -9,9 +11,13 @@ import singletons.SingletonPlayer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+
 public class Imp extends Mob {
     private AudioSource hurtSound, hitSound;
     private int hurtSoundId, hitSoundId, deathSoundId;
+
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
@@ -32,6 +38,7 @@ public class Imp extends Mob {
             }
         }
     };
+
     private TimerTask animationTask = new TimerTask() {
         @Override
         public void run() {
@@ -39,6 +46,7 @@ public class Imp extends Mob {
             if (getAnimationTime() == 5) setAnimationTime(1);
         }
     };
+
     private TimerTask hitAnimationTask = new TimerTask() {
         @Override
         public void run() {
@@ -59,6 +67,7 @@ public class Imp extends Mob {
             }
         }
     };
+
     private final TimerTask deathTask = new TimerTask() {
         @Override
         public void run() {
@@ -142,8 +151,10 @@ public class Imp extends Mob {
         getAttackBox().update(0,0,0,0);
     }
 
+    @Override
     public void update() {
-        if (getKnockBackTime() >= 25) stopTimer();
+        if (getKnockBackTime() >= 25)
+            stopTimer();
 
         // Имп получает урон от игрока
         if (AABB.AABBvsAABB(SingletonPlayer.player.getAttackBox(), getHitbox()) && !isImmortal()) {
@@ -227,6 +238,34 @@ public class Imp extends Mob {
             if (!SingletonPlayer.player.isScrollMenu() && !isKnockBackTaskStarted() && !isAttack())
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
         }
+    }
+
+    @Override
+    public void draw() {
+        String frame;
+        int tempHealth = getHealth() % 10 == 0 ? getHealth() : getHealth() - (getHealth() % 10) + 10;
+
+        // Полоска здоровья
+        if (tempHealth > 0) {
+            Texture.draw(
+                    Storage.textureMap.get("enemyHp" + tempHealth),
+                    new AABB(197, 0, 442, 30)
+            );
+        }
+
+        if (!isDead()) {
+            if (isAttack())
+                frame = "imp_" + getMoveDirection() + "_attack_0" + getHitAnimationTime();
+            else
+                frame = "imp_" + getMoveDirection() + "_move_0" + getAnimationTime();
+        }
+        else
+            frame = "imp_death_0" + getDeathAnimationTime();
+
+        Texture.draw(
+                Storage.textureMap.get(frame),
+                new AABB(getX(), getY(), getX() + 64, getY() + 64)
+        );
     }
 
     public TimerTask getKnockbackTask() { return knockbackTask; }

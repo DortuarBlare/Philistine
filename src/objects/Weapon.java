@@ -1,6 +1,11 @@
 package objects;
 
+import content.Storage;
+import managers.SoundManager;
 import physics.AABB;
+import singletons.SingletonPlayer;
+
+import java.util.ArrayList;
 
 public class Weapon extends Object {
     private int damage;
@@ -26,6 +31,31 @@ public class Weapon extends Object {
                 setMaxX(128);
                 setMaxY(128);
                 break;
+            }
+        }
+    }
+
+    @Override
+    public void interact(ArrayList<Object> objects) {
+        if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), getCollisionBox())) {
+            Weapon playerWeapon = SingletonPlayer.player.getWeapon();
+            setDrawable(false);
+            resize();
+
+            SingletonPlayer.player.setWeapon(this);
+            SingletonPlayer.player.updateDamage();
+            SoundManager.environmentSoundSource.play(Storage.soundMap.get("changingArmor"));
+
+            objects.remove(this);
+
+            if (!playerWeapon.getTexture().equals("nothing")) {
+                playerWeapon.setMinX(SingletonPlayer.player.getCollisionBox().getMin().x - 64);
+                playerWeapon.setMinY(SingletonPlayer.player.getCollisionBox().getMin().y - 64);
+                playerWeapon.setMaxX(SingletonPlayer.player.getCollisionBox().getMin().x + 128);
+                playerWeapon.setMaxY(SingletonPlayer.player.getCollisionBox().getMin().y + 128);
+                playerWeapon.setDrawable(true);
+                playerWeapon.correctCollisionBox();
+                objects.add(playerWeapon);
             }
         }
     }

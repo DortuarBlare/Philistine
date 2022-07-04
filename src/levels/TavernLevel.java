@@ -50,8 +50,7 @@ public class TavernLevel implements Level {
     @Override
     public void draw() {
         Texture.draw(Storage.textureMap.get("tavern"), new AABB(0, 0, 640, 360));
-        // Оффициантка
-        waiter.draw();
+        waiter.draw(); // Оффициантка
         // Торговец ключами
         Texture.draw(
                 Storage.textureMap.get("gentleman_brown"),

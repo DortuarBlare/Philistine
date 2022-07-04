@@ -1,9 +1,14 @@
 package objects;
 
+import content.Storage;
+import managers.SoundManager;
 import physics.AABB;
+import singletons.SingletonPlayer;
+
+import java.util.ArrayList;
 
 public class Armor extends Object {
-    private String type;
+    private final String type;
     private int defense;
     private int price;
     private int positionOnTradeTable;
@@ -13,6 +18,7 @@ public class Armor extends Object {
         this.type = type;
         this.defense = defense;
         this.price = price;
+
         switch (type) {
             case "head":
                 getCollisionBox().update(getMinX() + 21, getMinY() + 13, getMinX() + 42, getMinY() + 36);
@@ -45,6 +51,29 @@ public class Armor extends Object {
         this.defense = defense;
     }
 
+    @Override
+    public void interact(ArrayList<Object> objects) {
+        if (AABB.AABBvsAABB(SingletonPlayer.player.getCollisionBox(), getCollisionBox())) {
+            Armor playerArmor = SingletonPlayer.player.getArmorType(this);
+            setDrawable(false);
+
+            SingletonPlayer.player.setArmor(this);
+            SoundManager.environmentSoundSource.play(Storage.soundMap.get("changingArmor"));
+
+            objects.remove(this);
+
+            if (!playerArmor.getTexture().equals("nothing")) {
+                playerArmor.setMinX(SingletonPlayer.player.getCollisionBox().getMin().x - 20);
+                playerArmor.setMinY(SingletonPlayer.player.getCollisionBox().getMin().y - 30);
+                playerArmor.setMaxX(SingletonPlayer.player.getCollisionBox().getMin().x + 44);
+                playerArmor.setMaxY(SingletonPlayer.player.getCollisionBox().getMin().y + 34);
+                playerArmor.setDrawable(true);
+                playerArmor.correctCollisionBox();
+                objects.add(playerArmor);
+            }
+        }
+    }
+
     public void correctCollisionBox() {
         switch (type) {
             case "head":
@@ -72,11 +101,17 @@ public class Armor extends Object {
         }
     }
 
-    public String getType() { return type; }
+    public String getType() {
+        return type;
+    }
 
-    public int getDefense() { return defense; }
+    public int getDefense() {
+        return defense;
+    }
 
-    public void setDefense(int defense) { this.defense = defense; }
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
 
     public int getPrice() {
         return price;
@@ -86,7 +121,11 @@ public class Armor extends Object {
         this.price = price;
     }
 
-    public int getPositionOnTradeTable() { return positionOnTradeTable; }
+    public int getPositionOnTradeTable() {
+        return positionOnTradeTable;
+    }
 
-    public void setPositionOnTradeTable(int positionOnTradeTable) { this.positionOnTradeTable = positionOnTradeTable; }
+    public void setPositionOnTradeTable(int positionOnTradeTable) {
+        this.positionOnTradeTable = positionOnTradeTable;
+    }
 }

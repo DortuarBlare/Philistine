@@ -640,16 +640,16 @@ public class Storage {
 
     static {
         // Единичная загрузка всех текстур
-        for (int i = 0; i < textureString.length; i++)
-            textureMap.put(textureString[i], Texture.loadTexture("textures/" + textureString[i]));
+        for (String s : textureString)
+            textureMap.put(s, Texture.loadTexture("textures/" + s));
 
         // Единичная загрузка всех звуков
-        for (int i = 0; i < soundString.length; i++)
-            soundMap.put(soundString[i], AudioMaster.loadSound("sounds/" + soundString[i]));
+        for (String s : soundString)
+            soundMap.put(s, AudioMaster.loadSound("sounds/" + s));
 
         // Единичная загрузка всех хитбоксов
-        for (int i = 0; i < aabbString.length; i++)
-            aabbMap.put(aabbString[i], new AABB());
+        for (String s : aabbString)
+            aabbMap.put(s, new AABB());
 
         // Единичная инициализация переходов м/у уровнями
         aabbMap.get("entranceToFirstLevel").update(0, 190, 2, 286);

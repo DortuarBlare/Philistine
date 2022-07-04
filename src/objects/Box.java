@@ -10,6 +10,7 @@ public class Box extends Container {
         setMaxX(minX + 24);
         setMaxY(minY + 30);
         getCollisionBox().update(minX, minY, getMaxX(), getMaxY());
+
         for (int i = 0; i < 3; i++) {
             double b = random();
             if (b >= 0 && b < 0.3) {

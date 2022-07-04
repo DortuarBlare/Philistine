@@ -2,6 +2,8 @@ package mobs;
 
 import content.AudioMaster;
 import content.AudioSource;
+import content.Storage;
+import content.Texture;
 import physics.AABB;
 import physics.CollisionMessage;
 import singletons.SingletonMobs;
@@ -10,9 +12,14 @@ import singletons.SingletonPlayer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+
 public class Slime extends Mob {
-    private AudioSource hurtSound;
-    private int hurtSoundId, deathSoundId;
+    private final AudioSource hurtSound;
+    private final int hurtSoundId;
+    private final int deathSoundId;
+
     private TimerTask knockbackTask = new TimerTask() {
         @Override
         public void run() {
@@ -33,6 +40,7 @@ public class Slime extends Mob {
             }
         }
     };
+
     private TimerTask animationTask = new TimerTask() {
         @Override
         public void run() {
@@ -40,6 +48,7 @@ public class Slime extends Mob {
             if (getAnimationTime() == 4) setAnimationTime(1);
         }
     };
+
     private final TimerTask deathTask = new TimerTask() {
         @Override
         public void run() {
@@ -100,6 +109,7 @@ public class Slime extends Mob {
         setKnockBackTaskStarted(false);
     }
 
+    @Override
     public void update() {
         if (getKnockBackTime() >= 25) stopTimer();
 
@@ -150,6 +160,22 @@ public class Slime extends Mob {
             // Преследование игрока
             if (!SingletonPlayer.player.isScrollMenu() && !isKnockBackTaskStarted() && getAnimationTime() == 3)
                 moveTo(AABB.getFirstBoxPosition(SingletonPlayer.player.getHitbox(), getHitbox()));
+        }
+    }
+
+    @Override
+    public void draw() {
+        if (isDead()) {
+            Texture.draw(
+                    Storage.textureMap.get("slime_" + getMoveDirection() + "_0" + getAnimationTime()),
+                    new AABB(getX(), getY(), getX() + 18, getY() + 12)
+            );
+        }
+        else {
+            Texture.draw(
+                    Storage.textureMap.get("slime_death_0" + getDeathAnimationTime()),
+                    new AABB(getX(), getY(), getX() + 18, getY() + 12)
+            );
         }
     }
 

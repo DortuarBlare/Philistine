@@ -1,5 +1,9 @@
 package mobs;
 
+import content.Storage;
+import content.Texture;
+import physics.AABB;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -118,7 +122,18 @@ public class Blacksmith extends Mob {
         else if (directionToMove.equals("down")) moveDown();
     }
 
-    public int getAnimationTime() { return animationTime; }
+    public void draw() {
+        Texture.draw(
+                Storage.textureMap.get("blacksmith_" + getMoveDirection() + "_move_0" + animationTime),
+                new AABB(getX(), getY(), getX() + 64, getY() + 64)
+        );
+    }
 
-    public boolean isWaitingTaskStarted() { return waitingTaskStarted; }
+    public int getAnimationTime() {
+        return animationTime;
+    }
+
+    public boolean isWaitingTaskStarted() {
+        return waitingTaskStarted;
+    }
 }
