@@ -22,6 +22,8 @@ public class TownLevel implements Level {
 
     @Override
     public void update() {
+        collide();
+
         // Переход в данж
         if (SingletonPlayer.player.getX() + 32 == 1519)
             SingletonPlayer.player.setDialogBubble(true);

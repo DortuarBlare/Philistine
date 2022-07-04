@@ -49,6 +49,8 @@ public class TreasureLevel implements Level {
 
     @Override
     public void update() {
+        collide();
+
         for (Object object : objects) {
             // Обновление объектов
             object.update();

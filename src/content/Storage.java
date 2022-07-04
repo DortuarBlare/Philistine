@@ -5,6 +5,8 @@ import physics.AABB;
 import java.util.HashMap;
 
 public class Storage {
+    public static boolean loaded = false;
+
     public static final int[] dungeonVestibuleLevelWalls = {
             108, 128, 495, 140, // wall0
             496, 143, 498, 232, // wall1
@@ -663,5 +665,7 @@ public class Storage {
         aabbMap.get("entranceFromForgeToTown").update(384, 316, 415, 318);
         aabbMap.get("toBuyBeer").update(224, 240, 255, 255);
         aabbMap.get("toBuyKey").update(359, 244, 373, 250);
+
+        loaded = true;
     }
 }

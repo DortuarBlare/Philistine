@@ -134,7 +134,7 @@ public class Window {
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            try {
+            if (Storage.loaded) {
                 // Обновление и отрисовка уровней
                 LevelManager.update();
 
@@ -170,10 +170,6 @@ public class Window {
                 // Сброс единичных нажатий клавиш
                 UserInputManager.update();
             }
-            catch (Exception e) {
-                System.out.println(e);
-            }
-
 
             glfwPollEvents();
             glfwSwapBuffers(window);

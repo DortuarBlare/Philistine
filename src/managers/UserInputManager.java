@@ -19,13 +19,13 @@ public class UserInputManager {
             // Нажатие Escape
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS && !(LevelManager.currentLevel instanceof MainMenuLevel)) {
                 switch (SingletonPlayer.player.getMenuChoice()) {
-//                    case "Resume":
-//                    case "Options":
+                    case "Resume":
+                    case "Options":
                     case "Exit": {
                         SingletonPlayer.player.setScrollMenu(!SingletonPlayer.player.isScrollMenu());
                         break;
                     }
-//                    case "Options_Sounds":
+                    case "Options_Sounds":
                     case "Options_Controls": {
                         SingletonPlayer.player.setMenuChoice("Options");
                         break;

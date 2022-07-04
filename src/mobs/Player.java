@@ -29,10 +29,30 @@ public class Player extends Mob {
     private final AudioSource hitSound;
     private final AudioSource selectionMenuSound;
     private final AudioSource openMenuSound;
-    private Armor head, shoulders, overTorso, torso, belt, hands, legs, feet;
+
+    private Armor head;
+    private Armor shoulders;
+    private Armor overTorso;
+    private Armor torso;
+    private Armor belt;
+    private Armor hands;
+    private Armor legs;
+    private Armor feet;
     private Weapon weapon;
+
     private int money, keys;
-    private String bodyAnimation, weaponAnimation, headAnimation, shouldersAnimation, overTorsoAnimation, torsoAnimation, beltAnimation, handsAnimation, legsAnimation, feetAnimation;
+
+    private String bodyAnimation;
+    private String weaponAnimation;
+    private String headAnimation;
+    private String shouldersAnimation;
+    private String overTorsoAnimation;
+    private String torsoAnimation;
+    private String beltAnimation;
+    private String handsAnimation;
+    private String legsAnimation;
+    private String feetAnimation;
+
     private int moveLeftFrame = 2, moveRightFrame = 2, moveUpFrame = 2, moveDownFrame = 2;
     private int player_animation_move_g = 0;
     private int forPlacingCamera = 0;
@@ -1149,36 +1169,50 @@ public class Player extends Mob {
 
     public void draw() {
         AABB drawSquare = new AABB(getX(), getY(), getX() + 64, getY() + 64);
+        int bodyFrame, feetFrame, legsFrame, torsoFrame, overTorsoFrame, shouldersFrame;
+        int beltFrame, headFrame, handsFrame, weaponFrame;
 
-        Texture.draw(Storage.textureMap.get(bodyAnimation), drawSquare);
+        bodyFrame = Storage.textureMap.get(bodyAnimation) != null ? Storage.textureMap.get(bodyAnimation) : -1;
+        feetFrame = Storage.textureMap.get(feetAnimation) != null ? Storage.textureMap.get(feetAnimation) : -1;
+        legsFrame = Storage.textureMap.get(legsAnimation) != null ? Storage.textureMap.get(legsAnimation) : -1;
+        torsoFrame = Storage.textureMap.get(torsoAnimation) != null ? Storage.textureMap.get(torsoAnimation) : -1;
+        overTorsoFrame = Storage.textureMap.get(overTorsoAnimation) != null ? Storage.textureMap.get(overTorsoAnimation) : -1;
+        shouldersFrame = Storage.textureMap.get(shouldersAnimation) != null ? Storage.textureMap.get(shouldersAnimation) : -1;
+        beltFrame = Storage.textureMap.get(beltAnimation) != null ? Storage.textureMap.get(beltAnimation) : -1;
+        headFrame = Storage.textureMap.get(headAnimation) != null ? Storage.textureMap.get(headAnimation) : -1;
+        handsFrame = Storage.textureMap.get(handsAnimation) != null ? Storage.textureMap.get(handsAnimation) : -1;
+        weaponFrame = Storage.textureMap.get(weaponAnimation) != null ? Storage.textureMap.get(weaponAnimation) : -1;
 
-        if (!getFeetTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(feetAnimation), drawSquare);
+        if (bodyFrame != -1)
+            Texture.draw(bodyFrame, drawSquare);
 
-        if (!getLegsTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(legsAnimation), drawSquare);
+        if (feetFrame != -1 && !getFeetTexture().equals("nothing"))
+            Texture.draw(feetFrame, drawSquare);
 
-        if (!getTorsoTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(torsoAnimation), drawSquare);
+        if (legsFrame != -1 && !getLegsTexture().equals("nothing"))
+            Texture.draw(legsFrame, drawSquare);
 
-        if (!getOverTorsoTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(overTorsoAnimation), drawSquare);
+        if (torsoFrame != -1 && !getTorsoTexture().equals("nothing"))
+            Texture.draw(torsoFrame, drawSquare);
 
-        if (!getShouldersTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(shouldersAnimation), drawSquare);
+        if (overTorsoFrame != -1 && !getOverTorsoTexture().equals("nothing"))
+            Texture.draw(overTorsoFrame, drawSquare);
 
-        if (!getBeltTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(beltAnimation), drawSquare);
+        if (shouldersFrame != -1 && !getShouldersTexture().equals("nothing"))
+            Texture.draw(shouldersFrame, drawSquare);
 
-        if (!getHeadTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(headAnimation), drawSquare);
+        if (beltFrame != -1 && !getBeltTexture().equals("nothing"))
+            Texture.draw(beltFrame, drawSquare);
 
-        if (!getHandsTexture().equals("nothing"))
-            Texture.draw(Storage.textureMap.get(handsAnimation), drawSquare);
+        if (headFrame != -1 && !getHeadTexture().equals("nothing"))
+            Texture.draw(headFrame, drawSquare);
 
-        if (SingletonPlayer.player.isAttack() && !SingletonPlayer.player.isDead()/* && !level.equals("MainMenu")*/)
+        if (handsFrame != -1 && !getHandsTexture().equals("nothing"))
+            Texture.draw(handsFrame, drawSquare);
+
+        if (weaponFrame != -1 && SingletonPlayer.player.isAttack() && !SingletonPlayer.player.isDead())
             Texture.draw(
-                    Storage.textureMap.get(weaponAnimation),
+                    weaponFrame,
                     new AABB(
                             getX() - getWeapon().getMinX(),
                             getY() - getWeapon().getMinY(),
@@ -1319,14 +1353,18 @@ public class Player extends Mob {
         this.dialogBubble = dialogBubble;
     }
 
-    public boolean isScrollMenu() { return scrollMenu; }
+    public boolean isScrollMenu() {
+        return scrollMenu;
+    }
 
     public void setScrollMenu(boolean scrollMenu) {
         this.scrollMenu = scrollMenu;
         openMenuSound.play(playerSounds.get("openMenu"));
     }
 
-    public String getMenuChoice() { return menuChoice; }
+    public String getMenuChoice() {
+        return menuChoice;
+    }
 
     public void setMenuChoice(String menuChoice) {
         this.menuChoice = menuChoice;
